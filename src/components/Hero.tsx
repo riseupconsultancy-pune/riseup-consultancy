@@ -34,7 +34,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
 
             {/* Grounded Corporate Subtitle */}
             <p className="mt-6 text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
-              Rigorously screened profiles for hiring managers; direct corporate vacancies for ambitious talent across India and Nigeria.
+              Pre-screened profiles for hiring managers; direct corporate vacancies for skilled professionals across India and Nigeria.
             </p>
 
             {/* Two Square Action Buttons */}
