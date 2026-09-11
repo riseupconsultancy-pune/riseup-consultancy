@@ -1,21 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
+  variable: "--font-heading",
+  weight: ["500", "600", "700", "800"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "RiseUp Consultancy | Premier Recruitment & Staffing Partner",
+  title: "RiseUp Consultancy | Premier Recruitment & Executive Search",
   description:
-    "Connecting visionary companies with exceptional talent across Pune and Dubai. Permanent staffing, executive search, and career acceleration.",
+    "Strategic talent acquisition and executive search partner connecting high-growth enterprises with verified professionals across India and Nigeria.",
 };
 
 export default function RootLayout({
@@ -24,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} scroll-smooth`}>
-      <body className="antialiased min-h-screen flex flex-col">{children}</body>
+    <html lang="en" className={`${plusJakarta.variable} ${inter.variable} scroll-smooth`}>
+      <body className="antialiased min-h-screen flex flex-col font-sans">{children}</body>
     </html>
   );
 }
