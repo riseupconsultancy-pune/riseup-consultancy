@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, ChevronDown, Check, Globe } from "lucide-react";
 
 interface LocationOption {
@@ -70,21 +71,27 @@ export default function Header() {
     <header className="w-full sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
-        {/* Left: Brand Logo with Sharp Square Monogram & Clean Typography */}
+        {/* Left: Official Brand Logo & Name */}
         <Link href="/" className="group flex items-center gap-3 focus:outline-none">
-          <div className="flex items-center justify-center w-10 h-10 bg-blue-600 text-white font-black text-xl transition-colors group-hover:bg-slate-900">
-            R
+          <div className="relative w-11 h-11 rounded-full overflow-hidden border border-slate-200 shadow-xs bg-white shrink-0 group-hover:scale-105 transition-transform duration-200">
+            <Image
+              src="/images/rise_up_consultancy_pune_logo.jpg"
+              alt="Rise Up Consultancy Logo"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
 
           <div className="flex flex-col">
             <div className="flex items-center tracking-tight">
-              <span className="text-xl font-extrabold text-slate-900 tracking-tight">RiseUp</span>
+              <span className="text-xl font-extrabold text-slate-900 tracking-tight font-heading">RiseUp</span>
               <span className="text-xs font-bold uppercase tracking-widest text-blue-600 ml-2 pl-2 border-l border-slate-300">
                 Consultancy
               </span>
             </div>
             <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase">
-              India • Nigeria
+              Staffing & Recruiting Services
             </span>
           </div>
         </Link>
