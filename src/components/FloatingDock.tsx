@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Home, Briefcase, Settings2, UserPlus, Mail } from "lucide-react";
 
@@ -53,10 +53,10 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
   return (
     <nav
       aria-label="Bottom Navigation"
-      className="fixed bottom-3 sm:bottom-6 inset-x-0 mx-auto z-50 flex justify-center px-3.5 sm:px-6 pointer-events-none"
+      className="fixed bottom-3 sm:bottom-6 inset-x-0 mx-auto z-50 flex justify-center px-3 sm:px-4 pointer-events-none"
     >
-      {/* Perfect Square Solid White Dock - Centered with Symmetric Margins on Mobile */}
-      <div className="pointer-events-auto flex items-center justify-between sm:justify-center gap-1 sm:gap-2 px-1.5 sm:px-4 py-2 bg-white border border-slate-300 shadow-[0_20px_45px_-10px_rgba(15,23,42,0.22)] rounded-none w-full max-w-[420px] sm:w-auto transition-all duration-300">
+      {/* Perfect Square Solid White Dock - Strict Border Containment & Proportional Width */}
+      <div className="pointer-events-auto inline-flex items-stretch bg-white border border-slate-300 shadow-[0_16px_36px_-8px_rgba(15,23,42,0.22)] rounded-none overflow-hidden w-full max-w-[360px] sm:w-auto transition-all">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -66,20 +66,20 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
               key={item.id}
               type="button"
               onClick={() => handleNav(item)}
-              className={`relative flex flex-col items-center justify-center transition-all duration-200 focus:outline-none flex-1 sm:flex-initial rounded-none ${
+              className={`flex flex-col items-center justify-center flex-1 sm:flex-initial transition-colors focus:outline-none rounded-none py-2 sm:py-2.5 px-2 sm:px-5 ${
                 isActive
-                  ? "bg-blue-600 text-white shadow-xs px-2 sm:px-5 py-2"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 px-1.5 sm:px-4 py-2"
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <Icon
-                className={`w-4 h-4 sm:w-5 sm:h-5 mb-1 transition-transform duration-200 ${
-                  isActive ? "stroke-[2.2] scale-105 text-white" : "stroke-[1.75]"
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 mb-0.5 sm:mb-1 shrink-0 ${
+                  isActive ? "stroke-[2.2] text-white" : "stroke-[1.75]"
                 }`}
               />
               <span
-                className={`text-[9px] sm:text-[11px] uppercase tracking-wider whitespace-nowrap ${
-                  isActive ? "font-bold text-white" : "font-medium text-slate-600"
+                className={`text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap leading-none ${
+                  isActive ? "text-white" : "text-slate-600"
                 }`}
               >
                 {item.label}
