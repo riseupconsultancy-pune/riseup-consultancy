@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Users, Briefcase, Award, ArrowUpRight, ShieldCheck, Zap } from "lucide-react";
+import { Users, Award, ShieldCheck, Zap, ArrowUpRight } from "lucide-react";
 
 interface ServicesSectionProps {
   onHireClick?: () => void;
@@ -10,68 +10,68 @@ interface ServicesSectionProps {
 const SERVICES = [
   {
     icon: Users,
-    title: "Permanent Staffing",
-    description: "End-to-end talent acquisition matching pre-screened professionals with company culture and technical benchmarks.",
-    tag: "Pune & Dubai",
+    title: "Permanent & Executive Staffing",
+    description: "End-to-end talent placement matching rigorously vetted professionals with enterprise culture and technical benchmarks.",
+    tag: "India & Nigeria",
   },
   {
     icon: Award,
-    title: "Executive Search",
-    description: "Confidential headhunting for C-suite, VPs, and specialized domain leaders to steer critical business expansions.",
-    tag: "Leadership",
+    title: "C-Suite & Leadership Search",
+    description: "Confidential executive headhunting for board members, VPs, and technical department heads across emerging markets.",
+    tag: "Executive Search",
   },
   {
     icon: Zap,
-    title: "Contract & IT Hiring",
-    description: "Agile deployment of verified software engineers, product specialists, and technical staff on flexible models.",
-    tag: "Rapid Turnaround",
+    title: "Specialized Technical Contracting",
+    description: "Rapid deployment of senior engineers, digital product architects, and operations specialists on flexible mandates.",
+    tag: "Rapid SLA",
   },
   {
     icon: ShieldCheck,
-    title: "Career Acceleration",
-    description: "Direct guidance, resume alignment, and guaranteed corporate interview matching for aspiring professionals.",
-    tag: "For Candidates",
+    title: "Corporate Recruitment Advisory",
+    description: "Market compensation benchmarking, organizational structuring, and high-volume talent pipeline management.",
+    tag: "Advisory",
   },
 ];
 
 export default function ServicesSection({ onHireClick }: ServicesSectionProps) {
   return (
-    <section id="services" className="py-16 sm:py-24 bg-white relative">
+    <section id="services" className="py-20 sm:py-28 bg-white border-b border-slate-200 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-3">
-            Core Expertise
+        <div className="max-w-2xl mb-16">
+          <span className="block text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+            Practice Areas
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Consultancy Solutions Built for Speed & Precision
+            Consultancy Solutions Built on Precision & Discretion
           </h2>
-          <p className="mt-3 text-base text-slate-600 font-normal">
-            Whether scaling an enterprise or landing a career-defining role, RiseUp bridges the gap with zero friction.
+          <p className="mt-4 text-base text-slate-600 leading-relaxed">
+            We operate with the rigour of an international executive search firm, tailoring search strategies to enterprise needs.
           </p>
         </div>
 
-        {/* 4 Cards Grid */}
+        {/* 4 Square Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {SERVICES.map((srv, idx) => {
             const Icon = srv.icon;
             return (
               <div
                 key={idx}
-                className="group relative p-7 rounded-3xl bg-slate-50/70 border border-slate-200/80 hover:bg-white hover:border-blue-400 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 flex flex-col justify-between"
+                className="group p-8 bg-slate-50 border border-slate-200 hover:bg-white hover:border-slate-900 hover:shadow-xl transition-all duration-200 flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-100/70 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                      <Icon className="w-6 h-6" />
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 bg-white border border-slate-200 text-blue-600 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors duration-200">
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-[11px] font-semibold text-slate-500 bg-white px-2.5 py-1 rounded-full border border-slate-200/70">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 border border-slate-200 px-2 py-1 bg-white">
                       {srv.tag}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-lg font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
                     {srv.title}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
@@ -79,9 +79,9 @@ export default function ServicesSection({ onHireClick }: ServicesSectionProps) {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-200/50 flex items-center text-xs font-semibold text-blue-600">
-                  <span>Learn More</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <div className="mt-8 pt-4 border-t border-slate-200 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-900 group-hover:text-blue-600">
+                  <span>Inquire Practice</span>
+                  <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </div>
               </div>
             );

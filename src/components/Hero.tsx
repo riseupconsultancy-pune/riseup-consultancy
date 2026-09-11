@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { ArrowUpRight, Search, Briefcase, Building2, Users, CheckCircle2, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowUpRight, Search, Briefcase } from "lucide-react";
 
 interface HeroProps {
   onHireClick?: () => void;
@@ -11,131 +11,109 @@ interface HeroProps {
 
 export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
   return (
-    <section className="relative pt-10 pb-20 sm:pt-14 sm:pb-28 overflow-hidden bg-white">
-      {/* Subtle Ambient Background Gradient */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-blue-100/50 via-sky-50/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-slate-100/60 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-
+    <section className="relative pt-12 pb-20 lg:pt-16 lg:pb-28 bg-white border-b border-slate-200/80 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Two-Column Modern Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* Left Column: Authentic Typography & Two Action Buttons */}
-          <div className="lg:col-span-7 flex flex-col text-left">
+          {/* Left Column: Authoritative Editorial & Square Action Buttons */}
+          <div className="lg:col-span-7 flex flex-col justify-center text-left z-10">
             
-            {/* Minimal Sub-Headline Badge */}
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-blue-600">
-                Staffing & Executive Recruitment
+            {/* Minimalist Top Indicator */}
+            <div className="flex items-center gap-2.5 mb-6">
+              <span className="w-2 h-2 bg-blue-600 shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
+                Executive Search & Strategic Staffing
               </span>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.14]">
-              Connecting top talent with{" "}
-              <span className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-600 bg-clip-text text-transparent">
-                visionary companies
-              </span>
+            {/* Main Authoritative Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
+              Strategic Talent Acquisition for{" "}
+              <span className="text-blue-600">Industry Leaders</span>
             </h1>
 
-            {/* Editorial Value Proposition Subhead */}
+            {/* Grounded Corporate Subtitle */}
             <p className="mt-6 text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
-              RiseUp is your strategic recruitment partner across India and Nigeria. We help companies fill critical vacancies with verified professionals, while fast-tracking candidates into high-growth careers.
+              We partner with high-growth enterprises and multinationals across India and Nigeria to deliver rigorously screened professionals, senior managers, and executive talent.
             </p>
 
-            {/* The Two Main Action Buttons (High contrast, spacious, non-generic) */}
-            <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            {/* Two Square Action Buttons */}
+            <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               {/* Button 1: Looking to Hire Talent */}
               <button
                 onClick={onHireClick}
                 type="button"
-                className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm sm:text-base shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm tracking-wide transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
               >
-                <Briefcase className="w-4 h-4 text-white/90" />
+                <Briefcase className="w-4 h-4 text-white" />
                 <span>Looking to Hire Talent</span>
-                <ArrowUpRight className="w-4 h-4 text-blue-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </button>
 
               {/* Button 2: Looking for Jobs */}
               <button
                 onClick={onJobsClick}
                 type="button"
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white border border-slate-300/90 text-slate-800 hover:text-blue-600 hover:border-blue-500 hover:bg-blue-50/40 font-semibold text-sm sm:text-base shadow-xs hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-slate-200"
+                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-transparent border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-semibold text-sm tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
               >
-                <Search className="w-4 h-4 text-slate-500 group-hover:text-blue-600 transition-colors" />
+                <Search className="w-4 h-4" />
                 <span>Looking for Jobs</span>
-                <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </button>
             </div>
 
-            {/* Minimalist Trust & Proof Bar */}
-            <div className="mt-12 pt-8 border-t border-slate-100 grid grid-cols-3 gap-6 max-w-lg">
-              <div>
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">500+</div>
-                <div className="text-xs text-slate-500 font-medium mt-0.5">Partner Companies</div>
+            {/* Architectural Proof Metrics with Square Hairlines */}
+            <div className="mt-14 pt-8 border-t border-slate-200 grid grid-cols-3 gap-6 max-w-lg">
+              <div className="border-l-2 border-blue-600 pl-4">
+                <div className="text-3xl font-bold text-slate-900 tracking-tight">500+</div>
+                <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
+                  Client Firms
+                </div>
               </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">10k+</div>
-                <div className="text-xs text-slate-500 font-medium mt-0.5">Vetted Candidates</div>
+              <div className="border-l-2 border-slate-300 pl-4">
+                <div className="text-3xl font-bold text-slate-900 tracking-tight">10,000+</div>
+                <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
+                  Vetted Profiles
+                </div>
               </div>
-              <div>
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">48 hrs</div>
-                <div className="text-xs text-slate-500 font-medium mt-0.5">Shortlist Guarantee</div>
+              <div className="border-l-2 border-slate-300 pl-4">
+                <div className="text-3xl font-bold text-slate-900 tracking-tight">48 hrs</div>
+                <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
+                  Match SLA
+                </div>
               </div>
             </div>
 
           </div>
 
-          {/* Right Column: Professional Image Blended with Background */}
-          <div className="lg:col-span-5 relative flex items-center justify-center">
+          {/* Right Column: Seamlessly Blended & Zoomed Talent Image (No borders, No shadow, No floating widgets) */}
+          <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end min-h-[440px] lg:min-h-[560px]">
             
-            {/* Ambient Background Glow Behind Image */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/40 via-sky-100/30 to-white rounded-3xl -z-10" />
-
-            {/* Main Blended Talent Image Container */}
-            <div className="relative w-full max-w-md aspect-square rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-slate-100">
+            {/* The Zoomed Image with Multiple Smooth Edge Gradients */}
+            <div className="relative w-full h-[460px] sm:h-[520px] lg:h-[580px] overflow-hidden">
               <Image
                 src="/images/hero-talent.jpg"
-                alt="RiseUp Recruitment Professional"
+                alt="Corporate Recruiter & Executive Talent"
                 fill
                 priority
-                className="object-cover object-top"
-                sizes="(max-width: 768px) 100vw, 500px"
+                className="object-cover object-top scale-110 lg:scale-120 transform transition-transform duration-700"
+                sizes="(max-width: 768px) 100vw, 600px"
               />
-              
-              {/* Subtle Gradient Overlay to Blend Edges with White Canvas */}
-              <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-transparent to-transparent pointer-events-none" />
-            </div>
 
-            {/* Floating Glass Micro-Card 1: Shortlist Speed */}
-            <div className="absolute -bottom-5 -left-4 sm:left-4 p-3.5 rounded-2xl bg-white/90 backdrop-blur-xl border border-white/80 shadow-xl shadow-slate-900/10 flex items-center gap-3 animate-float">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-xs font-bold text-slate-900">48h Candidate Match</div>
-                <div className="text-[11px] text-slate-500">Fast-tracked interview slots</div>
-              </div>
-            </div>
-
-            {/* Floating Glass Micro-Card 2: Verified Partner */}
-            <div className="absolute -top-4 -right-3 sm:right-2 p-3 rounded-2xl bg-white/90 backdrop-blur-xl border border-white/80 shadow-xl shadow-slate-900/10 flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs font-bold text-slate-900">100% Vetted Talent</div>
-                <div className="text-[10px] text-blue-600 font-semibold">India & Nigeria Network</div>
-              </div>
+              {/* Edge Gradient Blends (Fading smoothly into white canvas) */}
+              {/* Left Edge Fade */}
+              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white via-white/80 to-transparent pointer-events-none" />
+              {/* Bottom Edge Fade */}
+              <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none" />
+              {/* Top Edge Fade */}
+              <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/70 to-transparent pointer-events-none" />
+              {/* Right Edge Fade */}
+              <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white/60 to-transparent pointer-events-none" />
             </div>
 
           </div>
 
         </div>
-
       </div>
     </section>
   );

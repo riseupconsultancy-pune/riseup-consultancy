@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { MapPin, Briefcase, IndianRupee, ArrowUpRight, CheckCircle, Clock } from "lucide-react";
+import { MapPin, Briefcase, ArrowUpRight, Clock } from "lucide-react";
 
 interface FeaturedJobsProps {
   onApplyClick?: (jobTitle: string) => void;
@@ -32,24 +32,24 @@ const SAMPLE_JOBS = [
   },
   {
     id: "3",
-    title: "Business Development Manager",
-    company: "Emirates Logistics Group",
-    location: "Dubai, UAE",
+    title: "Commercial Operations Lead",
+    company: "Sahara Logistics PLC",
+    location: "Lagos, Nigeria",
     type: "On-Site",
-    salary: "AED 12k - 16k / mo",
+    salary: "₦14M - 18M / yr",
     experience: "5+ Years",
-    tags: ["B2B Sales", "Client Acquisition", "Logistics"],
+    tags: ["Supply Chain", "B2B Operations", "Strategy"],
     featured: true,
   },
   {
     id: "4",
-    title: "Financial Data Analyst",
-    company: "FinVertex Advisory",
-    location: "Pune, India",
+    title: "Financial Risk & Compliance Analyst",
+    company: "Vertex Advisory Group",
+    location: "Abuja, Nigeria",
     type: "Hybrid",
-    salary: "₹8 - 14 LPA",
-    experience: "2-4 Years",
-    tags: ["Python", "SQL", "PowerBI"],
+    salary: "₦10M - 15M / yr",
+    experience: "3-6 Years",
+    tags: ["Financial Auditing", "Risk Management", "Tax"],
     featured: false,
   },
 ];
@@ -60,42 +60,41 @@ export default function FeaturedJobs({ onApplyClick }: FeaturedJobsProps) {
   const filteredJobs =
     selectedFilter === "All"
       ? SAMPLE_JOBS
-      : selectedFilter === "Pune"
-      ? SAMPLE_JOBS.filter((j) => j.location.includes("Pune"))
-      : selectedFilter === "Dubai"
-      ? SAMPLE_JOBS.filter((j) => j.location.includes("Dubai"))
+      : selectedFilter === "India"
+      ? SAMPLE_JOBS.filter((j) => j.location.includes("India"))
+      : selectedFilter === "Nigeria"
+      ? SAMPLE_JOBS.filter((j) => j.location.includes("Nigeria"))
       : SAMPLE_JOBS;
 
   return (
-    <section id="jobs" className="py-16 sm:py-24 bg-slate-50/60 border-t border-slate-200/70 relative">
+    <section id="jobs" className="py-20 sm:py-28 bg-slate-50 border-b border-slate-200 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6 pb-6 border-b border-slate-200">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-2">
-              <Briefcase className="w-3.5 h-3.5" />
-              Verified Openings
-            </div>
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Featured Opportunities
+            <span className="block text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+              Corporate Mandates
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Active Executive Openings
             </h2>
-            <p className="text-sm text-slate-500 mt-1">
-              Handpicked roles from our corporate client network in Pune & Dubai.
+            <p className="text-sm text-slate-500 mt-1 max-w-xl">
+              Verified career opportunities commissioned by our enterprise client network across India and Nigeria.
             </p>
           </div>
 
-          {/* Quick Location Filters */}
-          <div className="flex items-center gap-1.5 p-1 bg-white rounded-full border border-slate-200/80 shadow-2xs self-start sm:self-auto">
-            {["All", "Pune", "Dubai"].map((filter) => (
+          {/* Location Filters with Square Boxes */}
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            {["All", "India", "Nigeria"].map((filter) => (
               <button
                 key={filter}
                 type="button"
                 onClick={() => setSelectedFilter(filter)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all border ${
                   selectedFilter === filter
-                    ? "bg-blue-600 text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    ? "bg-slate-900 text-white border-slate-900 shadow-xs"
+                    : "bg-white text-slate-600 border-slate-300 hover:border-slate-900"
                 }`}
               >
                 {filter}
@@ -104,50 +103,50 @@ export default function FeaturedJobs({ onApplyClick }: FeaturedJobsProps) {
           </div>
         </div>
 
-        {/* Job Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* Job Cards Grid with Clean Square Edges */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredJobs.map((job) => (
             <div
               key={job.id}
-              className="group relative p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 flex flex-col justify-between"
+              className="group p-8 bg-white border border-slate-200 hover:border-slate-900 hover:shadow-xl transition-all duration-200 flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex items-start justify-between gap-3 mb-4">
                   <div>
-                    <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
+                    <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">
                       {job.company}
                     </span>
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mt-0.5">
+                    <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors mt-1">
                       {job.title}
                     </h3>
                   </div>
                   {job.featured && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-semibold shrink-0">
-                      Featured
+                    <span className="px-2.5 py-1 bg-slate-100 text-slate-800 text-[10px] font-bold uppercase tracking-wider border border-slate-200 shrink-0">
+                      Priority Role
                     </span>
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mb-5">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <div className="flex flex-wrap items-center gap-5 text-xs text-slate-600 mb-6">
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <MapPin className="w-4 h-4 text-blue-600" />
                     {job.location}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <Clock className="w-4 h-4 text-slate-400" />
                     {job.experience}
                   </span>
-                  <span className="font-semibold text-slate-800">
+                  <span className="font-bold text-slate-900">
                     {job.salary}
                   </span>
                 </div>
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 mb-6">
+                {/* Skill Tags */}
+                <div className="flex flex-wrap gap-2 mb-8">
                   {job.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-xs font-medium"
+                      className="px-2.5 py-1 bg-slate-50 text-slate-700 text-xs font-medium border border-slate-200"
                     >
                       {tag}
                     </span>
@@ -156,15 +155,17 @@ export default function FeaturedJobs({ onApplyClick }: FeaturedJobsProps) {
               </div>
 
               {/* Action Button */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs text-slate-400">Direct Consultancy Match</span>
+              <div className="pt-5 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  Direct Mandate
+                </span>
                 <button
                   type="button"
                   onClick={() => onApplyClick?.(job.title)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-900 text-white text-xs font-semibold group-hover:bg-blue-600 transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white text-xs font-bold uppercase tracking-wider group-hover:bg-blue-600 transition-colors"
                 >
                   <span>Apply Now</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
+                  <ArrowUpRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
