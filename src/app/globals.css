@@ -27,3 +27,15 @@ h1, h2, h3, h4, .font-heading {
   border: 1px solid rgba(226, 232, 240, 0.8);
   box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
 }
+
+/* Ultra-Premium Liquid Glass (Apple-inspired translucent frosted dock) */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(24px) saturate(190%) contrast(102%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(102%);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 
+    0 20px 45px -12px rgba(15, 23, 42, 0.18),
+    0 0 0 1px rgba(226, 232, 240, 0.8),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95);
+}

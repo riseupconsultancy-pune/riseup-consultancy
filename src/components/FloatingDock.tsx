@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Home, Briefcase, Settings2, UserPlus, Mail } from "lucide-react";
+import { Home, SearchCheck, Workflow, Handshake, PhoneCall } from "lucide-react";
 
 interface FloatingDockProps {
   onHireClick?: () => void;
@@ -11,17 +11,18 @@ interface FloatingDockProps {
 interface NavItem {
   id: string;
   label: string;
+  mobileLabel?: string;
   href?: string;
   icon: React.ComponentType<{ className?: string }>;
   isAction?: boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: "home", label: "Home", href: "/", icon: Home },
-  { id: "jobs", label: "Jobs", href: "/jobs", icon: Briefcase },
-  { id: "services", label: "Services", href: "/#services", icon: Settings2 },
-  { id: "hire", label: "For Employers", isAction: true, icon: UserPlus },
-  { id: "contact", label: "Contact", href: "/#contact", icon: Mail },
+  { id: "home", label: "Home", mobileLabel: "Home", href: "/", icon: Home },
+  { id: "jobs", label: "Jobs", mobileLabel: "Jobs", href: "/jobs", icon: SearchCheck },
+  { id: "services", label: "Services", mobileLabel: "Services", href: "/#services", icon: Workflow },
+  { id: "hire", label: "Employers", mobileLabel: "Hire", isAction: true, icon: Handshake },
+  { id: "contact", label: "Contact", mobileLabel: "Contact", href: "/#contact", icon: PhoneCall },
 ];
 
 export default function FloatingDock({ onHireClick }: FloatingDockProps) {
@@ -52,11 +53,11 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
 
   return (
     <nav
-      aria-label="Bottom Navigation"
-      className="fixed bottom-3 sm:bottom-6 inset-x-0 mx-auto z-50 flex justify-center px-3 sm:px-4 pointer-events-none"
+      aria-label="Bottom Quick Navigation"
+      className="fixed bottom-4 sm:bottom-6 inset-x-0 mx-auto z-50 flex justify-center px-3 sm:px-4 pointer-events-none"
     >
-      {/* Perfect Square Solid White Dock - Strict Border Containment & Proportional Width */}
-      <div className="pointer-events-auto inline-flex items-stretch bg-white border border-slate-300 shadow-[0_16px_36px_-8px_rgba(15,23,42,0.22)] rounded-none overflow-hidden w-full max-w-[360px] sm:w-auto transition-all">
+      {/* Symmetrical 5-Column Liquid Glass Floating Dock with Equal Slot Widths */}
+      <div className="pointer-events-auto grid grid-cols-5 gap-1 sm:gap-1.5 w-full max-w-[460px] sm:max-w-[540px] p-1.5 liquid-glass rounded-none">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -66,23 +67,31 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
               key={item.id}
               type="button"
               onClick={() => handleNav(item)}
-              className={`flex flex-col items-center justify-center flex-1 sm:flex-initial transition-colors focus:outline-none rounded-none py-2 sm:py-2.5 px-2 sm:px-5 ${
+              aria-label={item.label}
+              className={`flex flex-col items-center justify-center py-2 sm:py-2.5 px-0.5 sm:px-1 rounded-none transition-all duration-200 focus:outline-none w-full min-w-0 ${
                 isActive
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                  ? "bg-blue-600 text-white shadow-xs"
+                  : "text-slate-700 hover:text-blue-600 hover:bg-white/60 active:bg-blue-50/70"
               }`}
             >
               <Icon
-                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 mb-0.5 sm:mb-1 shrink-0 ${
-                  isActive ? "stroke-[2.2] text-white" : "stroke-[1.75]"
+                className={`w-5 h-5 sm:w-5 sm:h-5 mb-1 shrink-0 ${
+                  isActive ? "stroke-[2.2] text-white" : "stroke-[1.9] text-slate-700"
                 }`}
               />
               <span
-                className={`text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap leading-none ${
-                  isActive ? "text-white" : "text-slate-600"
+                className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-center truncate max-w-full px-0.5 ${
+                  isActive ? "text-white" : "text-slate-700"
                 }`}
               >
-                {item.label}
+                {item.mobileLabel && item.mobileLabel !== item.label ? (
+                  <>
+                    <span className="hidden sm:inline">{item.label}</span>
+                    <span className="sm:hidden">{item.mobileLabel}</span>
+                  </>
+                ) : (
+                  item.label
+                )}
               </span>
             </button>
           );
