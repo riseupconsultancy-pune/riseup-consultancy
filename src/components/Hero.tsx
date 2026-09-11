@@ -22,42 +22,42 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
             <div className="flex items-center gap-2.5 mb-6">
               <span className="w-2 h-2 bg-blue-600 shrink-0" />
               <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
-                Executive Search & Strategic Staffing
+                Verified Recruitment Partner
               </span>
             </div>
 
             {/* Main Authoritative Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
-              Strategic Talent Acquisition for{" "}
-              <span className="text-blue-600">Industry Leaders</span>
+              Verified Talent for Employers.{" "}
+              <span className="text-blue-600">Real Jobs for Professionals.</span>
             </h1>
 
             {/* Grounded Corporate Subtitle */}
             <p className="mt-6 text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
-              We partner with high-growth enterprises and multinationals across India and Nigeria to deliver rigorously screened professionals, senior managers, and executive talent.
+              Rigorously screened profiles for hiring managers; direct corporate vacancies for ambitious talent across India and Nigeria.
             </p>
 
             {/* Two Square Action Buttons */}
             <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              {/* Button 1: Looking to Hire Talent */}
+              {/* Button 1: Request Talent (Employers) */}
               <button
                 onClick={onHireClick}
                 type="button"
-                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm tracking-wide transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm tracking-wide transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 rounded-none"
               >
                 <Briefcase className="w-4 h-4 text-white" />
-                <span>Looking to Hire Talent</span>
+                <span>Request Talent</span>
                 <ArrowUpRight className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </button>
 
-              {/* Button 2: Looking for Jobs */}
+              {/* Button 2: Apply to Jobs (Job Seekers) */}
               <button
                 onClick={onJobsClick}
                 type="button"
-                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-transparent border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-semibold text-sm tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-transparent border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-semibold text-sm tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 rounded-none"
               >
                 <Search className="w-4 h-4" />
-                <span>Looking for Jobs</span>
+                <span>Apply to Jobs</span>
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </button>
             </div>
@@ -73,7 +73,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
               <div className="border-l-2 border-slate-300 pl-4">
                 <div className="text-3xl font-bold text-slate-900 tracking-tight">10,000+</div>
                 <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
-                  Vetted Profiles
+                  Screened Profiles
                 </div>
               </div>
               <div className="border-l-2 border-slate-300 pl-4">
