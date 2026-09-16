@@ -1,13 +1,6 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import { 
-  LayoutDashboard, 
-  PlusCircle, 
-  Briefcase, 
-  Users, 
-  FileCheck 
-} from "lucide-react";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import CrmShell from "@/components/crm/CrmShell";
@@ -20,14 +13,6 @@ export const metadata: Metadata = {
     nocache: true,
   },
 };
-
-const CLIENT_NAV_ITEMS = [
-  { href: "/client/dashboard", label: "Drive Overview", icon: LayoutDashboard },
-  { href: "/client/vacancies/new", label: "Request Candidate", icon: PlusCircle },
-  { href: "/client/vacancies", label: "Posted Vacancies", icon: Briefcase },
-  { href: "/client/candidates", label: "Interview Candidates", icon: Users },
-  { href: "/client/agreements", label: "Client Agreements", icon: FileCheck },
-];
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
@@ -43,11 +28,7 @@ export default async function ClientLayout({ children }: { children: React.React
   });
 
   return (
-    <CrmShell 
-      user={session} 
-      portalTitle="Corporate Client Workspace" 
-      navItems={CLIENT_NAV_ITEMS}
-    >
+    <CrmShell user={session}>
       {children}
     </CrmShell>
   );

@@ -12,7 +12,14 @@ import {
   Shield,
   Building2,
   Users,
-  ExternalLink
+  ExternalLink,
+  LayoutDashboard,
+  Briefcase,
+  FileText,
+  UserCheck,
+  PlusCircle,
+  FileCheck,
+  MessageSquareShare
 } from "lucide-react";
 import { logoutAction } from "@/app/actions/auth-actions";
 import { SessionUser } from "@/lib/auth";
@@ -26,40 +33,67 @@ interface NavItem {
 
 interface CrmShellProps {
   user: SessionUser;
-  portalTitle: string;
-  navItems: NavItem[];
   children: React.ReactNode;
 }
 
-export default function CrmShell({ user, portalTitle, navItems, children }: CrmShellProps) {
+const ADMIN_NAV_ITEMS: NavItem[] = [
+  { href: "/admin/dashboard", label: "Master Dashboard", icon: LayoutDashboard },
+  { href: "/admin/clients", label: "Client Management", icon: Building2 },
+  { href: "/admin/recruiters", label: "HR Management", icon: Users },
+  { href: "/admin/vacancies", label: "Vacancies & Broadcast", icon: Briefcase },
+  { href: "/admin/agreements", label: "Client Agreements", icon: FileText },
+  { href: "/admin/candidates", label: "Website Candidate Pool", icon: UserCheck },
+];
+
+const CLIENT_NAV_ITEMS: NavItem[] = [
+  { href: "/client/dashboard", label: "Drive Overview", icon: LayoutDashboard },
+  { href: "/client/vacancies/new", label: "Request Candidate", icon: PlusCircle },
+  { href: "/client/vacancies", label: "Posted Vacancies", icon: Briefcase },
+  { href: "/client/candidates", label: "Interview Candidates", icon: Users },
+  { href: "/client/agreements", label: "Client Agreements", icon: FileCheck },
+];
+
+const HR_NAV_ITEMS: NavItem[] = [
+  { href: "/hr/dashboard", label: "Recruiter Hub", icon: LayoutDashboard },
+  { href: "/hr/vacancies", label: "Openings & Links", icon: Briefcase },
+  { href: "/hr/candidates", label: "Candidate ATS Pipeline", icon: Users },
+  { href: "/hr/settings", label: "WhatsApp Template", icon: MessageSquareShare },
+];
+
+export default function CrmShell({ user, children }: CrmShellProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const getRoleBadge = () => {
+  const getPortalConfig = () => {
     switch (user.role) {
       case "SUPER_ADMIN":
         return {
-          label: "Master Admin",
-          bg: "bg-slate-900 text-white",
-          icon: Shield,
+          portalTitle: "Executive Administration",
+          badgeLabel: "Master Admin",
+          badgeBg: "bg-slate-900 text-white",
+          BadgeIcon: Shield,
+          navItems: ADMIN_NAV_ITEMS,
         };
       case "CLIENT":
         return {
-          label: "Corporate Client",
-          bg: "bg-blue-700 text-white",
-          icon: Building2,
+          portalTitle: "Corporate Client Workspace",
+          badgeLabel: "Corporate Client",
+          badgeBg: "bg-blue-700 text-white",
+          BadgeIcon: Building2,
+          navItems: CLIENT_NAV_ITEMS,
         };
       case "HR_RECRUITER":
         return {
-          label: "HR Recruiter",
-          bg: "bg-emerald-700 text-white",
-          icon: Users,
+          portalTitle: "Recruiter Operations",
+          badgeLabel: "HR Recruiter",
+          badgeBg: "bg-emerald-700 text-white",
+          BadgeIcon: Users,
+          navItems: HR_NAV_ITEMS,
         };
     }
   };
 
-  const badge = getRoleBadge();
-  const RoleIcon = badge.icon;
+  const { portalTitle, badgeLabel, badgeBg, BadgeIcon, navItems } = getPortalConfig();
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row">
@@ -84,7 +118,7 @@ export default function CrmShell({ user, portalTitle, navItems, children }: CrmS
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-none focus:outline-none"
+          className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-none focus:outline-none cursor-pointer"
           aria-label="Toggle navigation menu"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -101,7 +135,7 @@ export default function CrmShell({ user, portalTitle, navItems, children }: CrmS
           <div className="relative flex-1 flex flex-col max-w-xs w-full bg-slate-900 text-white p-5 z-50 border-r border-slate-800">
             <div className="flex items-center justify-between pb-4 border-b border-slate-800">
               <div className="flex items-center gap-2">
-                <RoleIcon className="w-4 h-4 text-blue-400" />
+                <BadgeIcon className="w-4 h-4 text-blue-400" />
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-200">
                   {portalTitle}
                 </span>
@@ -109,7 +143,7 @@ export default function CrmShell({ user, portalTitle, navItems, children }: CrmS
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-1 text-slate-400 hover:text-white"
+                className="p-1 text-slate-400 hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -154,7 +188,7 @@ export default function CrmShell({ user, portalTitle, navItems, children }: CrmS
               <form action={logoutAction}>
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold text-red-400 hover:text-white hover:bg-red-600/20 border border-red-500/30 transition-colors rounded-none"
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold text-red-400 hover:text-white hover:bg-red-600/20 border border-red-500/30 transition-colors rounded-none cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Log Out</span>
@@ -198,9 +232,9 @@ export default function CrmShell({ user, portalTitle, navItems, children }: CrmS
         {/* Current User Role Pill */}
         <div className="px-5 py-3.5 border-b border-slate-800/80 bg-slate-950/40">
           <div className="flex items-center gap-2">
-            <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-none ${badge.bg}`}>
-              <RoleIcon className="w-3 h-3" />
-              <span>{badge.label}</span>
+            <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-none ${badgeBg}`}>
+              <BadgeIcon className="w-3 h-3" />
+              <span>{badgeLabel}</span>
             </span>
           </div>
           <div className="mt-1.5 text-xs font-bold text-slate-200 truncate">
@@ -257,9 +291,9 @@ export default function CrmShell({ user, portalTitle, navItems, children }: CrmS
           <form action={logoutAction}>
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold text-red-400 hover:text-white hover:bg-red-600 transition-colors rounded-none border border-red-500/30"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold text-red-400 hover:text-white hover:bg-red-600 transition-colors rounded-none border border-red-500/30 cursor-pointer"
             >
-              <LogOut className="w-3.5 h-3.5" />
+              <LogOut className="w-4 h-4" />
               <span>Sign Out</span>
             </button>
           </form>
