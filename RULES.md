@@ -118,30 +118,77 @@
 
 ---
 
-## 4. Development Workflow & Git Protocol
+## 4. In-Flight SEO & Structured Metadata Engineering
 
-### 4.1 Feature-by-Feature Incremental Delivery
+### 4.1 Apply SEO During Development of Every Feature
+* **Never Postpone SEO to the End:** Every page, dynamic route, and public component must have its search engine optimization built concurrently with the feature.
+* **Semantic HTML5 Hierarchy:**
+  * Exactly **one** `<h1>` per page representing the core topic.
+  * Nested semantic heading hierarchy (`<h2>`, `<h3>`) with zero skipped levels.
+  * Semantic container landmarks: `<header>`, `<nav>`, `<main>`, `<article>`, `<section>`, and `<footer>`.
+* **Descriptive Image Alt Attributes:**
+  * Every `<Image>` component from `next/image` must provide meaningful, descriptive `alt` text incorporating relevant keywords (e.g. `alt="RiseUp Consultancy - Recruitment and Staffing in Pune and Lagos"`). Never use empty or generic `alt="image"` strings.
+
+### 4.2 Dynamic Metadata & OpenGraph Architecture
+* **Metadata Export on Every Public Page:**
+  * Every public `page.tsx` must export a tailored `Metadata` object or `generateMetadata()` function.
+  * Title Template: `%s | RiseUp Consultancy - Executive Recruitment`.
+  * Contextual Meta Descriptions: 140–160 characters, concise, high-value, action-oriented.
+  * Canonical URLs: Every public route must declare its canonical URL to prevent duplicate content indexing.
+  * OpenGraph (OG) & Twitter Cards: Provide `og:title`, `og:description`, `og:url`, `og:siteName`, `og:locale`, and `og:image` on all public marketing and job pages.
+
+### 4.3 Rich JSON-LD Structured Data (Google for Jobs & Schema.org)
+* **JobPosting Schema:**
+  * The `/jobs/[id]` dynamic page must render a Google-compliant `<script type="application/ld+json">` containing `JobPosting` schema:
+    * `title`, `description`, `datePosted`, `validThrough`, `employmentType`, `hiringOrganization`, `jobLocation` (specifying city, region, country for Pune/Mumbai/Bengaluru or Lagos/Abuja), and `baseSalary` (when applicable).
+  * Enables native listing in **Google for Jobs** search engine results.
+* **Organization & Breadcrumb Schema:**
+  * Root layout must include `Organization` schema detailing official brand name, logo URL, addresses (Pune & Lagos), and contact endpoints.
+  * Subpages must include `BreadcrumbList` schema to assist search bot navigation.
+
+### 4.4 Defensive Privacy & Noindex on Internal Routes
+* **Block Indexing on Sensitive Routes:**
+  * Internal CRM, admin portal (`/admin/*`), recruiter workflows, and candidate confidential file viewers must strictly export:
+    ```ts
+    export const metadata: Metadata = {
+      robots: {
+        index: false,
+        follow: false,
+        nocache: true,
+      },
+    };
+    ```
+  * Never allow private candidate resumes, interview feedback, or corporate agreement terms to be crawled or indexed by search engines.
+
+---
+
+## 5. Development Workflow & Git Protocol
+
+### 5.1 Feature-by-Feature Incremental Delivery
 * Build and commit features one by one in logical, atomic stages:
   1. **Database Schema & Migrations** (Prisma)
   2. **Server Actions & Security Validation** (Zod + RBAC)
-  3. **UI Components & Responsive Layouts** (Tailwind + Square Theme)
+  3. **UI Components & Responsive Layouts** (Tailwind + Square Theme + SEO)
   4. **Integration, End-to-End Verification & Build Test**
 * Each stage must be verified with `npm run build` before pushing to GitHub.
 
-### 4.2 Git Commit Conventions
+### 5.2 Git Commit Conventions
 * Use clear, conventional commit messages:
   * `feat(jobs): add filter sidebar and verified vacancy cards`
   * `sec(auth): implement argon2id password hashing and session cookies`
   * `style(dock): apply liquid glass effect with sharp square styling`
   * `fix(mobile): resolve header dropdown overflow on 360px viewports`
+  * `seo(jobs): add JobPosting JSON-LD and dynamic metadata`
+* Note: Pushes to GitHub are executed manually by the developer to allow seamless multi-account selection in Windows Credential Manager.
 
 ---
 
-## 5. Pre-Deployment Verification Checklist
+## 6. Pre-Deployment Verification Checklist
 
 Before deploying any feature or shipping to Hostinger, verify the following:
 - [ ] **Mobile Responsiveness:** Tested on 360px, 390px, and 414px viewports without horizontal scroll.
 - [ ] **Theme Adherence:** All corners are `rounded-none`, colors follow the blue-and-white scheme, typography is Plus Jakarta Sans + Inter.
+- [ ] **SEO & Metadata:** Semantic HTML5 tags, unique title & description, canonical link, OpenGraph tags, and JSON-LD schema (JobPosting/Organization) applied. Admin routes set to `noindex`.
 - [ ] **TypeScript Cleanliness:** `npm run build` passes with zero type errors, zero unhandled promises.
 - [ ] **Input Validation:** All server actions validate with Zod schemas.
 - [ ] **File Security:** Uploads strictly enforce 2MB limit and PDF magic byte verification.
