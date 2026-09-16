@@ -88,8 +88,8 @@ export default function Footer() {
           <div className="flex items-center gap-6">
             <span className="hover:text-slate-400 transition-colors cursor-pointer">Privacy Policy</span>
             <span className="hover:text-slate-400 transition-colors cursor-pointer">Terms of Service</span>
-            <Link href="/admin/login" className="text-slate-400 hover:text-blue-400 transition-colors">
-              Staff / Admin Portal
+            <Link href="/login" className="text-slate-400 hover:text-blue-400 transition-colors">
+              CRM Portal Login
             </Link>
           </div>
         </div>
