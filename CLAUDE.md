@@ -1,2 +1,3 @@
 @AGENTS.md
 @RULES.md
+@MASTER_USER_PROMPT.md
