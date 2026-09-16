@@ -21,7 +21,7 @@ model User {
   updatedAt    DateTime  @updatedAt
 
   clientProfile     ClientProfile?
-  hrProfile         HRProfile?
+  hrProfile         HrProfile?
   createdAgreements ClientAgreement[]        @relation("AdminAgreements")
   statusChanges     CandidateStatusHistory[]
 }
@@ -43,7 +43,7 @@ model ClientProfile {
   agreements ClientAgreement[]
 }
 
-model HRProfile {
+model HrProfile {
   id               String   @id @default(uuid())
   userId           String   @unique
   user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -53,7 +53,7 @@ model HRProfile {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  publicLinks       HRPublicLink[]
+  publicLinks       HrPublicLink[]
   sourcedCandidates Candidate[]
 }
 
@@ -84,15 +84,15 @@ model Vacancy {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 
-  hrLinks    HRPublicLink[]
+  hrLinks    HrPublicLink[]
   candidates Candidate[]
 }
 
-model HRPublicLink {
+model HrPublicLink {
   id         String   @id @default(uuid())
   uniqueSlug String   @unique // e.g. job-rup-1001-hr101
   hrId       String
-  hr         HRProfile @relation(fields: [hrId], references: [id], onDelete: Cascade)
+  hr         HrProfile @relation(fields: [hrId], references: [id], onDelete: Cascade)
   vacancyId  String
   vacancy    Vacancy  @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
   status     String   @default("ACTIVE") // ACTIVE, DISABLED
@@ -122,9 +122,9 @@ model Candidate {
   vacancyId       String
   vacancy         Vacancy   @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
   hrId            String?
-  hr              HRProfile? @relation(fields: [hrId], references: [id], onDelete: SetNull)
+  hr              HrProfile? @relation(fields: [hrId], references: [id], onDelete: SetNull)
   hrPublicLinkId  String?
-  hrPublicLink    HRPublicLink? @relation(fields: [hrPublicLinkId], references: [id], onDelete: SetNull)
+  hrPublicLink    HrPublicLink? @relation(fields: [hrPublicLinkId], references: [id], onDelete: SetNull)
   referralTag     String?   // e.g. "Referral: Priya Sharma | RiseUp Consultancy"
   status          String    @default("APPLIED") // APPLIED, CONNECTED, GOING_FOR_INTERVIEW, INTERVIEWED, SELECTED, REJECTED, ABSENT
   clientFeedback  String?
