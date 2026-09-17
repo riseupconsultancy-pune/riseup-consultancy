@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "db:push": "prisma db push",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "db:deploy": "prisma db push && npx tsx prisma/seed.ts",
     "start": "next start",
     "lint": "eslint"
   },
