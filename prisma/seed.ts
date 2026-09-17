@@ -51,7 +51,23 @@ async function main() {
   const clientPasswordHash = await bcrypt.hash("ClientApex@2026", 12);
   const clientUser = await prisma.user.upsert({
     where: { email: "client@apexglobal.com" },
-    update: { passwordHash: clientPasswordHash, status: "ACTIVE" },
+    update: { 
+      passwordHash: clientPasswordHash, 
+      status: "ACTIVE",
+      clientProfile: {
+        upsert: {
+          create: {
+            companyName: "Apex Global BPO Solutions",
+            country: "India",
+            city: "Pune",
+            industry: "BPO / BPM / Back Office",
+            contactPerson: "Rajesh Kulkarni (Director HR)",
+            phone: "+91 98220 11223",
+          },
+          update: {},
+        },
+      },
+    },
     create: {
       email: "client@apexglobal.com",
       fullName: "Rajesh Kulkarni",
@@ -80,7 +96,20 @@ async function main() {
   const hrPasswordHash = await bcrypt.hash("HRPriya@2026", 12);
   const hrUser = await prisma.user.upsert({
     where: { email: "hr.priya@riseupconsultancy.in" },
-    update: { passwordHash: hrPasswordHash, status: "ACTIVE" },
+    update: { 
+      passwordHash: hrPasswordHash, 
+      status: "ACTIVE",
+      hrProfile: {
+        upsert: {
+          create: {
+            employeeCode: "RUP-HR-101",
+            commissionRate: 5.0,
+            whatsappTemplate: "Hello {Candidate_Name}, this is Priya from RiseUp Consultancy regarding your application for {Job_Title} in {City}. Are you available for a brief discussion regarding the interview schedule?",
+          },
+          update: {},
+        },
+      },
+    },
     create: {
       email: "hr.priya@riseupconsultancy.in",
       fullName: "Priya Sharma",
