@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -49,7 +49,7 @@ model HrProfile {
   user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   employeeCode     String   @unique
   commissionRate   Float?   @default(0.0)
-  whatsappTemplate String?
+  whatsappTemplate String?  @db.Text
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -75,8 +75,8 @@ model Vacancy {
   salaryCurrency       String    @default("INR")
   headcount            Int       @default(1)
   availabilityRequired String    @default("Immediate Joiner") // Immediate Joiner, 15 Days, 30 Days
-  description          String
-  requirements         String?
+  description          String    @db.Text
+  requirements         String?   @db.Text
   status               String    @default("PENDING_REVIEW") // PENDING_REVIEW, ACTIVE, FULFILLED, CLOSED, DISABLED
   isBroadcastedToHR    Boolean   @default(false)
   isPostedOnWebsite    Boolean   @default(false)
@@ -114,7 +114,7 @@ model Candidate {
   qualification   String
   totalExperience String    @default("Fresher")
   availability    String    @default("Immediate Joiner") // Immediate Joiner, 15 Days, 30 Days
-  interestedRoles String    @default("[]") // JSON Array: ["Voice", "Non-Voice", "Back Office"]
+  interestedRoles String    @db.Text // JSON Array: ["Voice", "Non-Voice", "Back Office"]
   resumeUrl       String    // /uploads/resumes/uuid.pdf
   resumeFileName  String
   resumeFileSize  Int
@@ -127,7 +127,7 @@ model Candidate {
   hrPublicLink    HrPublicLink? @relation(fields: [hrPublicLinkId], references: [id], onDelete: SetNull)
   referralTag     String?   // e.g. "Referral: Priya Sharma | RiseUp Consultancy"
   status          String    @default("APPLIED") // APPLIED, CONNECTED, GOING_FOR_INTERVIEW, INTERVIEWED, SELECTED, REJECTED, ABSENT
-  clientFeedback  String?
+  clientFeedback  String?   @db.Text
   interviewDate   DateTime?
   selectedAt      DateTime?
   placementFee    Float?
@@ -147,7 +147,7 @@ model CandidateStatusHistory {
   changedByUserId String?
   changedByUser   User?     @relation(fields: [changedByUserId], references: [id], onDelete: SetNull)
   changedByRole   String    // SUPER_ADMIN, HR_RECRUITER, CLIENT
-  note            String?
+  note            String?   @db.Text
   createdAt       DateTime  @default(now())
 }
 
@@ -162,12 +162,12 @@ model ClientAgreement {
   fixedFeePerHead          Float?
   paymentTermDays          Int       @default(30)
   replacementGuaranteeDays Int       @default(90)
-  termsText                String
+  termsText                String    @db.Text
   hashToken                String    @unique // Secure hash for /agreement/sign/[hashToken]
   status                   String    @default("DRAFT") // DRAFT, SENT, SIGNED, EXPIRED
   signedByName             String?
   signedByDesignation      String?
-  signatureImage           String?
+  signatureImage           String?   @db.Text
   signedAt                 DateTime?
   signerIp                 String?
   createdAt                DateTime  @default(now())

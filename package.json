@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "mode:local": "node scripts/db-mode.js local",
+    "mode:prod": "node scripts/db-mode.js prod",
     "db:push": "prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
-    "db:deploy": "prisma db push && npx tsx prisma/seed.ts",
+    "db:deploy": "node scripts/db-mode.js prod && prisma db push && npx tsx prisma/seed.ts",
     "start": "next start",
     "lint": "eslint"
   },
