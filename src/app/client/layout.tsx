@@ -5,6 +5,8 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import CrmShell from "@/components/crm/CrmShell";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Corporate Client Portal | RiseUp Consultancy",
   robots: {

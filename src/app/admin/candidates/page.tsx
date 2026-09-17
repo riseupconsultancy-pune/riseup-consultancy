@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import AdminCandidatePool from "./AdminCandidatePool";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Website Candidate Pool | RiseUp Admin",
   robots: {

@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import ClientAgreementsView from "./ClientAgreementsView";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Service Agreements & E-Sign | RiseUp Client Portal",
   robots: {

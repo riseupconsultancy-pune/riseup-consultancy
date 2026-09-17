@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import ClientVacancyWizard from "./ClientVacancyWizard";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Request Candidate / Post Vacancy | RiseUp Consultancy",
   robots: {

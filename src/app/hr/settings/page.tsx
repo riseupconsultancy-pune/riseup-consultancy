@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import HrSettingsView from "./HrSettingsView";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "WhatsApp Template Settings | RiseUp Recruiter Portal",
   robots: {

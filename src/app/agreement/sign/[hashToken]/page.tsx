@@ -10,6 +10,8 @@ interface PageProps {
   }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Execute Recruitment Agreement | RiseUp Consultancy",
   robots: {

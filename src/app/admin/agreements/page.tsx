@@ -2,6 +2,8 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import AgreementManager from "./AgreementManager";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminAgreementsPage() {
   const [agreementsData, clientsList] = await Promise.all([
     prisma.clientAgreement.findMany({

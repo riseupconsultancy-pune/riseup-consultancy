@@ -2,6 +2,8 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import HrManager from "./HrManager";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminRecruitersPage() {
   const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
   const startOfToday = new Date();

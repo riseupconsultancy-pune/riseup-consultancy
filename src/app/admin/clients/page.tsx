@@ -2,6 +2,8 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import ClientManager from "./ClientManager";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminClientsPage() {
   const clientsData = await prisma.clientProfile.findMany({
     orderBy: { createdAt: "desc" },

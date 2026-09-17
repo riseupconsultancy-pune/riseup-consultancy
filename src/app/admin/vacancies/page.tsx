@@ -2,6 +2,8 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import VacancyBroadcastHub from "./VacancyBroadcastHub";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminVacanciesPage() {
   const vacanciesData = await prisma.vacancy.findMany({
     orderBy: { createdAt: "desc" },

@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import JobsDirectoryClient, { MinimalistJob } from "./JobsDirectoryClient";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Browse Open Job Vacancies | RiseUp Consultancy Pune & Nigeria",
   description:

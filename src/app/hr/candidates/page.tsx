@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import HrCandidatePipeline from "./HrCandidatePipeline";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Candidate ATS Pipeline | RiseUp Recruiter Portal",
   robots: {
