@@ -85,36 +85,49 @@ export default function Header() {
 
           <div className="flex flex-col min-w-0">
             <div className="flex items-center tracking-tight">
-              <span className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight font-heading">RiseUp</span>
+              <span className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight font-heading">Rise Up</span>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-blue-600 ml-1.5 sm:ml-2 pl-1.5 sm:pl-2 border-l border-slate-300 hidden min-[380px]:inline-block">
                 Consultancy
               </span>
             </div>
-            <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 tracking-wider uppercase hidden sm:inline-block">
-              Staffing & Recruiting Services
+            <span className="text-[9px] sm:text-[10px] font-semibold text-slate-500 tracking-wider uppercase hidden sm:inline-block">
+              Pune – Staffing & Recruiting Services
             </span>
           </div>
         </Link>
 
-        {/* Right: Sharp Square Country & City Dropdown (Mobile-Optimized to prevent screen overflow) */}
-        <div className="relative shrink-0" ref={dropdownRef}>
-          <button
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            className="group flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white transition-all text-left focus:outline-none rounded-none"
+        {/* Right Actions: Direct HR Call Badge + Location Switcher */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Direct HR Call Button (Desktop & Tablet) */}
+          <a
+            href="tel:+919359892819"
+            className="hidden md:inline-flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white text-xs font-semibold text-slate-800 transition-all rounded-none"
+            title="Call Meenakshi Patel (HR Manager)"
           >
-            {selectedCountry.flagComponent}
-            <div className="flex items-center gap-1 text-xs font-semibold text-slate-800">
-              <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600 shrink-0" />
-              <span className="text-[11px] sm:text-xs whitespace-nowrap">{selectedCity}</span>
-              <span className="text-slate-400 font-normal text-[10px] sm:text-xs hidden min-[480px]:inline">({selectedCountry.code})</span>
-            </div>
-            <ChevronDown
-              className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 group-hover:text-slate-900 transition-transform duration-200 shrink-0 ${
-                isOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            <span className="text-slate-500 font-normal">HR Desk:</span>
+            <span className="font-bold text-slate-900">+91 93598 92819</span>
+          </a>
+
+          {/* Location Selector Dropdown */}
+          <div className="relative shrink-0" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="group flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white transition-all text-left focus:outline-none rounded-none"
+            >
+              {selectedCountry.flagComponent}
+              <div className="flex items-center gap-1 text-xs font-semibold text-slate-800">
+                <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600 shrink-0" />
+                <span className="text-[11px] sm:text-xs whitespace-nowrap">{selectedCity}</span>
+                <span className="text-slate-400 font-normal text-[10px] sm:text-xs hidden min-[480px]:inline">({selectedCountry.code})</span>
+              </div>
+              <ChevronDown
+                className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 group-hover:text-slate-900 transition-transform duration-200 shrink-0 ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
 
           {/* Location Dropdown Modal (Constrained strictly to mobile viewport boundaries) */}
           {isOpen && (
@@ -190,6 +203,7 @@ export default function Header() {
         </div>
 
       </div>
-    </header>
+    </div>
+  </header>
   );
 }

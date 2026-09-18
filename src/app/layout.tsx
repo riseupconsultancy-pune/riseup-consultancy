@@ -17,9 +17,19 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "RiseUp Consultancy | Premier Recruitment & Executive Search",
+  title: "Rise Up Consultancy Pune | Staffing & Recruiting Services",
   description:
-    "Strategic talent acquisition and executive search partner connecting high-growth enterprises with verified professionals across India and Nigeria.",
+    "Official website of Rise Up Consultancy Pune. Talent Aligned. Futures Elevated. Pan-India and international staffing solutions specializing in BPO, Voice, Non-Voice, Back Office, and corporate recruitment.",
+  keywords: [
+    "Rise Up Consultancy Pune",
+    "Staffing & Recruiting Services Pune",
+    "BPO Recruitment Pune",
+    "Non-Technical Hiring",
+    "Voice Process Jobs Pune",
+    "Chandan Nagar Pune Recruitment Agency",
+    "Back Office Operations Staffing",
+    "International Staffing Nigeria",
+  ],
 };
 
 export default function RootLayout({
