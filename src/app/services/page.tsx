@@ -120,7 +120,7 @@ export default function ServicesPage() {
   ];
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 selection:bg-blue-600 selection:text-white pb-28 sm:pb-36">
+    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 selection:bg-blue-600 selection:text-white">
       <Header />
 
       {/* Hero Header */}

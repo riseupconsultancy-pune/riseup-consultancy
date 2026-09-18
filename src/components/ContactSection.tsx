@@ -2,6 +2,7 @@
 
 import React from "react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import ContactForm from "./ContactForm";
 import { 
   Phone, 
   Mail, 
@@ -198,6 +199,11 @@ export default function ContactSection() {
             </div>
           </div>
 
+        </div>
+
+        {/* Contact Form */}
+        <div className="mt-12 max-w-4xl mx-auto">
+          <ContactForm />
         </div>
 
       </div>

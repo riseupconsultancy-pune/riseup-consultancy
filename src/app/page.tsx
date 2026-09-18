@@ -41,7 +41,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 selection:bg-blue-600 selection:text-white pb-24 sm:pb-32">
+    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 selection:bg-blue-600 selection:text-white">
       {/* 1. Official Header */}
       <Header />
 

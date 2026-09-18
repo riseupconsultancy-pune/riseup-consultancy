@@ -7,6 +7,7 @@ import FloatingDock from "@/components/FloatingDock";
 import HireModal from "@/components/HireModal";
 import VerificationBadge from "@/components/VerificationBadge";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import ContactForm from "@/components/ContactForm";
 import { 
   Phone, 
   Mail, 
@@ -23,7 +24,7 @@ export default function ContactPage() {
   const [isHireModalOpen, setIsHireModalOpen] = useState(false);
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 selection:bg-blue-600 selection:text-white pb-28 sm:pb-36">
+    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 selection:bg-blue-600 selection:text-white">
       <Header />
 
       {/* Hero Header */}
@@ -256,6 +257,13 @@ export default function ContactPage() {
 
           </div>
 
+        </div>
+      </section>
+
+      {/* 4. Direct Online Contact Form */}
+      <section className="py-12 sm:py-16 bg-white border-b border-slate-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ContactForm />
         </div>
       </section>
 

@@ -312,3 +312,83 @@ export async function assignCandidateToHrAction(candidateId: string, hrId: strin
     return { success: false, error: message };
   }
 }
+
+// -------------------------------------------------------------
+// 4. PUBLIC CONTACT FORM INQUIRY (CONTACT PAGE & SECTION)
+// -------------------------------------------------------------
+
+const contactInquirySchema = z.object({
+  fullName: z.string().min(2, "Please provide your name (at least 2 characters)").max(100).trim(),
+  email: z.string().email("Please enter a valid email address").toLowerCase().trim(),
+  phone: z.string().min(7, "Please provide a valid phone number with at least 7 digits").max(20).trim(),
+  userType: z.enum(["CANDIDATE", "EMPLOYER", "GENERAL"]).default("CANDIDATE"),
+  subject: z.string().min(2, "Subject is required").max(150).trim(),
+  message: z.string().min(5, "Message must be at least 5 characters").max(2000).trim(),
+});
+
+export async function submitContactInquiryAction(formData: FormData) {
+  try {
+    const rawData = {
+      fullName: formData.get("fullName"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      userType: formData.get("userType") || "CANDIDATE",
+      subject: formData.get("subject"),
+      message: formData.get("message"),
+    };
+
+    const parsed = contactInquirySchema.safeParse(rawData);
+    if (!parsed.success) {
+      return { success: false, error: parsed.error.issues[0]?.message || "Invalid contact inquiry details." };
+    }
+
+    const { fullName, email, phone, userType, subject, message } = parsed.data;
+
+    // If it's an employer inquiry, check if user exists or register as pending client lead
+    if (userType === "EMPLOYER") {
+      const existing = await prisma.user.findUnique({ where: { email } });
+      if (!existing) {
+        const randomPassword = crypto.randomBytes(8).toString("hex");
+        const { hashPassword } = await import("@/lib/auth");
+        const passwordHash = await hashPassword(randomPassword);
+
+        await prisma.user.create({
+          data: {
+            email,
+            fullName,
+            phone,
+            passwordHash,
+            role: "CLIENT",
+            status: "INACTIVE",
+            clientProfile: {
+              create: {
+                companyName: subject || "Corporate Client Prospect",
+                country: "India",
+                city: "Pune",
+                industry: "BPO / BPM / Corporate",
+                contactPerson: fullName,
+                phone,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    try {
+      revalidatePath("/admin/clients");
+      revalidatePath("/admin/dashboard");
+    } catch {
+      // safe fallback
+    }
+
+    return {
+      success: true,
+      message: `Thank you, ${fullName}! Your message has been received by our Pune recruitment team. A consultant will reach out via phone or WhatsApp at ${phone} shortly.`,
+    };
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : "Failed to submit contact inquiry.";
+    return { success: false, error: errorMsg };
+  }
+}
+

@@ -89,7 +89,7 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
     selectedCountry !== "All" || selectedExp !== "All" || selectedCategory !== "All" || searchQuery !== "";
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 pb-32">
+    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900">
       <Header />
 
       {/* Main Content Area */}
