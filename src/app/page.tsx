@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import ClientPartners from "@/components/ClientPartners";
 import TrustBanner from "@/components/TrustBanner";
 import SpecializationMatrix from "@/components/SpecializationMatrix";
 import CandidateJourney from "@/components/CandidateJourney";
@@ -49,22 +48,19 @@ export default function HomePage() {
       {/* 2. Executive Hero Section with Official Tagline & Dual CTAs */}
       <Hero onHireClick={handleHireClick} onJobsClick={handleJobsClick} />
 
-      {/* 3. Corporate Hiring Ecosystem (Pune & Mumbai Delivery Corridors) */}
-      <ClientPartners />
-
-      {/* 4. Candidate Placement Pathway (48-Hour Roadmap) */}
+      {/* 3. Candidate Placement Pathway (48-Hour Roadmap) */}
       <CandidateJourney />
 
-      {/* 5. Official Trust & Verification Standards */}
+      {/* 4. Official Trust & Verification Standards */}
       <TrustBanner />
 
-      {/* 6. Key Employment Micro-Markets Across Pune (Kharadi, Magarpatta, Hinjewadi) */}
+      {/* 5. Key Employment Micro-Markets Across Pune (Kharadi, Magarpatta, Hinjewadi) */}
       <PuneHubsMatrix />
 
-      {/* 7. Current Hiring Specialization (BPO & Non-Technical) */}
+      {/* 6. Current Hiring Specialization (BPO & Non-Technical) */}
       <SpecializationMatrix onJobsClick={handleJobsClick} />
 
-      {/* 8. Featured Open Positions */}
+      {/* 7. Featured Open Positions */}
       <section className="py-12 sm:py-16 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
