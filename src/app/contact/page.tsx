@@ -6,12 +6,12 @@ import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
 import HireModal from "@/components/HireModal";
 import VerificationBadge from "@/components/VerificationBadge";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { 
   Phone, 
   Mail, 
   MapPin, 
   Clock, 
-  MessageCircle, 
   ExternalLink, 
   Building2, 
   CalendarCheck,
@@ -130,7 +130,7 @@ export default function ContactPage() {
                 rel="noopener noreferrer"
                 className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors rounded-none"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-4 h-4" />
                 <span>Chat on WhatsApp Directly</span>
               </a>
             </div>

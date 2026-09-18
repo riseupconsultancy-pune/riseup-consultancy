@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, MessageCircle, ArrowUpRight } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 export default function Footer() {
   return (
@@ -21,9 +22,11 @@ export default function Footer() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight font-heading">Rise Up Consultancy</span>
-                <span className="text-[10px] text-blue-400 font-semibold tracking-wider uppercase">
-                  Pune – Staffing & Recruiting Services
+                <span className="text-xl font-black tracking-tight uppercase font-heading">
+                  RISE UP CONSULTANCY
+                </span>
+                <span className="text-[10px] text-blue-400 font-bold tracking-wider uppercase">
+                  Staffing & Recruiting Services
                 </span>
               </div>
             </div>
@@ -43,7 +46,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-3.5 py-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/25 transition-colors rounded-none"
               >
-                <MessageCircle className="w-3.5 h-3.5" />
+                <WhatsAppIcon className="w-3.5 h-3.5 text-emerald-400" />
                 <span>WhatsApp HR</span>
               </a>
 

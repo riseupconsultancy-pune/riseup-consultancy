@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
+import WhatsAppIcon from "./WhatsAppIcon";
 import { 
   Phone, 
   Mail, 
   MapPin, 
   Clock, 
-  MessageCircle, 
   ExternalLink, 
   Building2, 
   ShieldCheck,
@@ -94,7 +94,7 @@ export default function ContactSection() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2.5 w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs tracking-wider uppercase transition-colors rounded-none"
             >
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppIcon className="w-4 h-4" />
               <span>Chat on WhatsApp Directly</span>
             </a>
           </div>

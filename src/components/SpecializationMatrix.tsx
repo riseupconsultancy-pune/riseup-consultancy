@@ -84,19 +84,16 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10 pb-3 border-b border-slate-200">
           <div className="max-w-2xl">
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
-              <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
-                Current Hiring Specialization
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Specialized in High-Volume BPO & Non-Technical Talent
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
+              Core Sourcing Practice
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+              Specialized in High-Volume BPO & Operational Talent
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-slate-600">
-              Purpose-built sourcing pipelines for enterprise BPO, customer care, back office, and operations in Pune and beyond.
+            <p className="mt-1.5 text-xs sm:text-sm text-slate-600">
+              Verified voice, back office, and financial operations talent pipelines for enterprise employers in Pune and pan-India.
             </p>
           </div>
           <Link

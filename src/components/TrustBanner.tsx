@@ -37,19 +37,16 @@ export default function TrustBanner() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header with Authentic Direct Sourcing Badge */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6 pb-3 border-b border-slate-200">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
-              <span className="text-[11px] font-bold uppercase tracking-widest text-blue-600">
-                Official Integrity Standard
-              </span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-              Authentic Direct Sourcing. Uncompromising Integrity.
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
+              Official Integrity Standard
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              Authentic Direct Sourcing • Zero Third-Party Brokers
             </h2>
           </div>
-          <div className="self-start sm:self-auto">
+          <div className="self-start sm:self-auto shrink-0">
             <VerificationBadge label="DIRECT SOURCING" sublabel="PUNE HQ AUDITED" variant="blue" size="md" />
           </div>
         </div>

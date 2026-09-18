@@ -8,6 +8,8 @@ import Hero from "@/components/Hero";
 import ClientPartners from "@/components/ClientPartners";
 import TrustBanner from "@/components/TrustBanner";
 import SpecializationMatrix from "@/components/SpecializationMatrix";
+import CandidateJourney from "@/components/CandidateJourney";
+import PuneHubsMatrix from "@/components/PuneHubsMatrix";
 import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
 import HireModal from "@/components/HireModal";
@@ -47,29 +49,32 @@ export default function HomePage() {
       {/* 2. Executive Hero Section with Official Tagline & Dual CTAs */}
       <Hero onHireClick={handleHireClick} onJobsClick={handleJobsClick} />
 
-      {/* 3. Partner Companies Logo Strip (Requested by User) */}
+      {/* 3. Corporate Hiring Ecosystem (Pune & Mumbai Delivery Corridors) */}
       <ClientPartners />
 
-      {/* 4. Official Trust & Verification Standards with Authentic Direct Sourcing Badge */}
+      {/* 4. Candidate Placement Pathway (48-Hour Roadmap) */}
+      <CandidateJourney />
+
+      {/* 5. Official Trust & Verification Standards */}
       <TrustBanner />
 
-      {/* 5. Current Hiring Specialization (BPO & Non-Technical) with Compact Cards */}
+      {/* 6. Key Employment Micro-Markets Across Pune (Kharadi, Magarpatta, Hinjewadi) */}
+      <PuneHubsMatrix />
+
+      {/* 7. Current Hiring Specialization (BPO & Non-Technical) */}
       <SpecializationMatrix onJobsClick={handleJobsClick} />
 
-      {/* 6. Featured Open Positions (Low Padding p-4 sm:p-5, Zero Company Names, Mobile Horizontal Snap) */}
+      {/* 8. Featured Open Positions */}
       <section className="py-12 sm:py-16 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-3 border-b border-slate-200 gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
-                <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
-                  Active Direct Mandates
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Featured Open Positions
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
+                Active Hiring Mandates
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Featured Pune Vacancies
               </h2>
             </div>
             <Link
@@ -202,13 +207,10 @@ export default function HomePage() {
           <div className="bg-white border border-slate-200 p-5 sm:p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 rounded-none">
             
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
-                <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
-                  Established January 2025 • Pune, India
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700 block mb-1">
+                Established January 2025 • Pune, India
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                 Direct Corporate Staffing Built on Integrity
               </h2>
               <p className="mt-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -260,13 +262,10 @@ export default function HomePage() {
             
             {/* Left: Office & Contact Information */}
             <div className="lg:col-span-7">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
-                <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
-                  Direct Contact & Headquarters
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
+                Direct Contact & Headquarters Desk
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                 Visit Our Pune Office or Speak to HR Directly
               </h2>
               <p className="mt-2 text-xs sm:text-sm text-slate-600">
