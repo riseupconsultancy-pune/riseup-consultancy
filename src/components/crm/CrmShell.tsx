@@ -103,7 +103,7 @@ export default function CrmShell({ user, children }: CrmShellProps) {
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="relative w-7 h-7 rounded-full overflow-hidden border border-slate-700 shrink-0 bg-white">
             <Image
-              src="/images/rise_up_consultancy_pune_logo.jpg"
+              src="/images/rise_up_consultancy_pune_logo.png"
               alt="RiseUp Logo"
               fill
               className="object-cover"
@@ -206,7 +206,7 @@ export default function CrmShell({ user, children }: CrmShellProps) {
           <Link href="/" target="_blank" className="flex items-center gap-3 group focus:outline-none">
             <div className="relative w-9 h-9 rounded-full overflow-hidden border border-slate-700 bg-white shrink-0">
               <Image
-                src="/images/rise_up_consultancy_pune_logo.jpg"
+                src="/images/rise_up_consultancy_pune_logo.png"
                 alt="RiseUp Logo"
                 fill
                 className="object-cover"

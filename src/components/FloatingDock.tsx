@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Home, SearchCheck, Workflow, Handshake, PhoneCall } from "lucide-react";
+import { Home, SearchCheck, Workflow, Users, PhoneCall } from "lucide-react";
 
 interface FloatingDockProps {
   onHireClick?: () => void;
@@ -19,10 +19,10 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { id: "home", label: "Home", mobileLabel: "Home", href: "/", icon: Home },
+  { id: "services", label: "Services", mobileLabel: "Services", href: "/services", icon: Workflow },
   { id: "jobs", label: "Jobs", mobileLabel: "Jobs", href: "/jobs", icon: SearchCheck },
-  { id: "services", label: "Services", mobileLabel: "Services", href: "/#services", icon: Workflow },
-  { id: "hire", label: "Employers", mobileLabel: "Hire", isAction: true, icon: Handshake },
-  { id: "contact", label: "Contact", mobileLabel: "Contact", href: "/#contact", icon: PhoneCall },
+  { id: "about", label: "About", mobileLabel: "About", href: "/about", icon: Users },
+  { id: "contact", label: "Contact", mobileLabel: "Contact", href: "/contact", icon: PhoneCall },
 ];
 
 export default function FloatingDock({ onHireClick }: FloatingDockProps) {
@@ -30,7 +30,10 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
   const pathname = usePathname();
 
   const getActiveTab = () => {
-    if (pathname === "/jobs") return "jobs";
+    if (pathname.startsWith("/services")) return "services";
+    if (pathname.startsWith("/jobs")) return "jobs";
+    if (pathname.startsWith("/about")) return "about";
+    if (pathname.startsWith("/contact")) return "contact";
     return "home";
   };
 
@@ -42,12 +45,7 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
       return;
     }
     if (item.href) {
-      if (item.href.startsWith("/#") && pathname === "/") {
-        const id = item.href.replace("/#", "");
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      } else {
-        router.push(item.href);
-      }
+      router.push(item.href);
     }
   };
 

@@ -75,8 +75,8 @@ export default function LoginForm() {
         <Link href="/" className="inline-flex items-center gap-3 group focus:outline-none mb-4">
           <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-200 shadow-xs bg-white">
             <Image
-              src="/images/rise_up_consultancy_pune_logo.jpg"
-              alt="RiseUp Consultancy Logo"
+              src="/images/rise_up_consultancy_pune_logo.png"
+              alt="Rise Up Consultancy Logo"
               fill
               className="object-cover"
               priority

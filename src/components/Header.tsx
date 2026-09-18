@@ -75,7 +75,7 @@ export default function Header() {
         <Link href="/" className="group flex items-center gap-2 sm:gap-3 focus:outline-none min-w-0">
           <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden border border-slate-200 shadow-xs bg-white shrink-0 group-hover:scale-105 transition-transform duration-200">
             <Image
-              src="/images/rise_up_consultancy_pune_logo.jpg"
+              src="/images/rise_up_consultancy_pune_logo.png"
               alt="Rise Up Consultancy Logo"
               fill
               className="object-cover"
@@ -96,15 +96,42 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Right Actions: Direct HR Call Badge + Location Switcher */}
+        {/* Center Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-slate-700">
+          <Link href="/services" className="hover:text-blue-600 transition-colors">
+            Services
+          </Link>
+          <Link href="/jobs" className="hover:text-blue-600 transition-colors">
+            Jobs
+          </Link>
+          <Link href="/about" className="hover:text-blue-600 transition-colors">
+            About
+          </Link>
+          <Link href="/contact" className="hover:text-blue-600 transition-colors">
+            Contact
+          </Link>
+        </nav>
+
+        {/* Right Actions: LinkedIn + Direct HR Call Badge + Location Switcher */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Official LinkedIn Link */}
+          <a
+            href="https://www.linkedin.com/company/rise-up-consultancy-pune"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 border border-slate-300 hover:border-blue-600 hover:text-blue-600 text-slate-700 transition-all rounded-none"
+            title="Rise Up Consultancy on LinkedIn"
+          >
+            <span className="font-extrabold text-xs">in</span>
+          </a>
+
           {/* Direct HR Call Button (Desktop & Tablet) */}
           <a
             href="tel:+919359892819"
             className="hidden md:inline-flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white text-xs font-semibold text-slate-800 transition-all rounded-none"
             title="Call Meenakshi Patel (HR Manager)"
           >
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-blue-600 rounded-none shrink-0" />
             <span className="text-slate-500 font-normal">HR Desk:</span>
             <span className="font-bold text-slate-900">+91 93598 92819</span>
           </a>

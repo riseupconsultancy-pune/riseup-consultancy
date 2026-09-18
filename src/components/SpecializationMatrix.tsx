@@ -80,64 +80,73 @@ const SPECIALIZATIONS = [
 
 export default function SpecializationMatrix({ onJobsClick }: SpecializationMatrixProps) {
   return (
-    <section className="py-16 sm:py-24 bg-slate-50 border-b border-slate-200 relative">
+    <section className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
-              Current Hiring Specialization
-            </span>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+                Current Hiring Specialization
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              Specialized in High-Volume BPO & Non-Technical Talent
+            </h2>
+            <p className="mt-2 text-xs sm:text-sm text-slate-600">
+              Purpose-built sourcing pipelines for enterprise BPO, customer care, back office, and operations in Pune and beyond.
+            </p>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            Specialized in High-Volume BPO & Non-Technical Talent
-          </h2>
-          <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
-            Rise Up Consultancy operates a purpose-built sourcing infrastructure designed to fulfill enterprise BPO, customer support, back office, and operational staffing mandates with verified turnaround times.
-          </p>
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 hover:text-blue-800 transition-colors self-start sm:self-auto shrink-0 pb-1"
+          >
+            <span>Explore All 13 Sourcing Services</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </Link>
         </div>
 
         {/* 8 Cards: Responsive Grid on Desktop, Horizontal Snap Carousel on Mobile */}
-        <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4 sm:pb-0 gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 sm:pb-0 gap-3.5 sm:grid sm:grid-cols-2 lg:grid-cols-4 -mx-4 px-4 sm:mx-0 sm:px-0">
           {SPECIALIZATIONS.map((spec, idx) => {
             const Icon = spec.icon;
             return (
               <div
                 key={idx}
-                className="snap-start shrink-0 w-[84vw] max-w-[340px] sm:w-auto p-6 bg-white border border-slate-200 hover:border-slate-900 hover:shadow-lg transition-all duration-200 flex flex-col justify-between rounded-none"
+                className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-white border border-slate-200 hover:border-slate-900 hover:shadow-md transition-all duration-200 flex flex-col justify-between rounded-none group"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-11 h-11 bg-slate-50 border border-slate-200 text-blue-600 flex items-center justify-center shrink-0">
-                      <Icon className="w-5 h-5" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-9 h-9 bg-slate-50 border border-slate-200 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      <Icon className="w-4 h-4" />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50 border border-slate-200 px-2 py-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5">
                       {spec.category}
                     </span>
                   </div>
 
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-3">
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 mb-2">
                     {spec.title}
                   </h3>
 
                   {/* Representative Roles List */}
-                  <ul className="space-y-1.5 mb-4">
-                    {spec.roles.map((role, rIdx) => (
-                      <li key={rIdx} className="text-xs text-slate-600 flex items-center gap-2">
+                  <ul className="space-y-1 mb-3">
+                    {spec.roles.slice(0, 3).map((role, rIdx) => (
+                      <li key={rIdx} className="text-xs text-slate-600 flex items-center gap-1.5">
                         <span className="w-1 h-1 bg-blue-600 shrink-0" />
-                        <span>{role}</span>
+                        <span className="truncate">{role}</span>
                       </li>
                     ))}
                   </ul>
 
                   {/* Skill Pill Badges */}
-                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-slate-100">
-                    {spec.tags.map((tag, tIdx) => (
+                  <div className="flex flex-wrap gap-1 pt-2.5 border-t border-slate-100">
+                    {spec.tags.slice(0, 2).map((tag, tIdx) => (
                       <span
                         key={tIdx}
-                        className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5"
+                        className="text-[9px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.5"
                       >
                         {tag}
                       </span>
@@ -147,10 +156,10 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
 
                 <Link
                   href="/jobs"
-                  className="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-900 hover:text-blue-600 transition-colors"
+                  className="mt-4 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-900 hover:text-blue-600 transition-colors"
                 >
                   <span>Explore Openings</span>
-                  <ArrowUpRight className="w-4 h-4" />
+                  <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             );
@@ -158,7 +167,7 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
         </div>
 
         {/* Mobile Swipe Notice */}
-        <div className="flex sm:hidden items-center justify-center gap-1.5 text-[11px] font-semibold text-slate-400 mt-2">
+        <div className="flex sm:hidden items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 mt-2">
           <span>Swipe horizontally to browse all specializations →</span>
         </div>
 
