@@ -28,14 +28,14 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
 
             {/* Primary Brand Lockup: Bigger Official Logo & Corporate Name */}
             <div className="flex items-center gap-4 sm:gap-6 mb-5">
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm bg-white shrink-0">
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 shrink-0">
                 <Image
                   src="/images/rise_up_consultancy_pune_logo.png"
                   alt="Rise Up Consultancy Official Logo"
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   priority
-                  sizes="(max-width: 640px) 64px, (max-width: 1024px) 96px, 112px"
+                  sizes="(max-width: 640px) 80px, (max-width: 1024px) 112px, 128px"
                 />
               </div>
 
