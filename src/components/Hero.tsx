@@ -19,35 +19,33 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
           <div className="lg:col-span-7 flex flex-col justify-center text-left z-10">
             
             {/* Primary Brand Lockup: Bigger Official Logo & Corporate Name */}
-            <div className="flex items-center gap-4 sm:gap-6 mb-6">
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 shrink-0">
+            <div className="flex items-start gap-4 sm:gap-6 lg:gap-8 mb-8">
+              <div className="relative w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 xl:w-44 xl:h-44 shrink-0">
                 <Image
                   src="/images/rise_up_consultancy_pune_logo.png"
                   alt="Rise Up Consultancy Official Logo"
                   fill
                   className="object-contain"
                   priority
-                  sizes="(max-width: 640px) 80px, (max-width: 1024px) 112px, 128px"
+                  sizes="(max-width: 640px) 96px, (max-width: 1024px) 128px, 176px"
                 />
               </div>
 
               <div className="flex flex-col min-w-0">
-                <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900 tracking-tight uppercase font-heading leading-[1.08]">
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-slate-900 tracking-tight uppercase font-heading leading-[1.04]">
                   RISE UP <span className="text-blue-600 block sm:inline">CONSULTANCY</span>
                 </h1>
-                <span className="mt-1 sm:mt-1.5 text-[10px] sm:text-xs lg:text-sm font-extrabold uppercase tracking-widest text-slate-500">
+                <span className="mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base font-extrabold uppercase tracking-widest text-slate-500">
                   Staffing &amp; Recruiting Services
                 </span>
+                <p className="mt-3 text-xs sm:text-sm lg:text-base text-slate-600 font-normal leading-relaxed max-w-xl">
+                  Direct company payroll staffing and verified recruitment across Pune, Pan-India, and international corridors. Connecting ambitious talent with premier organizations with 100% free placement assistance.
+                </p>
               </div>
             </div>
 
-            {/* Grounded Corporate Subtitle */}
-            <p className="text-sm sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
-              Connecting organizations with high-performing BPO, corporate, and non-technical talent. Aligning top talent with verified opportunities across Pune, Pan-India, and global corridors.
-            </p>
-
             {/* Two Square Action Buttons */}
-            <div className="mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               {/* Button 1: Request Talent (Employers) */}
               <button
                 onClick={onHireClick}
