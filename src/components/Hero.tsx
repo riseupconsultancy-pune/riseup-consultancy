@@ -18,16 +18,8 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
           {/* Left Column: Authoritative Editorial & Square Action Buttons */}
           <div className="lg:col-span-7 flex flex-col justify-center text-left z-10">
             
-            {/* Minimalist Top Indicator */}
-            <div className="flex items-center gap-2.5 mb-5 sm:mb-6">
-              <span className="w-2 h-2 bg-blue-600 shrink-0" />
-              <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
-                Est. January 2025 • Pune Headquarters &amp; Global Markets
-              </span>
-            </div>
-
             {/* Primary Brand Lockup: Bigger Official Logo & Corporate Name */}
-            <div className="flex items-center gap-4 sm:gap-6 mb-5">
+            <div className="flex items-center gap-4 sm:gap-6 mb-6">
               <div className="relative w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 shrink-0">
                 <Image
                   src="/images/rise_up_consultancy_pune_logo.png"
@@ -47,14 +39,6 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
                   Staffing &amp; Recruiting Services
                 </span>
               </div>
-            </div>
-
-            {/* Slogan Motto Line (Relocated as a distinct authoritative motto badge) */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-blue-50 border border-blue-200/80 rounded-none w-fit mb-4">
-              <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
-              <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-900 font-heading">
-                Talent Aligned. <span className="text-blue-600">Futures Elevated.</span>
-              </span>
             </div>
 
             {/* Grounded Corporate Subtitle */}
