@@ -19,22 +19,47 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
           <div className="lg:col-span-7 flex flex-col justify-center text-left z-10">
             
             {/* Minimalist Top Indicator */}
-            <div className="flex items-center gap-2.5 mb-6">
+            <div className="flex items-center gap-2.5 mb-5 sm:mb-6">
               <span className="w-2 h-2 bg-blue-600 shrink-0" />
               <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
-                Est. January 2025 • Pune Headquarters & Global Markets
+                Est. January 2025 • Pune Headquarters &amp; Global Markets
               </span>
             </div>
 
-            {/* Main Authoritative Headline with Official Tagline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
-              Talent Aligned.{" "}
-              <span className="text-blue-600">Futures Elevated.</span>
-            </h1>
+            {/* Primary Brand Lockup: Bigger Official Logo & Corporate Name */}
+            <div className="flex items-center gap-4 sm:gap-6 mb-5">
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm bg-white shrink-0">
+                <Image
+                  src="/images/rise_up_consultancy_pune_logo.png"
+                  alt="Rise Up Consultancy Official Logo"
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 640px) 64px, (max-width: 1024px) 96px, 112px"
+                />
+              </div>
 
-            {/* Grounded Corporate Subtitle with Tagline Dual Meaning */}
-            <p className="mt-6 text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
-              <strong className="text-slate-900 font-semibold">Rise Up Consultancy Pune</strong> connects organizations with high-performing BPO, corporate, and non-technical talent. Aligning top talent with opportunity, elevating futures for candidates and businesses.
+              <div className="flex flex-col min-w-0">
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900 tracking-tight uppercase font-heading leading-[1.08]">
+                  RISE UP <span className="text-blue-600 block sm:inline">CONSULTANCY</span>
+                </h1>
+                <span className="mt-1 sm:mt-1.5 text-[10px] sm:text-xs lg:text-sm font-extrabold uppercase tracking-widest text-slate-500">
+                  Staffing &amp; Recruiting Services
+                </span>
+              </div>
+            </div>
+
+            {/* Slogan Motto Line (Relocated as a distinct authoritative motto badge) */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-blue-50 border border-blue-200/80 rounded-none w-fit mb-4">
+              <span className="w-1.5 h-1.5 bg-blue-600 shrink-0" />
+              <span className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-900 font-heading">
+                Talent Aligned. <span className="text-blue-600">Futures Elevated.</span>
+              </span>
+            </div>
+
+            {/* Grounded Corporate Subtitle */}
+            <p className="text-sm sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
+              Connecting organizations with high-performing BPO, corporate, and non-technical talent. Aligning top talent with verified opportunities across Pune, Pan-India, and global corridors.
             </p>
 
             {/* Two Square Action Buttons */}
