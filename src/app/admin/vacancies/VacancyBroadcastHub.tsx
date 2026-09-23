@@ -19,7 +19,8 @@ import {
 import { 
   broadcastVacancyToHRsAction, 
   publishVacancyToWebsiteAction, 
-  toggleVacancyStatusAction 
+  toggleVacancyStatusAction,
+  updateVacancyVenueAction
 } from "@/app/actions/admin-actions";
 
 interface VacancyRecord {
@@ -39,6 +40,11 @@ interface VacancyRecord {
   salaryCurrency: string;
   headcount: number;
   availabilityRequired: string;
+  interviewVenue?: string | null;
+  interviewLocationUrl?: string | null;
+  interviewContactPerson?: string | null;
+  interviewContactPhone?: string | null;
+  interviewInstructions?: string | null;
   status: string;
   isBroadcastedToHR: boolean;
   isPostedOnWebsite: boolean;
@@ -55,6 +61,66 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  // Venue Edit Modal State
+  const [editingVenueVacancy, setEditingVenueVacancy] = useState<VacancyRecord | null>(null);
+  const [venueForm, setVenueForm] = useState({
+    interviewVenue: "",
+    interviewLocationUrl: "",
+    interviewContactPerson: "",
+    interviewContactPhone: "",
+    interviewInstructions: "",
+  });
+  const [isSavingVenue, setIsSavingVenue] = useState(false);
+
+  const handleOpenVenueModal = (v: VacancyRecord) => {
+    setEditingVenueVacancy(v);
+    setVenueForm({
+      interviewVenue: v.interviewVenue || "",
+      interviewLocationUrl: v.interviewLocationUrl || "",
+      interviewContactPerson: v.interviewContactPerson || "",
+      interviewContactPhone: v.interviewContactPhone || "",
+      interviewInstructions: v.interviewInstructions || "",
+    });
+  };
+
+  const handleSaveVenue = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingVenueVacancy) return;
+    setIsSavingVenue(true);
+    setActionError(null);
+
+    const res = await updateVacancyVenueAction({
+      vacancyId: editingVenueVacancy.id,
+      interviewVenue: venueForm.interviewVenue,
+      interviewLocationUrl: venueForm.interviewLocationUrl || null,
+      interviewContactPerson: venueForm.interviewContactPerson || null,
+      interviewContactPhone: venueForm.interviewContactPhone || null,
+      interviewInstructions: venueForm.interviewInstructions || null,
+    });
+
+    setIsSavingVenue(false);
+    if (res.success && res.vacancy) {
+      setVacancies((prev) =>
+        prev.map((v) =>
+          v.id === editingVenueVacancy.id
+            ? {
+                ...v,
+                interviewVenue: res.vacancy.interviewVenue,
+                interviewLocationUrl: res.vacancy.interviewLocationUrl,
+                interviewContactPerson: res.vacancy.interviewContactPerson,
+                interviewContactPhone: res.vacancy.interviewContactPhone,
+                interviewInstructions: res.vacancy.interviewInstructions,
+              }
+            : v
+        )
+      );
+      setEditingVenueVacancy(null);
+      setActionSuccess("Interview venue & GPS navigation details updated successfully!");
+    } else {
+      setActionError(res.error || "Failed to update interview venue.");
+    }
+  };
 
   const filtered = vacancies.filter((v) => {
     const matchesSearch =
@@ -240,6 +306,45 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                         <strong>Availability:</strong> {v.availabilityRequired}
                       </span>
                     </div>
+
+                    {/* Interview Venue & Location Pill */}
+                    {v.interviewVenue ? (
+                      <div className="flex items-center gap-2 text-xs pt-1.5 flex-wrap">
+                        <span className="inline-flex items-center gap-1 font-medium text-slate-800 bg-slate-50 px-2.5 py-1 border border-slate-200 rounded-none">
+                          <MapPin className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                          <strong className="text-[11px] text-slate-600 uppercase">Venue:</strong>
+                          <span className="line-clamp-1">{v.interviewVenue}</span>
+                        </span>
+                        {v.interviewLocationUrl && (
+                          <a
+                            href={v.interviewLocationUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 hover:text-blue-900 bg-blue-50 border border-blue-200 px-2 py-1 rounded-none"
+                          >
+                            <span>Google Maps ↗</span>
+                          </a>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleOpenVenueModal(v)}
+                          className="text-[11px] font-bold text-slate-600 hover:text-slate-900 underline"
+                        >
+                          Edit Venue
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="pt-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenVenueModal(v)}
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-none hover:bg-amber-100"
+                        >
+                          <MapPin className="w-3 h-3" />
+                          <span>+ Add Interview Venue & GPS Link</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Right Column: Sourcing Stats & Distribution Controls */}
@@ -306,6 +411,119 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
           })
         )}
       </div>
+
+      {/* MODAL: Edit Interview Venue & GPS Link */}
+      {editingVenueVacancy && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="relative w-full max-w-lg bg-white rounded-none shadow-2xl border border-slate-300 p-4 sm:p-6">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-5 h-5 text-blue-600" />
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 font-heading">
+                    Edit Interview Venue & GPS Location
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    {editingVenueVacancy.jobId}: {editingVenueVacancy.title} &bull; {editingVenueVacancy.companyName}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setEditingVenueVacancy(null)}
+                className="p-2 text-slate-400 hover:text-slate-700 rounded-none min-h-[44px] min-w-[44px] flex items-center justify-center"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveVenue} className="space-y-3.5 mt-4 text-xs">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                  Physical Interview Venue Address *
+                </label>
+                <textarea
+                  required
+                  rows={2}
+                  value={venueForm.interviewVenue}
+                  onChange={(e) => setVenueForm({ ...venueForm, interviewVenue: e.target.value })}
+                  placeholder="e.g. Digitide Business Solutions, 4th Floor, Cerebrum IT Park, Kalyani Nagar, Pune - 411014"
+                  className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                  Google Maps Location URL (GPS Link)
+                </label>
+                <input
+                  type="url"
+                  value={venueForm.interviewLocationUrl}
+                  onChange={(e) => setVenueForm({ ...venueForm, interviewLocationUrl: e.target.value })}
+                  placeholder="e.g. https://maps.app.goo.gl/abcdef123"
+                  className="w-full px-3 py-2 rounded-none border border-slate-300 font-mono text-slate-900 outline-none min-h-[44px]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Reception / SPOC Person
+                  </label>
+                  <input
+                    type="text"
+                    value={venueForm.interviewContactPerson}
+                    onChange={(e) => setVenueForm({ ...venueForm, interviewContactPerson: e.target.value })}
+                    placeholder="e.g. Ms. Pooja Sharma"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Arrival Contact Phone
+                  </label>
+                  <input
+                    type="text"
+                    value={venueForm.interviewContactPhone}
+                    onChange={(e) => setVenueForm({ ...venueForm, interviewContactPhone: e.target.value })}
+                    placeholder="e.g. +91 98765 43210"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                  Candidate Instructions / Gate Notes
+                </label>
+                <input
+                  type="text"
+                  value={venueForm.interviewInstructions}
+                  onChange={(e) => setVenueForm({ ...venueForm, interviewInstructions: e.target.value })}
+                  placeholder="e.g. Carry 2 CV hard copies, mention RiseUp Consultancy at the security gate"
+                  className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
+                />
+              </div>
+
+              <div className="pt-3 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingVenueVacancy(null)}
+                  className="px-4 py-2.5 rounded-none border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold uppercase tracking-wider min-h-[44px]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSavingVenue}
+                  className="px-5 py-2.5 rounded-none bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-wider shadow-2xs transition-colors min-h-[44px]"
+                >
+                  {isSavingVenue ? "Saving..." : "Save Venue & GPS Link"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -21,22 +21,47 @@ interface HrSettingsViewProps {
   currentTemplate?: string | null;
 }
 
-const DEFAULT_TEMPLATE = `Hello {candidate_name}, this is {recruiter_name} from RiseUp Consultancy regarding your application for {job_title} ({work_city}).
+const DEFAULT_TEMPLATE = `Dear {candidate_name},
 
-We have reviewed your profile and would like to schedule you for an interview. 
+Congratulations! You have been shortlisted for an interview with {company_name} for the position of *{job_title}* (Job ID: *{job_id}*).
 
-*Mandatory Referral Code at Interview:*
-{referral_tag}
+📅 *Interview Date & Time:*
+{interview_date}
 
-Please reply to confirm your availability.`;
+📍 *Interview Venue:*
+{interview_venue}
+
+🗺️ *Google Maps GPS Location:*
+{venue_location_url}
+
+👤 *Contact Person / SPOC:* {contact_person}
+📞 *Contact Phone:* {contact_phone}
+
+⚠️ *Important Instructions:*
+1. Kindly call {contact_phone} once you reach the venue.
+2. At the company reception desk, please don't forget to mention *RiseUp Consultancy* as your consultancy referral.
+3. Carry 2 printed hard copies of your updated resume and a valid Government Photo ID.
+{interview_instructions}
+
+Best of luck!
+— {recruiter_name} | RiseUp Consultancy
+📞 {recruiter_phone}`;
 
 const PLACEHOLDERS = [
   { tag: "{candidate_name}", label: "Candidate Name" },
   { tag: "{job_title}", label: "Job Title" },
-  { tag: "{work_city}", label: "Work City" },
+  { tag: "{job_id}", label: "Job ID" },
   { tag: "{company_name}", label: "Company Name" },
-  { tag: "{recruiter_name}", label: "Your Name" },
-  { tag: "{referral_tag}", label: "Official Referral Tag" },
+  { tag: "{work_city}", label: "Work City" },
+  { tag: "{interview_date}", label: "Interview Date & Time" },
+  { tag: "{interview_venue}", label: "Interview Venue" },
+  { tag: "{venue_location_url}", label: "Google Maps URL" },
+  { tag: "{contact_person}", label: "On-site SPOC" },
+  { tag: "{contact_phone}", label: "Contact Phone" },
+  { tag: "{recruiter_name}", label: "Recruiter Name" },
+  { tag: "{recruiter_phone}", label: "Recruiter Phone" },
+  { tag: "{referral_tag}", label: "Referral Code" },
+  { tag: "{interview_instructions}", label: "Candidate Notes" },
 ];
 
 export default function HrSettingsView({
@@ -84,9 +109,17 @@ export default function HrSettingsView({
   const previewText = template
     .replace(/{candidate_name}/g, "Rahul Sharma")
     .replace(/{recruiter_name}/g, recruiterName)
+    .replace(/{recruiter_phone}/g, "+91 98765 43210")
     .replace(/{job_title}/g, "Customer Support Specialist")
+    .replace(/{job_id}/g, "RUP-JOB-1002")
     .replace(/{work_city}/g, "Pune HQ")
-    .replace(/{company_name}/g, "Apex Global Solutions")
+    .replace(/{company_name}/g, "Digitide Business Solutions")
+    .replace(/{interview_date}/g, "Thu, 24 Sep 2026, 10:30 AM")
+    .replace(/{interview_venue}/g, "4th Floor, Cerebrum IT Park, Kalyani Nagar, Pune - 411014")
+    .replace(/{venue_location_url}/g, "https://maps.app.goo.gl/sample123")
+    .replace(/{contact_person}/g, "Sneha Deshmukh (HR Manager)")
+    .replace(/{contact_phone}/g, "+91 91234 56789")
+    .replace(/{interview_instructions}/g, "Dress Code: Formal attire. Report 15 minutes before slot.")
     .replace(/{referral_tag}/g, `Referral: ${recruiterName} | RiseUp Consultancy`);
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Upload, FileText, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { X, Upload, FileText, CheckCircle2, AlertCircle, Loader2, Sparkles, Check } from "lucide-react";
 import { applyDirectJobAction } from "@/app/actions/public-actions";
 
 interface ApplyModalProps {
@@ -10,6 +10,36 @@ interface ApplyModalProps {
   jobTitle?: string;
   vacancyId?: string;
 }
+
+const QUALIFICATIONS = [
+  "Any Graduate",
+  "B.Com / BBA / BBM",
+  "B.Sc / BCA / BCS",
+  "B.E. / B.Tech / Engineering",
+  "Postgraduate / MBA / MCA",
+  "Undergraduate / Pursuing Graduation",
+  "12th Pass / Higher Secondary",
+  "Diploma Holder",
+];
+
+const EXPERIENCES = [
+  "Fresher (0 Months)",
+  "0 - 6 Months",
+  "6 Months - 1 Year",
+  "1 - 2 Years",
+  "2 - 3 Years",
+  "3 - 5 Years",
+  "5+ Years",
+];
+
+const CROSS_ROLES = [
+  "Voice BPO / Inbound & Outbound Calling",
+  "Non-Voice BPO / Email & Chat Support",
+  "Back Office Operations / Data Entry",
+  "Customer Support / Relationship Management",
+  "IT Helpdesk / Technical Support",
+  "Administrative / Front Desk Operations",
+];
 
 export default function ApplyModal({
   isOpen,
@@ -27,11 +57,28 @@ export default function ApplyModal({
     fullName: "",
     email: "",
     phone: "",
-    location: "Pune",
-    experience: "1-3 years",
+    country: "India" as "India" | "Nigeria",
+    city: "Pune",
+    qualification: "Any Graduate",
+    totalExperience: "Fresher (0 Months)",
+    availability: "Immediate Joiner" as "Immediate Joiner" | "15 Days" | "30 Days",
   });
 
+  const [interestedRoles, setInterestedRoles] = useState<string[]>([]);
+
   if (!isOpen) return null;
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrorMessage(null);
+  };
+
+  const handleRoleToggle = (role: string) => {
+    setInterestedRoles((prev) =>
+      prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role]
+    );
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileError("");
@@ -43,7 +90,7 @@ export default function ApplyModal({
     }
 
     if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-      setFileError("Only PDF documents are accepted.");
+      setFileError("Only PDF documents (.pdf) are accepted.");
       setResumeFile(null);
       return;
     }
@@ -63,8 +110,18 @@ export default function ApplyModal({
     e.preventDefault();
     setErrorMessage(null);
 
+    if (!formData.fullName.trim() || formData.fullName.trim().length < 2) {
+      setErrorMessage("Please enter your full legal name.");
+      return;
+    }
+
+    if (!formData.city.trim()) {
+      setErrorMessage("Please specify your current city.");
+      return;
+    }
+
     if (!resumeFile) {
-      setFileError("Please attach your PDF resume to continue.");
+      setFileError("Please attach your PDF resume to complete the application.");
       return;
     }
 
@@ -75,8 +132,12 @@ export default function ApplyModal({
       data.append("fullName", formData.fullName.trim());
       data.append("email", formData.email.trim().toLowerCase());
       data.append("phone", formData.phone.trim());
-      data.append("location", formData.location.trim());
-      data.append("experience", formData.experience);
+      data.append("country", formData.country);
+      data.append("city", formData.city.trim());
+      data.append("qualification", formData.qualification);
+      data.append("totalExperience", formData.totalExperience);
+      data.append("availability", formData.availability);
+      data.append("interestedRoles", JSON.stringify(interestedRoles));
       data.append("jobTitle", jobTitle);
       if (vacancyId) {
         data.append("vacancyId", vacancyId);
@@ -106,13 +167,13 @@ export default function ApplyModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-white border border-slate-300 shadow-2xl p-6 sm:p-8 rounded-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+      <div className="relative w-full max-w-2xl bg-white border border-slate-300 shadow-2xl p-5 sm:p-7 rounded-none max-h-[92vh] overflow-y-auto">
         {/* Close Button */}
         <button
           type="button"
           onClick={handleResetAndClose}
-          className="absolute top-5 right-5 w-8 h-8 bg-slate-100 text-slate-700 hover:text-white hover:bg-slate-900 flex items-center justify-center transition-colors rounded-none"
+          className="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-700 hover:text-white hover:bg-slate-900 flex items-center justify-center transition-colors rounded-none cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
@@ -129,27 +190,27 @@ export default function ApplyModal({
               <h3 className="text-2xl font-extrabold text-slate-900 mt-3 font-heading">
                 Application Registered!
               </h3>
-              <p className="mt-2 text-xs text-slate-600 max-w-xs mx-auto leading-relaxed">
-                Your profile has been delivered to the RiseUp recruitment team for screening. You will be contacted via WhatsApp for interview scheduling.
+              <p className="mt-2 text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
+                Your unified profile and resume have been delivered directly to the RiseUp recruitment team for immediate screening. Our team will contact you via WhatsApp for interview scheduling.
               </p>
             </div>
             <div className="pt-2">
               <button
                 type="button"
                 onClick={handleResetAndClose}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none"
+                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
               >
-                Close Window
+                Done
               </button>
             </div>
           </div>
         ) : (
           <div>
-            <div className="mb-5">
+            <div className="mb-5 pr-8">
               <span className="inline-block px-2.5 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest mb-2 rounded-none">
-                100% Free Placement Intake
+                100% Free Candidate Placement
               </span>
-              <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight font-heading">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight font-heading">
                 Apply for Position
               </h2>
               <p className="text-xs font-semibold text-blue-700 mt-0.5">{jobTitle}</p>
@@ -163,32 +224,20 @@ export default function ApplyModal({
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Full Legal Name <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  required
-                  type="text"
-                  placeholder="e.g. Rahul Sharma"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Row 1: Legal Name & Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    Email Address <span className="text-rose-500">*</span>
+                    Full Legal Name <span className="text-rose-500">*</span>
                   </label>
                   <input
                     required
-                    type="email"
-                    placeholder="name@domain.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                    type="text"
+                    name="fullName"
+                    placeholder="e.g. Rahul Sharma"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
                   />
                 </div>
 
@@ -199,43 +248,142 @@ export default function ApplyModal({
                   <input
                     required
                     type="tel"
-                    placeholder="e.g. 9822011223"
+                    name="phone"
+                    placeholder="e.g. +91 98220 11223"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Row 2: Email & Country */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    Current Location / City <span className="text-rose-500">*</span>
+                    Email Address <span className="text-rose-500">*</span>
                   </label>
                   <input
                     required
-                    type="text"
-                    placeholder="e.g. Pune / Mumbai / Lagos"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                    type="email"
+                    name="email"
+                    placeholder="name@domain.com"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    Experience Level
+                    Country <span className="text-rose-500">*</span>
                   </label>
                   <select
-                    value={formData.experience}
-                    onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
                   >
-                    <option value="Fresher (0-1 year)">Fresher (0-1 year)</option>
-                    <option value="1-3 years">1-3 years</option>
-                    <option value="3-5 years">3-5 years</option>
-                    <option value="5+ years">5+ years</option>
+                    <option value="India">India</option>
+                    <option value="Nigeria">Nigeria</option>
                   </select>
+                </div>
+              </div>
+
+              {/* Row 3: City & Qualification */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Current City / Location <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    name="city"
+                    placeholder="e.g. Pune, Mumbai, Lagos..."
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Highest Qualification <span className="text-rose-500">*</span>
+                  </label>
+                  <select
+                    name="qualification"
+                    value={formData.qualification}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                  >
+                    {QUALIFICATIONS.map((q) => (
+                      <option key={q} value={q}>{q}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 4: Total Experience & Availability */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Total Experience <span className="text-rose-500">*</span>
+                  </label>
+                  <select
+                    name="totalExperience"
+                    value={formData.totalExperience}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                  >
+                    {EXPERIENCES.map((exp) => (
+                      <option key={exp} value={exp}>{exp}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Joining Notice Period <span className="text-rose-500">*</span>
+                  </label>
+                  <select
+                    name="availability"
+                    value={formData.availability}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                  >
+                    <option value="Immediate Joiner">Immediate Joiner (0 to 7 Days)</option>
+                    <option value="15 Days">Within 15 Days</option>
+                    <option value="30 Days">30 Days Notice Period</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Cross Domain Interested Roles */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+                  <span>Cross-Domain Interested Roles (Optional)</span>
+                  <span className="text-[10px] text-slate-400 font-normal lowercase">select multiple to expand matching</span>
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {CROSS_ROLES.map((role) => {
+                    const isSelected = interestedRoles.includes(role);
+                    return (
+                      <button
+                        key={role}
+                        type="button"
+                        onClick={() => handleRoleToggle(role)}
+                        className={`text-left p-2 border text-[11px] font-medium transition-all rounded-none flex items-center justify-between cursor-pointer ${
+                          isSelected
+                            ? "bg-blue-50 border-blue-600 text-blue-900 font-semibold"
+                            : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
+                        }`}
+                      >
+                        <span className="truncate pr-1">{role}</span>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -259,13 +407,13 @@ export default function ApplyModal({
                     <button
                       type="button"
                       onClick={() => setResumeFile(null)}
-                      className="p-1 text-slate-400 hover:text-slate-700"
+                      className="p-1 text-slate-400 hover:text-slate-700 cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-300 hover:border-blue-600 bg-slate-50 hover:bg-blue-50/20 cursor-pointer transition-colors rounded-none">
+                  <label className="flex flex-col items-center justify-center p-3.5 border-2 border-dashed border-slate-300 hover:border-blue-600 bg-slate-50 hover:bg-blue-50/20 cursor-pointer transition-colors rounded-none">
                     <Upload className="w-5 h-5 text-slate-400 mb-1" />
                     <span className="text-xs font-bold text-slate-700">Choose PDF Document</span>
                     <span className="text-[10px] text-slate-400 mt-0.5">Strictly up to 2.0 MB</span>
@@ -285,12 +433,12 @@ export default function ApplyModal({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Verifying & Submitting...</span>
+                      <span>Submitting Unified Profile...</span>
                     </>
                   ) : (
                     <span>Submit Free Application</span>

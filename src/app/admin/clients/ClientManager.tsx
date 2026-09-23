@@ -52,6 +52,8 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
   // Form State for New Client
   const [country, setCountry] = useState("India");
   const [city, setCity] = useState(SERVING_CITIES["India"][0]);
+  const [isCustomCity, setIsCustomCity] = useState(false);
+  const [customCity, setCustomCity] = useState("");
 
   const filteredClients = clients.filter(
     (c) =>
@@ -63,7 +65,9 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
 
   const handleCountryChange = (newCountry: string) => {
     setCountry(newCountry);
-    setCity(SERVING_CITIES[newCountry][0]);
+    setCity(SERVING_CITIES[newCountry]?.[0] || "");
+    setIsCustomCity(false);
+    setCustomCity("");
   };
 
   const handleCreateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -72,10 +76,17 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
     setActionSuccess(null);
     setIsSubmitting(true);
 
+    const finalCity = isCustomCity ? customCity.trim() : city.trim();
+    if (!finalCity) {
+      setActionError("Please provide or select an operating city.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const formData = new FormData(e.currentTarget);
       formData.set("country", country);
-      formData.set("city", city);
+      formData.set("city", finalCity);
 
       const res = await createClientAction(formData);
       if (!res.success) {
@@ -311,18 +322,50 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Operating City *
-                  </label>
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-3 py-2.5 text-xs bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-none outline-none"
-                  >
-                    {SERVING_CITIES[country].map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                      Operating City *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCustomCity(!isCustomCity);
+                        if (!isCustomCity) setCustomCity("");
+                      }}
+                      className="text-[10px] font-bold text-blue-600 hover:text-blue-800 uppercase tracking-wider cursor-pointer"
+                    >
+                      {isCustomCity ? "Choose from list" : "+ Add New City"}
+                    </button>
+                  </div>
+
+                  {isCustomCity ? (
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Nagpur, Nashik, Ibadan..."
+                      value={customCity}
+                      onChange={(e) => setCustomCity(e.target.value)}
+                      className="w-full px-3 py-2.5 text-xs bg-white border border-blue-500 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-none outline-none font-medium"
+                    />
+                  ) : (
+                    <select
+                      value={city}
+                      onChange={(e) => {
+                        if (e.target.value === "__CUSTOM__") {
+                          setIsCustomCity(true);
+                          setCustomCity("");
+                        } else {
+                          setCity(e.target.value);
+                        }
+                      }}
+                      className="w-full px-3 py-2.5 text-xs bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 rounded-none outline-none"
+                    >
+                      {SERVING_CITIES[country]?.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                      <option value="__CUSTOM__">+ Enter New City Manually...</option>
+                    </select>
+                  )}
                 </div>
               </div>
 

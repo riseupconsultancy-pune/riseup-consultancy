@@ -100,6 +100,11 @@ export default async function JobsPage() {
       expMin: true,
       expMax: true,
       requirements: true,
+      description: true,
+      salaryMin: true,
+      salaryMax: true,
+      salaryCurrency: true,
+      createdAt: true,
     },
     orderBy: { createdAt: "desc" },
   });
@@ -125,27 +130,44 @@ export default async function JobsPage() {
       expMin: v.expMin,
       expMax: v.expMax,
       skills: extractedSkills.length > 0 ? extractedSkills : [v.category],
+      description: v.description,
+      salaryMin: v.salaryMin,
+      salaryMax: v.salaryMax,
+      salaryCurrency: v.salaryCurrency,
+      createdAt: v.createdAt.toISOString(),
     };
   });
 
   const jobsToDisplay = formattedDbJobs.length > 0 ? formattedDbJobs : FALLBACK_JOBS;
 
-  // JSON-LD structured data for Google Jobs
+  // JSON-LD structured data for Google Jobs, Indeed, LinkedIn, Naukri automated scrapers
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    itemListElement: jobsToDisplay.slice(0, 10).map((job, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      item: {
+    itemListElement: jobsToDisplay.slice(0, 20).map((job, index) => {
+      const datePosted = job.createdAt
+        ? new Date(job.createdAt).toISOString().split("T")[0]
+        : new Date().toISOString().split("T")[0];
+      const validThroughDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0];
+
+      const jobPostingItem: Record<string, any> = {
         "@type": "JobPosting",
         title: job.title,
-        description: `Apply for ${job.title} in ${job.city}, ${job.country}. Free placement service by RiseUp Consultancy.`,
-        datePosted: "2026-09-01",
+        description:
+          job.description ||
+          `Immediate opening for ${job.title} in ${job.city}, ${job.country}. Free placement assistance provided by RiseUp Consultancy. Candidate requirements: ${job.skills.join(
+            ", "
+          )}.`,
+        datePosted,
+        validThrough: validThroughDate,
         employmentType: "FULL_TIME",
+        directApply: true,
         hiringOrganization: {
           "@type": "Organization",
           name: "RiseUp Consultancy Client Partner",
+          sameAs: "https://riseupconsultancy.in",
         },
         jobLocation: {
           "@type": "Place",
@@ -155,8 +177,27 @@ export default async function JobsPage() {
             addressCountry: job.country === "Nigeria" ? "NG" : "IN",
           },
         },
-      },
-    })),
+      };
+
+      if (job.salaryMin || job.salaryMax) {
+        jobPostingItem.baseSalary = {
+          "@type": "MonetaryAmount",
+          currency: job.salaryCurrency || (job.country === "Nigeria" ? "NGN" : "INR"),
+          value: {
+            "@type": "QuantitativeValue",
+            minValue: job.salaryMin || 0,
+            maxValue: job.salaryMax || job.salaryMin || 0,
+            unitText: "YEAR",
+          },
+        };
+      }
+
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        item: jobPostingItem,
+      };
+    }),
   };
 
   return (
@@ -165,7 +206,9 @@ export default async function JobsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <JobsDirectoryClient initialJobs={jobsToDisplay} />
+      <React.Suspense fallback={<div className="min-h-screen bg-[#f8fafc]" />}>
+        <JobsDirectoryClient initialJobs={jobsToDisplay} />
+      </React.Suspense>
     </>
   );
 }

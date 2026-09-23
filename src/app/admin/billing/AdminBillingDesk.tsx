@@ -25,7 +25,9 @@ import {
   Settings,
   Percent,
   PlusCircle,
-  Trash2
+  Trash2,
+  Briefcase,
+  ChevronDown
 } from "lucide-react";
 import { 
   generateInvoiceAction,
@@ -61,8 +63,16 @@ export interface AdminCandidateBillingItem {
 export interface ClientSelectItem {
   id: string;
   companyName: string;
+  city?: string;
+  country?: string;
+  contactPerson?: string | null;
+  phone?: string | null;
   billingAddress: string | null;
   billingGstin: string | null;
+  billingPan?: string | null;
+  billingContactPerson?: string | null;
+  billingEmail?: string | null;
+  billingPhone?: string | null;
 }
 
 export interface ConsultancyConfigData {
@@ -273,6 +283,7 @@ export default function AdminBillingDesk({
       const newInv: InvoiceData = {
         id: res.invoice.id,
         invoiceNumber: res.invoice.invoiceNumber,
+        clientId: res.invoice.clientId,
         invoiceDate: formatDateStr(res.invoice.invoiceDate) || "",
         dueDate: formatDateStr(res.invoice.dueDate),
         terms: res.invoice.terms,
@@ -442,10 +453,25 @@ export default function AdminBillingDesk({
     }
   };
 
-  // Filter candidates
-  const filteredCandidates = candidates.filter((c) => {
-    if (selectedClientFilter !== "ALL" && c.clientId !== selectedClientFilter) return false;
+  // Client Selection logic
+  const selectedClient = clients.find((c) => c.id === selectedClientFilter);
 
+  // Relevant Candidates (client-filtered)
+  const clientCandidates = selectedClientFilter === "ALL"
+    ? candidates
+    : candidates.filter((c) => c.clientId === selectedClientFilter);
+
+  // Relevant Invoices (client-filtered)
+  const clientInvoices = selectedClientFilter === "ALL"
+    ? invoices
+    : invoices.filter((inv) => 
+        inv.clientId 
+          ? inv.clientId === selectedClientFilter 
+          : (selectedClient ? inv.clientName.toLowerCase().includes(selectedClient.companyName.toLowerCase()) : true)
+      );
+
+  // Filtered candidates for table/cards based on search and status
+  const filteredCandidates = clientCandidates.filter((c) => {
     const matchesSearch =
       c.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.clientCompanyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -460,62 +486,64 @@ export default function AdminBillingDesk({
     return true;
   });
 
-  const pendingCount = candidates.filter((c) => c.billingInfoStatus === "PENDING_INFO").length;
-  const submittedCount = candidates.filter((c) => c.billingInfoStatus === "INFO_SUBMITTED").length;
-  const invoicedCount = candidates.filter((c) => c.billingInfoStatus === "INVOICED").length;
+  // Client / Global Metrics
+  const totalSelectedCount = clientCandidates.length;
+  const pendingCount = clientCandidates.filter((c) => c.billingInfoStatus === "PENDING_INFO").length;
+  const submittedCount = clientCandidates.filter((c) => c.billingInfoStatus === "INFO_SUBMITTED").length;
+  const invoicedCount = clientCandidates.filter((c) => c.billingInfoStatus === "INVOICED").length;
+
+  const totalInvoicedSum = clientInvoices.reduce((sum, inv) => sum + (inv.grandTotal || 0), 0);
+  const totalBalanceDue = clientInvoices.reduce((sum, inv) => sum + (inv.balanceDue || (inv.status === "PAID" ? 0 : inv.grandTotal)), 0);
+  const totalPaidSum = clientInvoices.filter((inv) => inv.status === "PAID").reduce((sum, inv) => sum + (inv.grandTotal || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Toast Notification */}
       {notification && (
         <div
-          className={`p-4 rounded-xl flex items-center justify-between shadow-md transition ${
+          className={`p-3.5 rounded-none flex items-center justify-between border-l-4 shadow-2xs transition ${
             notification.type === "success"
-              ? "bg-emerald-50 border border-emerald-200 text-emerald-900"
-              : "bg-rose-50 border border-rose-200 text-rose-900"
+              ? "bg-emerald-50 border-emerald-600 text-emerald-900"
+              : "bg-rose-50 border-rose-600 text-rose-900"
           }`}
         >
           <div className="flex items-center space-x-2">
             {notification.type === "success" ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-rose-600" />
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
             )}
-            <span className="text-sm font-semibold">{notification.message}</span>
+            <span className="text-xs font-bold">{notification.message}</span>
           </div>
-          <button onClick={() => setNotification(null)} className="text-slate-400 hover:text-slate-700">
+          <button onClick={() => setNotification(null)} className="text-slate-400 hover:text-slate-700 p-1">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* Header Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
-              <Receipt className="w-6 h-6" />
+      {/* Top Header Banner */}
+      <div className="bg-white rounded-none border border-slate-200 p-4 sm:p-6 shadow-2xs space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div className="flex items-center space-x-2 mb-1">
+              <Receipt className="w-4 h-4 text-blue-600" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Super Admin Invoicing Control
+              </span>
             </div>
-            <div>
-              <div className="flex items-center space-x-3">
-                <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-                  Invoicing & Placement Billing Desk
-                </h1>
-                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-900 text-white">
-                  Super Admin
-                </span>
-              </div>
-              <p className="text-sm text-slate-600 mt-1">
-                Generate official billing invoices matching the exact format of <code>invoice_format.docx</code> with automated tax calculations and live Word (.docx) export.
-              </p>
-            </div>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-heading">
+              Invoicing & Placement Billing Desk
+            </h1>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Generate official billing invoices matching <code>invoice_format.docx</code> with automated tax calculations and live Word (.docx) export.
+            </p>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2">
             {selectedCandidateIds.length > 0 && (
               <button
                 onClick={handleOpenGenerateModal}
-                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition animate-pulse"
+                className="inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-none bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider shadow-2xs transition-colors min-h-[44px]"
               >
                 <PlusCircle className="w-4 h-4" />
                 <span>Generate Invoice ({selectedCandidateIds.length})</span>
@@ -523,163 +551,283 @@ export default function AdminBillingDesk({
             )}
           </div>
         </div>
+
+        {/* PRIMARY CLIENT SELECTOR & MULTI-CLIENT PROFILE WIDGET */}
+        <div className="bg-slate-50 border border-slate-200 rounded-none p-3.5 sm:p-4 text-xs space-y-3">
+          {/* Dropdown Selector Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+            <div className="flex items-center space-x-2">
+              <Building2 className="w-4 h-4 text-blue-600 shrink-0" />
+              <span className="font-bold text-slate-800 uppercase tracking-wider text-[11px]">
+                Filter by Corporate Client:
+              </span>
+            </div>
+
+            <div className="relative w-full sm:w-80">
+              <select
+                value={selectedClientFilter}
+                onChange={(e) => {
+                  setSelectedClientFilter(e.target.value);
+                  setSelectedCandidateIds([]); // Clear selection across clients
+                }}
+                className="w-full px-3 py-2 text-xs font-bold text-slate-900 bg-white border border-slate-300 rounded-none outline-none focus:border-blue-600 cursor-pointer min-h-[44px]"
+              >
+                <option value="ALL">🏢 All Corporate Clients ({clients.length} Registered)</option>
+                {clients.map((cl) => {
+                  const clientCandsCount = candidates.filter((c) => c.clientId === cl.id).length;
+                  return (
+                    <option key={cl.id} value={cl.id}>
+                      {cl.companyName} ({clientCandsCount} candidates)
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+
+          {/* Conditional Profile View: Selected Client vs All Clients Overview */}
+          {selectedClient ? (
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-slate-700">
+                <div>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase block tracking-wider">
+                    Client Entity & Location
+                  </span>
+                  <span className="font-bold text-slate-900 text-sm block">{selectedClient.companyName}</span>
+                  <span className="text-[11px] text-slate-500 font-medium">
+                    {selectedClient.city || "Pune"}, {selectedClient.country || "India"}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase block tracking-wider">
+                    Registered Billing Address
+                  </span>
+                  <span className="font-medium text-slate-800 line-clamp-2">
+                    {selectedClient.billingAddress || "Billing address not configured by client"}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase block tracking-wider">
+                    Tax Identifiers & Contact
+                  </span>
+                  <div className="font-mono text-slate-800 text-[11px]">
+                    GSTIN: <strong className="font-bold">{selectedClient.billingGstin || "N/A"}</strong>
+                    {selectedClient.billingPan && <span> • PAN: {selectedClient.billingPan}</span>}
+                  </div>
+                  <div className="text-[11px] text-slate-600">
+                    {selectedClient.billingContactPerson || selectedClient.contactPerson || "Accounts Dept"}
+                    {selectedClient.billingEmail && ` (${selectedClient.billingEmail})`}
+                  </div>
+                </div>
+              </div>
+
+              {/* Client High-Signal Metrics Ribbon */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 pt-2 border-t border-slate-200">
+                <div className="p-2 bg-white border border-slate-200 rounded-none">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Selected</span>
+                  <span className="text-base font-black text-slate-900 font-mono">{totalSelectedCount}</span>
+                </div>
+                <div className="p-2 bg-amber-50 border border-amber-200 rounded-none text-amber-900">
+                  <span className="text-[10px] font-bold uppercase block">Pending Info</span>
+                  <span className="text-base font-black font-mono">{pendingCount}</span>
+                </div>
+                <div className="p-2 bg-emerald-50 border border-emerald-200 rounded-none text-emerald-900">
+                  <span className="text-[10px] font-bold uppercase block">Ready to Bill</span>
+                  <span className="text-base font-black font-mono">{submittedCount}</span>
+                </div>
+                <div className="p-2 bg-blue-50 border border-blue-200 rounded-none text-blue-900">
+                  <span className="text-[10px] font-bold uppercase block">Invoiced</span>
+                  <span className="text-base font-black font-mono">{invoicedCount}</span>
+                </div>
+                <div className="p-2 bg-white border border-slate-200 rounded-none">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Invoices</span>
+                  <span className="text-base font-black text-slate-900 font-mono">{clientInvoices.length}</span>
+                </div>
+                <div className="p-2 bg-white border border-slate-200 rounded-none">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Total Invoiced</span>
+                  <span className="text-sm font-black text-slate-900 font-mono">₹{totalInvoicedSum.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="p-2 bg-slate-900 border border-slate-800 text-white rounded-none">
+                  <span className="text-[10px] font-bold text-slate-300 uppercase block">Balance Due</span>
+                  <span className="text-sm font-black text-amber-400 font-mono">₹{totalBalanceDue.toLocaleString("en-IN")}</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Aggregate Multi-Client Portfolio Summary */
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+              <div className="p-2.5 bg-white border border-slate-200 rounded-none">
+                <span className="text-[10px] font-bold text-slate-400 uppercase block tracking-wider">Registered Clients</span>
+                <span className="text-base font-black text-slate-900 font-mono">{clients.length} Clients</span>
+              </div>
+              <div className="p-2.5 bg-white border border-slate-200 rounded-none">
+                <span className="text-[10px] font-bold text-slate-400 uppercase block tracking-wider">Total Candidates</span>
+                <span className="text-base font-black text-slate-900 font-mono">{candidates.length} Selected</span>
+              </div>
+              <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-none text-emerald-900">
+                <span className="text-[10px] font-bold uppercase block tracking-wider">Ready to Bill</span>
+                <span className="text-base font-black font-mono">{submittedCount} Candidates</span>
+              </div>
+              <div className="p-2.5 bg-blue-50 border border-blue-200 rounded-none text-blue-900">
+                <span className="text-[10px] font-bold uppercase block tracking-wider">Total Invoices</span>
+                <span className="text-base font-black font-mono">{invoices.length} Issued</span>
+              </div>
+              <div className="p-2.5 bg-white border border-slate-200 rounded-none">
+                <span className="text-[10px] font-bold text-slate-400 uppercase block tracking-wider">Total Billed ₹</span>
+                <span className="text-base font-black text-slate-900 font-mono">₹{totalInvoicedSum.toLocaleString("en-IN")}</span>
+              </div>
+              <div className="p-2.5 bg-slate-900 border border-slate-800 text-white rounded-none">
+                <span className="text-[10px] font-bold text-slate-300 uppercase block tracking-wider">Total Balance Due ₹</span>
+                <span className="text-base font-black text-amber-400 font-mono">₹{totalBalanceDue.toLocaleString("en-IN")}</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center space-x-3 border-b border-slate-200 pb-2">
+      <div className="grid grid-cols-3 gap-1.5 sm:flex sm:items-center border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab("CANDIDATES")}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition ${
+          className={`flex items-center justify-center space-x-2 px-3 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px] ${
             activeTab === "CANDIDATES"
-              ? "bg-slate-900 text-white shadow-xs"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              ? "bg-slate-900 text-white shadow-2xs"
+              : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-100"
           }`}
         >
-          <UserCheck className="w-4 h-4" />
-          <span>Selected Candidates Queue</span>
+          <UserCheck className="w-4 h-4 shrink-0" />
+          <span className="hidden sm:inline">Candidates Queue</span>
+          <span className="sm:hidden">Candidates</span>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+            className={`text-[11px] px-1.5 py-0.5 rounded-none font-bold ${
               activeTab === "CANDIDATES" ? "bg-slate-800 text-white" : "bg-slate-200 text-slate-700"
             }`}
           >
-            {candidates.length}
+            {clientCandidates.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab("INVOICES")}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition ${
+          className={`flex items-center justify-center space-x-2 px-3 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px] ${
             activeTab === "INVOICES"
-              ? "bg-slate-900 text-white shadow-xs"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              ? "bg-slate-900 text-white shadow-2xs"
+              : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-100"
           }`}
         >
-          <FileText className="w-4 h-4" />
-          <span>Invoices Master Desk</span>
+          <FileText className="w-4 h-4 shrink-0" />
+          <span className="hidden sm:inline">Invoices Master</span>
+          <span className="sm:hidden">Invoices</span>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+            className={`text-[11px] px-1.5 py-0.5 rounded-none font-bold ${
               activeTab === "INVOICES" ? "bg-slate-800 text-white" : "bg-slate-200 text-slate-700"
             }`}
           >
-            {invoices.length}
+            {clientInvoices.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab("SETTINGS")}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition ${
+          className={`flex items-center justify-center space-x-2 px-3 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition-colors min-h-[44px] ${
             activeTab === "SETTINGS"
-              ? "bg-slate-900 text-white shadow-xs"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              ? "bg-slate-900 text-white shadow-2xs"
+              : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-100"
           }`}
         >
-          <Settings className="w-4 h-4" />
-          <span>Consultancy & Tax Config</span>
+          <Settings className="w-4 h-4 shrink-0" />
+          <span className="hidden sm:inline">Tax & Consultancy Config</span>
+          <span className="sm:hidden">Config</span>
         </button>
       </div>
 
       {/* TAB 1: Candidates Queue & Invoicing */}
       {activeTab === "CANDIDATES" && (
         <div className="space-y-4">
-          {/* Filter Bar */}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Client Dropdown */}
-              <div className="relative">
-                <select
-                  value={selectedClientFilter}
-                  onChange={(e) => setSelectedClientFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-800 bg-white"
-                >
-                  <option value="ALL">All Clients ({clients.length})</option>
-                  {clients.map((cl) => (
-                    <option key={cl.id} value={cl.id}>
-                      {cl.companyName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Status Pills */}
+          {/* Filter Bar & Search */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="grid grid-cols-2 sm:flex sm:items-center gap-1.5 p-1 bg-white border border-slate-200 rounded-none">
               <button
                 onClick={() => setStatusFilter("ALL")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-none transition-colors min-h-[36px] ${
                   statusFilter === "ALL"
                     ? "bg-slate-900 text-white"
-                    : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                    : "text-slate-600 hover:bg-slate-100"
                 }`}
               >
-                All ({candidates.length})
+                All ({clientCandidates.length})
               </button>
               <button
                 onClick={() => setStatusFilter("SUBMITTED")}
-                className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                className={`inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-none transition-colors min-h-[36px] ${
                   statusFilter === "SUBMITTED"
                     ? "bg-emerald-600 text-white"
-                    : "bg-emerald-50 border border-emerald-200 text-emerald-900 hover:bg-emerald-100"
+                    : "text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200"
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span>Ready to Bill ({submittedCount})</span>
+                <span className="w-2 h-2 bg-emerald-500 rounded-none shrink-0" />
+                <span>Ready ({submittedCount})</span>
               </button>
               <button
                 onClick={() => setStatusFilter("PENDING")}
-                className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                className={`inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-none transition-colors min-h-[36px] ${
                   statusFilter === "PENDING"
                     ? "bg-amber-600 text-white"
-                    : "bg-amber-50 border border-amber-200 text-amber-900 hover:bg-amber-100"
+                    : "text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200"
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                <span>Pending Info ({pendingCount})</span>
+                <span className="w-2 h-2 bg-amber-500 rounded-none shrink-0" />
+                <span>Pending ({pendingCount})</span>
               </button>
               <button
                 onClick={() => setStatusFilter("INVOICED")}
-                className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                className={`inline-flex items-center justify-center space-x-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-none transition-colors min-h-[36px] ${
                   statusFilter === "INVOICED"
                     ? "bg-blue-600 text-white"
-                    : "bg-blue-50 border border-blue-200 text-blue-900 hover:bg-blue-100"
+                    : "text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200"
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-blue-500" />
+                <span className="w-2 h-2 bg-blue-500 rounded-none shrink-0" />
                 <span>Invoiced ({invoicedCount})</span>
               </button>
             </div>
 
             <div className="relative w-full sm:w-64">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search candidate, client, Emp ID..."
+                placeholder="Search candidate or Emp ID..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 bg-white"
+                className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 focus:border-blue-600 text-slate-900 rounded-none outline-none min-h-[44px]"
               />
             </div>
           </div>
 
           {/* Selection Banner if items selected */}
           {selectedCandidateIds.length > 0 && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center justify-between text-xs text-blue-900">
+            <div className="bg-blue-50 border border-blue-300 rounded-none p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-blue-900 shadow-2xs">
               <div className="flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
                 <span className="font-bold">
                   {selectedCandidateIds.length} candidate(s) selected for billing batch.
                 </span>
-                <span className="text-blue-700">
-                  Total Billing Sum: ₹{wizardSubTotal.toLocaleString("en-IN")}
+                <span className="text-blue-700 font-mono font-bold">
+                  (Sum: ₹{wizardSubTotal.toLocaleString("en-IN")})
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setSelectedCandidateIds([])}
-                  className="px-2.5 py-1 text-slate-600 hover:text-slate-900 font-semibold"
+                  className="px-3 py-1.5 text-slate-600 hover:text-slate-900 font-bold uppercase tracking-wider min-h-[44px]"
                 >
                   Clear Selection
                 </button>
                 <button
                   onClick={handleOpenGenerateModal}
-                  className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-xs transition"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider rounded-none shadow-2xs transition-colors min-h-[44px]"
                 >
                   Generate Invoice
                 </button>
@@ -687,32 +835,32 @@ export default function AdminBillingDesk({
             </div>
           )}
 
-          {/* Candidates Table */}
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+          {/* DESKTOP VIEW: Data Table (Hidden on small mobile screens) */}
+          <div className="hidden md:block bg-white rounded-none border border-slate-200 overflow-hidden shadow-2xs">
             {filteredCandidates.length === 0 ? (
               <div className="text-center py-16 px-4">
                 <UserCheck className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <h3 className="text-base font-bold text-slate-900">No Candidates Found</h3>
+                <h3 className="text-base font-bold text-slate-900 font-heading">No Candidates Found</h3>
                 <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
                   Candidates marked as &quot;Selected&quot; by clients or admin will appear in this queue.
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
                     <tr>
-                      <th className="py-3 px-4 w-10 text-center">
+                      <th className="py-3 px-3.5 w-10 text-center">
                         <span className="sr-only">Select</span>
                       </th>
-                      <th className="py-3 px-4">Candidate</th>
-                      <th className="py-3 px-4">Client Company</th>
-                      <th className="py-3 px-4">Role / Process</th>
-                      <th className="py-3 px-4">Emp ID</th>
-                      <th className="py-3 px-4">DOJ</th>
-                      <th className="py-3 px-4">Billing Amt</th>
-                      <th className="py-3 px-4">Status</th>
-                      <th className="py-3 px-4 text-right">Actions</th>
+                      <th className="py-3 px-3.5">Candidate</th>
+                      <th className="py-3 px-3.5">Client Company</th>
+                      <th className="py-3 px-3.5">Role / Process</th>
+                      <th className="py-3 px-3.5">Emp ID</th>
+                      <th className="py-3 px-3.5">DOJ</th>
+                      <th className="py-3 px-3.5">Billing Amt</th>
+                      <th className="py-3 px-3.5">Status</th>
+                      <th className="py-3 px-3.5 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-medium text-slate-800">
@@ -723,76 +871,76 @@ export default function AdminBillingDesk({
                       return (
                         <tr
                           key={c.id}
-                          className={`hover:bg-slate-50/80 transition ${
+                          className={`hover:bg-slate-50 transition-colors ${
                             isSelected ? "bg-blue-50/50" : ""
                           }`}
                         >
-                          <td className="py-3 px-4 text-center">
+                          <td className="py-3 px-3.5 text-center">
                             {isReadyToBill ? (
                               <input
                                 type="checkbox"
                                 checked={isSelected}
                                 onChange={() => handleToggleSelectCandidate(c.id)}
-                                className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                                className="w-4 h-4 rounded-none border-slate-300 text-blue-600 focus:ring-0 cursor-pointer"
                               />
                             ) : (
                               <span className="text-slate-300">-</span>
                             )}
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-3 px-3.5">
                             <div className="font-bold text-slate-900">{c.fullName}</div>
-                            <div className="text-[11px] text-slate-500">{c.phone}</div>
+                            <div className="text-[11px] text-slate-500 font-mono">{c.phone}</div>
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-3 px-3.5">
                             <div className="font-bold text-slate-900">{c.clientCompanyName}</div>
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-3 px-3.5">
                             <div className="text-slate-900 font-semibold">{c.process || c.vacancyTitle}</div>
                             <div className="text-[11px] text-slate-500">{c.designation || "-"}</div>
                           </td>
-                          <td className="py-3 px-4 font-mono">
+                          <td className="py-3 px-3.5 font-mono">
                             {c.empId ? (
-                              <span className="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">
+                              <span className="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 border border-slate-200">
                                 {c.empId}
                               </span>
                             ) : (
-                              <span className="text-amber-600 italic font-semibold">Missing</span>
+                              <span className="text-amber-700 font-bold text-[11px]">MISSING</span>
                             )}
                           </td>
-                          <td className="py-3 px-4 font-mono">
+                          <td className="py-3 px-3.5 font-mono">
                             {c.dateOfJoining ? (
                               new Date(c.dateOfJoining).toLocaleDateString("en-IN")
                             ) : (
                               <span className="text-slate-400 italic">Pending</span>
                             )}
                           </td>
-                          <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                          <td className="py-3 px-3.5 font-mono font-bold text-slate-900">
                             {c.billingAmount ? `₹${c.billingAmount.toLocaleString("en-IN")}` : "-"}
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-3 px-3.5">
                             {c.billingInfoStatus === "PENDING_INFO" && (
-                              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
+                              <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-300 rounded-none uppercase tracking-wider">
+                                <span className="w-1.5 h-1.5 bg-amber-600 rounded-none" />
                                 <span>Pending Info</span>
                               </span>
                             )}
                             {c.billingInfoStatus === "INFO_SUBMITTED" && (
-                              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                              <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-none uppercase tracking-wider">
                                 <Check className="w-3 h-3 text-emerald-600" />
                                 <span>Ready to Bill</span>
                               </span>
                             )}
                             {c.billingInfoStatus === "INVOICED" && (
-                              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800 border border-blue-300">
+                              <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-300 rounded-none uppercase tracking-wider">
                                 <FileText className="w-3 h-3 text-blue-600" />
                                 <span>{c.invoiceNumber || "Invoiced"}</span>
                               </span>
                             )}
                           </td>
-                          <td className="py-3 px-4 text-right">
+                          <td className="py-3 px-3.5 text-right">
                             <button
                               onClick={() => handleOpenEditCandidate(c)}
-                              className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition"
+                              className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-none bg-white border border-slate-300 text-slate-800 hover:bg-slate-50 text-xs font-bold uppercase tracking-wider transition-colors shadow-2xs"
                             >
                               <Edit3 className="w-3.5 h-3.5" />
                               <span>Edit</span>
@@ -806,94 +954,214 @@ export default function AdminBillingDesk({
               </div>
             )}
           </div>
+
+          {/* MOBILE VIEW: Responsive Square Card Roster (Shown on 320px–768px viewports) */}
+          <div className="block md:hidden space-y-3">
+            {filteredCandidates.length === 0 ? (
+              <div className="bg-white border border-slate-200 p-8 text-center text-xs text-slate-400 font-medium rounded-none">
+                No candidates match your selected criteria.
+              </div>
+            ) : (
+              filteredCandidates.map((c) => {
+                const isSelected = selectedCandidateIds.includes(c.id);
+                const isReadyToBill = c.billingInfoStatus === "INFO_SUBMITTED";
+
+                return (
+                  <div
+                    key={c.id}
+                    className={`bg-white border p-4 rounded-none shadow-2xs space-y-3 transition-colors ${
+                      isSelected ? "border-blue-500 bg-blue-50/20" : "border-slate-200"
+                    }`}
+                  >
+                    {/* Top: Name, Phone & Status */}
+                    <div className="flex items-start justify-between gap-2 border-b border-slate-100 pb-2.5">
+                      <div className="flex items-start space-x-2.5">
+                        {isReadyToBill && (
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleToggleSelectCandidate(c.id)}
+                            className="w-5 h-5 rounded-none border-slate-300 text-blue-600 focus:ring-0 cursor-pointer mt-0.5"
+                          />
+                        )}
+                        <div>
+                          <h4 className="font-bold text-slate-900 text-sm font-heading">{c.fullName}</h4>
+                          <p className="text-[11px] text-slate-500 font-mono">{c.phone}</p>
+                        </div>
+                      </div>
+
+                      <div>
+                        {c.billingInfoStatus === "PENDING_INFO" && (
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-300 rounded-none uppercase tracking-wider">
+                            <span className="w-1.5 h-1.5 bg-amber-600 rounded-none" />
+                            <span>Pending Info</span>
+                          </span>
+                        )}
+                        {c.billingInfoStatus === "INFO_SUBMITTED" && (
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-none uppercase tracking-wider">
+                            <Check className="w-3 h-3 text-emerald-600" />
+                            <span>Ready to Bill</span>
+                          </span>
+                        )}
+                        {c.billingInfoStatus === "INVOICED" && (
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-300 rounded-none uppercase tracking-wider">
+                            <FileText className="w-3 h-3 text-blue-600" />
+                            <span>{c.invoiceNumber || "Invoiced"}</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* High-signal 2x2 data grid */}
+                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-700 bg-slate-50 p-2.5 border border-slate-200">
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-slate-400 block">Client Entity</span>
+                        <span className="font-semibold text-slate-900 line-clamp-1">{c.clientCompanyName}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-slate-400 block">Employee ID</span>
+                        <span className="font-mono font-bold text-slate-900">
+                          {c.empId || <span className="text-amber-700">Missing</span>}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-slate-400 block">Process / Role</span>
+                        <span className="font-semibold text-slate-800 line-clamp-1">{c.process || c.vacancyTitle}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-slate-400 block">DOJ</span>
+                        <span className="font-mono text-slate-800">
+                          {c.dateOfJoining ? new Date(c.dateOfJoining).toLocaleDateString("en-IN") : "-"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Bottom: Billing Amount & Touch-sized action button */}
+                    <div className="flex items-center justify-between pt-1">
+                      <div>
+                        <span className="text-[10px] uppercase text-slate-400 font-bold block">Billing Fee</span>
+                        <span className="text-sm font-black text-slate-900 font-mono">
+                          {c.billingAmount ? `₹${c.billingAmount.toLocaleString("en-IN")}` : "₹2,500"}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        {isReadyToBill && (
+                          <button
+                            type="button"
+                            onClick={() => handleToggleSelectCandidate(c.id)}
+                            className={`inline-flex items-center justify-center px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-none min-h-[44px] transition-colors ${
+                              isSelected
+                                ? "bg-blue-600 text-white"
+                                : "bg-white border border-slate-300 text-slate-700 hover:bg-slate-50"
+                            }`}
+                          >
+                            {isSelected ? "Selected" : "Select"}
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => handleOpenEditCandidate(c)}
+                          className="inline-flex items-center justify-center space-x-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-none bg-slate-900 hover:bg-slate-800 text-white min-h-[44px] transition-colors shadow-2xs"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                          <span>Edit</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
       )}
 
       {/* TAB 2: Invoices Master Desk */}
       {activeTab === "INVOICES" && (
         <div className="space-y-4">
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-            {invoices.length === 0 ? (
+          {/* DESKTOP TABLE */}
+          <div className="hidden md:block bg-white rounded-none border border-slate-200 overflow-hidden shadow-2xs">
+            {clientInvoices.length === 0 ? (
               <div className="text-center py-16 px-4">
                 <Receipt className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <h3 className="text-base font-bold text-slate-900">No Invoices Created Yet</h3>
+                <h3 className="text-base font-bold text-slate-900 font-heading">No Invoices Found</h3>
                 <p className="text-xs text-slate-500 max-w-md mx-auto mt-1">
                   Select candidates with green status from the queue and click &quot;Generate Invoice&quot; to issue official bills.
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
                     <tr>
-                      <th className="py-3 px-4">Invoice No</th>
-                      <th className="py-3 px-4">Client Company</th>
-                      <th className="py-3 px-4">Date</th>
-                      <th className="py-3 px-4">Billing Cycle</th>
-                      <th className="py-3 px-4 text-center">Heads</th>
-                      <th className="py-3 px-4">Grand Total</th>
-                      <th className="py-3 px-4">Status</th>
-                      <th className="py-3 px-4 text-right">Actions</th>
+                      <th className="py-3 px-3.5">Invoice No</th>
+                      <th className="py-3 px-3.5">Client Company</th>
+                      <th className="py-3 px-3.5">Date</th>
+                      <th className="py-3 px-3.5">Billing Cycle</th>
+                      <th className="py-3 px-3.5 text-center">Heads</th>
+                      <th className="py-3 px-3.5">Grand Total</th>
+                      <th className="py-3 px-3.5">Status</th>
+                      <th className="py-3 px-3.5 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-medium text-slate-800">
-                    {invoices.map((inv) => (
-                      <tr key={inv.id} className="hover:bg-slate-50/80 transition">
-                        <td className="py-3 px-4">
+                    {clientInvoices.map((inv) => (
+                      <tr key={inv.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-3 px-3.5">
                           <span className="font-bold text-blue-700 font-mono text-sm">{inv.invoiceNumber}</span>
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="py-3 px-3.5">
                           <div className="font-bold text-slate-900">{inv.clientName}</div>
                           <div className="text-[11px] text-slate-400 font-mono">{inv.clientGstin || "No GST"}</div>
                         </td>
-                        <td className="py-3 px-4 text-slate-600">
+                        <td className="py-3 px-3.5 text-slate-600">
                           <div>{inv.invoiceDate}</div>
+                          {inv.dueDate && <div className="text-[11px] text-slate-400">Due: {inv.dueDate}</div>}
                         </td>
-                        <td className="py-3 px-4 text-slate-800 font-medium">
+                        <td className="py-3 px-3.5 text-slate-800 font-medium">
                           {inv.billingCycle || "Standard Billing"}
                         </td>
-                        <td className="py-3 px-4 text-center">
-                          <span className="inline-block px-2 py-0.5 rounded-full bg-slate-100 font-bold text-slate-700">
-                            {inv.items.length} Heads
-                          </span>
+                        <td className="py-3 px-3.5 text-center font-bold">
+                          {inv.items.length} Heads
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="py-3 px-3.5">
                           <div className="font-bold text-slate-900 font-mono text-sm">
                             ₹{inv.grandTotal.toLocaleString("en-IN")}
                           </div>
                         </td>
-                        <td className="py-3 px-4">
+                        <td className="py-3 px-3.5">
                           {inv.status === "PAID" && (
-                            <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                            <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-none uppercase tracking-wider">
                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                               <span>Paid</span>
                             </span>
                           )}
                           {inv.status === "SENT" && (
-                            <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800 border border-blue-300">
+                            <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-300 rounded-none uppercase tracking-wider">
                               <Clock className="w-3.5 h-3.5 text-blue-600" />
                               <span>Sent / Pending</span>
                             </span>
                           )}
                           {inv.status === "REVISION_REQUESTED" && (
                             <div>
-                              <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                              <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-300 rounded-none uppercase tracking-wider">
                                 <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
                                 <span>Revision Requested</span>
                               </span>
                               {inv.clientFeedback && (
-                                <p className="text-[11px] text-amber-900 line-clamp-1 mt-0.5">
+                                <p className="text-[11px] text-amber-900 line-clamp-1 mt-0.5 font-medium">
                                   {inv.clientFeedback}
                                 </p>
                               )}
                             </div>
                           )}
                         </td>
-                        <td className="py-3 px-4 text-right">
+                        <td className="py-3 px-3.5 text-right">
                           <div className="flex items-center justify-end space-x-1.5">
                             <button
                               onClick={() => setViewingInvoice(inv)}
-                              className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition"
+                              className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-none bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-2xs"
                             >
                               <Eye className="w-3.5 h-3.5" />
                               <span>View</span>
@@ -901,7 +1169,7 @@ export default function AdminBillingDesk({
 
                             <a
                               href={`/api/invoices/${inv.id}/download-docx`}
-                              className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold transition border border-blue-200"
+                              className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-none bg-white hover:bg-slate-100 text-blue-700 text-xs font-bold uppercase tracking-wider transition-colors border border-blue-300 shadow-2xs"
                               title="Download Word (.docx)"
                             >
                               <Download className="w-3.5 h-3.5" />
@@ -911,7 +1179,7 @@ export default function AdminBillingDesk({
                             {inv.status !== "PAID" && (
                               <button
                                 onClick={() => setPayingInvoice(inv)}
-                                className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-2xs"
+                                className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-none bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-2xs"
                               >
                                 <CreditCard className="w-3.5 h-3.5" />
                                 <span>Mark Paid</span>
@@ -926,136 +1194,243 @@ export default function AdminBillingDesk({
               </div>
             )}
           </div>
+
+          {/* MOBILE INVOICE CARDS */}
+          <div className="block md:hidden space-y-3">
+            {clientInvoices.length === 0 ? (
+              <div className="bg-white border border-slate-200 p-8 text-center text-xs text-slate-400 font-medium rounded-none">
+                No invoices found for this client.
+              </div>
+            ) : (
+              clientInvoices.map((inv) => (
+                <div
+                  key={inv.id}
+                  className="bg-white border border-slate-200 p-4 rounded-none shadow-2xs space-y-3"
+                >
+                  <div className="flex items-start justify-between gap-2 border-b border-slate-100 pb-2.5">
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Official Invoice</span>
+                      <h4 className="font-mono font-black text-blue-700 text-base">{inv.invoiceNumber}</h4>
+                      <p className="text-[11px] text-slate-900 font-bold">{inv.clientName}</p>
+                    </div>
+
+                    <div>
+                      {inv.status === "PAID" && (
+                        <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-none uppercase tracking-wider">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Paid</span>
+                        </span>
+                      )}
+                      {inv.status === "SENT" && (
+                        <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-300 rounded-none uppercase tracking-wider">
+                          <Clock className="w-3 h-3 text-blue-600" />
+                          <span>Sent</span>
+                        </span>
+                      )}
+                      {inv.status === "REVISION_REQUESTED" && (
+                        <span className="inline-flex items-center space-x-1 px-2 py-0.5 text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-300 rounded-none uppercase tracking-wider">
+                          <AlertCircle className="w-3 h-3 text-amber-600" />
+                          <span>Revision</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 border border-slate-200">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase text-slate-400 block">Date</span>
+                      <span className="font-mono text-slate-800">{inv.invoiceDate}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase text-slate-400 block">Due Date</span>
+                      <span className="font-mono text-slate-800">{inv.dueDate || "Net 30"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase text-slate-400 block">Candidates</span>
+                      <span className="font-bold text-slate-900">{inv.items.length} Placements</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase text-slate-400 block">Grand Total</span>
+                      <span className="font-mono font-black text-slate-900 text-sm">
+                        ₹{inv.grandTotal.toLocaleString("en-IN")}
+                      </span>
+                    </div>
+                  </div>
+
+                  {inv.clientFeedback && (
+                    <div className="p-2 bg-amber-50 border-l-2 border-amber-500 text-[11px] text-amber-900">
+                      <strong>Client Feedback:</strong> {inv.clientFeedback}
+                    </div>
+                  )}
+
+                  {/* Mobile Action Buttons (Grid with 44px min touch target) */}
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      onClick={() => setViewingInvoice(inv)}
+                      className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-none min-h-[44px]"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>View Bill</span>
+                    </button>
+
+                    <a
+                      href={`/api/invoices/${inv.id}/download-docx`}
+                      className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-blue-700 text-xs font-bold uppercase tracking-wider rounded-none border border-blue-300 min-h-[44px]"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Word .docx</span>
+                    </a>
+
+                    {inv.status !== "PAID" && (
+                      <button
+                        onClick={() => setPayingInvoice(inv)}
+                        className="col-span-2 inline-flex items-center justify-center space-x-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-none min-h-[44px]"
+                      >
+                        <CreditCard className="w-3.5 h-3.5" />
+                        <span>Confirm Payment (Mark Paid)</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       )}
 
       {/* TAB 3: Consultancy & Tax Configuration */}
       {activeTab === "SETTINGS" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Rise Up Consultancy Billing Profile */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-            <div className="flex items-center space-x-3 pb-4 border-b border-slate-100">
+          <div className="bg-white rounded-none border border-slate-200 p-4 sm:p-6 shadow-2xs">
+            <div className="flex items-center space-x-3 pb-3 border-b border-slate-100">
               <Building2 className="w-5 h-5 text-blue-600" />
               <div>
-                <h3 className="text-base font-bold text-slate-900">Rise Up Consultancy Details</h3>
+                <h3 className="text-base font-bold text-slate-900 font-heading">Rise Up Consultancy Details</h3>
                 <p className="text-xs text-slate-500">
                   Appears on all official invoices (Table 0, Table 4, Table 5)
                 </p>
               </div>
             </div>
 
-            <form onSubmit={handleSaveConfig} className="space-y-4 mt-4 text-xs">
+            <form onSubmit={handleSaveConfig} className="space-y-3.5 mt-4 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Company / Firm Name</label>
+                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                  Company / Firm Name
+                </label>
                 <input
                   type="text"
                   required
                   value={configForm.companyName}
                   onChange={(e) => setConfigForm({ ...configForm, companyName: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 text-slate-900 font-bold"
+                  className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 font-bold outline-none min-h-[44px]"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Office Address</label>
+                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                  Office Address
+                </label>
                 <textarea
                   required
                   rows={2}
                   value={configForm.address}
                   onChange={(e) => setConfigForm({ ...configForm, address: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 text-slate-900"
+                  className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none"
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">GSTIN</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">GSTIN</label>
                   <input
                     type="text"
                     required
                     value={configForm.gstin}
                     onChange={(e) => setConfigForm({ ...configForm, gstin: e.target.value })}
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-mono text-slate-900 uppercase"
+                    className="w-full px-2.5 py-2 rounded-none border border-slate-300 font-mono text-slate-900 uppercase outline-none min-h-[44px]"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">PAN</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">PAN</label>
                   <input
                     type="text"
                     required
                     value={configForm.pan}
                     onChange={(e) => setConfigForm({ ...configForm, pan: e.target.value })}
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-mono text-slate-900 uppercase"
+                    className="w-full px-2.5 py-2 rounded-none border border-slate-300 font-mono text-slate-900 uppercase outline-none min-h-[44px]"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">HSN/SAC</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">HSN/SAC</label>
                   <input
                     type="text"
                     required
                     value={configForm.hsnSac}
                     onChange={(e) => setConfigForm({ ...configForm, hsnSac: e.target.value })}
-                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-mono text-slate-900"
+                    className="w-full px-2.5 py-2 rounded-none border border-slate-300 font-mono text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
               </div>
 
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                <p className="font-bold text-slate-800 text-xs border-b border-slate-200 pb-1">
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-none space-y-2">
+                <p className="font-bold text-slate-800 text-xs border-b border-slate-200 pb-1 uppercase tracking-wider">
                   Bank Account Details (AU Small Finance Bank)
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-0.5">Bank Name</label>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-0.5 uppercase tracking-wider">Bank Name</label>
                     <input
                       type="text"
                       required
                       value={configForm.bankName}
                       onChange={(e) => setConfigForm({ ...configForm, bankName: e.target.value })}
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-slate-900 bg-white"
+                      className="w-full px-2.5 py-1.5 rounded-none border border-slate-300 text-slate-900 bg-white outline-none min-h-[44px]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-0.5">Account Name</label>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-0.5 uppercase tracking-wider">Account Name</label>
                     <input
                       type="text"
                       required
                       value={configForm.bankAccountName}
                       onChange={(e) => setConfigForm({ ...configForm, bankAccountName: e.target.value })}
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-slate-900 bg-white"
+                      className="w-full px-2.5 py-1.5 rounded-none border border-slate-300 text-slate-900 bg-white outline-none min-h-[44px]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-0.5">Account Number</label>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-0.5 uppercase tracking-wider">Account Number</label>
                     <input
                       type="text"
                       required
                       value={configForm.bankAccountNumber}
                       onChange={(e) => setConfigForm({ ...configForm, bankAccountNumber: e.target.value })}
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-mono text-slate-900 bg-white"
+                      className="w-full px-2.5 py-1.5 rounded-none border border-slate-300 font-mono text-slate-900 bg-white outline-none min-h-[44px]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-0.5">IFSC Code</label>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-0.5 uppercase tracking-wider">IFSC Code</label>
                     <input
                       type="text"
                       required
                       value={configForm.bankIfsc}
                       onChange={(e) => setConfigForm({ ...configForm, bankIfsc: e.target.value })}
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-mono text-slate-900 bg-white uppercase"
+                      className="w-full px-2.5 py-1.5 rounded-none border border-slate-300 font-mono text-slate-900 bg-white uppercase outline-none min-h-[44px]"
                     />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Terms & Conditions</label>
+                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                  Terms & Conditions
+                </label>
                 <textarea
                   required
                   rows={2}
                   value={configForm.termsText}
                   onChange={(e) => setConfigForm({ ...configForm, termsText: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900"
+                  className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none"
                 />
               </div>
 
@@ -1063,7 +1438,7 @@ export default function AdminBillingDesk({
                 <button
                   type="submit"
                   disabled={isSavingConfig}
-                  className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-xs transition"
+                  className="px-5 py-2.5 rounded-none bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-wider shadow-2xs transition-colors min-h-[44px]"
                 >
                   {isSavingConfig ? "Saving..." : "Save Consultancy Profile"}
                 </button>
@@ -1072,13 +1447,13 @@ export default function AdminBillingDesk({
           </div>
 
           {/* Tax Management */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col justify-between">
+          <div className="bg-white rounded-none border border-slate-200 p-4 sm:p-6 shadow-2xs flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center space-x-3">
-                  <Percent className="w-5 h-5 text-indigo-600" />
+                  <Percent className="w-5 h-5 text-blue-600" />
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">Tax Configurations (GST)</h3>
+                    <h3 className="text-base font-bold text-slate-900 font-heading">Tax Configurations (GST)</h3>
                     <p className="text-xs text-slate-500">
                       Configure multiple taxes & percentages used during invoice calculation
                     </p>
@@ -1098,22 +1473,22 @@ export default function AdminBillingDesk({
                       },
                     ])
                   }
-                  className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-semibold transition"
+                  className="inline-flex items-center space-x-1 px-3 py-2 rounded-none bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold uppercase tracking-wider transition-colors border border-blue-200 min-h-[44px]"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Tax</span>
                 </button>
               </div>
 
-              <div className="space-y-3 mt-4 text-xs">
+              <div className="space-y-2.5 mt-4 text-xs">
                 {taxesList.map((tax, idx) => (
                   <div
                     key={tax.id || idx}
-                    className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-3"
+                    className="p-3 bg-slate-50 border border-slate-200 rounded-none flex items-center justify-between gap-3"
                   >
                     <div className="flex-1 grid grid-cols-2 gap-2">
                       <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-0.5">Tax Name</label>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-0.5 uppercase tracking-wider">Tax Name</label>
                         <input
                           type="text"
                           value={tax.name}
@@ -1123,11 +1498,11 @@ export default function AdminBillingDesk({
                             setTaxesList(updated);
                           }}
                           placeholder="e.g. CGST, SGST, IGST"
-                          className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-mono text-slate-900 uppercase bg-white"
+                          className="w-full px-2.5 py-1.5 rounded-none border border-slate-300 font-mono text-slate-900 uppercase bg-white outline-none min-h-[40px]"
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-0.5">Rate (%)</label>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-0.5 uppercase tracking-wider">Rate (%)</label>
                         <input
                           type="number"
                           step="0.01"
@@ -1137,13 +1512,13 @@ export default function AdminBillingDesk({
                             updated[idx].rate = Number(e.target.value);
                             setTaxesList(updated);
                           }}
-                          className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 font-mono text-slate-900 bg-white"
+                          className="w-full px-2.5 py-1.5 rounded-none border border-slate-300 font-mono text-slate-900 bg-white outline-none min-h-[40px]"
                         />
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-2 pt-4">
-                      <label className="flex items-center space-x-1.5 cursor-pointer text-[11px] text-slate-600 font-medium">
+                      <label className="flex items-center space-x-1.5 cursor-pointer text-[11px] text-slate-600 font-bold uppercase">
                         <input
                           type="checkbox"
                           checked={tax.isSelectedByDefault}
@@ -1152,7 +1527,7 @@ export default function AdminBillingDesk({
                             updated[idx].isSelectedByDefault = e.target.checked;
                             setTaxesList(updated);
                           }}
-                          className="w-3.5 h-3.5 rounded text-indigo-600"
+                          className="w-4 h-4 rounded-none text-blue-600 focus:ring-0"
                         />
                         <span>Default</span>
                       </label>
@@ -1160,7 +1535,8 @@ export default function AdminBillingDesk({
                       <button
                         type="button"
                         onClick={() => setTaxesList(taxesList.filter((_, i) => i !== idx))}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 transition"
+                        className="p-2 text-slate-400 hover:text-rose-600 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        aria-label="Delete Tax Rule"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -1175,7 +1551,7 @@ export default function AdminBillingDesk({
                 type="button"
                 onClick={handleSaveTaxes}
                 disabled={isSavingTaxes}
-                className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-xs transition text-xs"
+                className="px-5 py-2.5 rounded-none bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-wider shadow-2xs transition-colors text-xs min-h-[44px]"
               >
                 {isSavingTaxes ? "Saving..." : "Save Tax Settings"}
               </button>
@@ -1186,13 +1562,13 @@ export default function AdminBillingDesk({
 
       {/* MODAL 1: Invoice Generation Wizard */}
       {showGenerateModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="relative w-full max-w-2xl bg-white rounded-none shadow-2xl border border-slate-300 p-4 sm:p-6 max-h-[92vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="flex items-center space-x-3">
-                <Receipt className="w-6 h-6 text-blue-600" />
+                <Receipt className="w-5 h-5 text-blue-600" />
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 font-heading">
                     Generate Official Placement Invoice
                   </h3>
                   <p className="text-xs text-slate-500">
@@ -1202,81 +1578,91 @@ export default function AdminBillingDesk({
               </div>
               <button
                 onClick={() => setShowGenerateModal(false)}
-                className="p-1 text-slate-400 hover:text-slate-700 rounded-lg"
+                className="p-2 text-slate-400 hover:text-slate-700 rounded-none min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleConfirmGenerateInvoice} className="space-y-4 mt-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Billing Cycle / Batch Name</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Billing Cycle / Batch Name
+                  </label>
                   <input
                     type="text"
                     required
                     value={invoiceWizard.billingCycle}
                     onChange={(e) => setInvoiceWizard({ ...invoiceWizard, billingCycle: e.target.value })}
                     placeholder="e.g. October 2026 Batch"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Place of Supply</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Place of Supply
+                  </label>
                   <input
                     type="text"
                     required
                     value={invoiceWizard.placeOfSupply}
                     onChange={(e) => setInvoiceWizard({ ...invoiceWizard, placeOfSupply: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Invoice Date</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Invoice Date
+                  </label>
                   <input
                     type="date"
                     required
                     value={invoiceWizard.invoiceDate}
                     onChange={(e) => setInvoiceWizard({ ...invoiceWizard, invoiceDate: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Due Date</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Due Date
+                  </label>
                   <input
                     type="date"
                     value={invoiceWizard.dueDate}
                     onChange={(e) => setInvoiceWizard({ ...invoiceWizard, dueDate: e.target.value })}
                     placeholder="30 days default"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Payment Terms</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Payment Terms
+                  </label>
                   <input
                     type="text"
                     value={invoiceWizard.terms}
                     onChange={(e) => setInvoiceWizard({ ...invoiceWizard, terms: e.target.value })}
                     placeholder="Net 30 Days"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
               </div>
 
               {/* Candidate Items Included */}
               <div>
-                <label className="block font-bold text-slate-700 mb-1.5">
+                <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
                   Included Candidate Line Items ({selectedCandidatesForInvoice.length})
                 </label>
-                <div className="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                <div className="border border-slate-200 rounded-none overflow-x-auto max-h-48 overflow-y-auto">
+                  <table className="w-full text-left text-xs border-collapse min-w-[480px]">
+                    <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
                       <tr>
                         <th className="py-2 px-3">SR</th>
                         <th className="py-2 px-3">Emp ID</th>
@@ -1304,12 +1690,14 @@ export default function AdminBillingDesk({
 
               {/* Tax Selection */}
               <div>
-                <label className="block font-bold text-slate-700 mb-1.5">Apply Taxes (GST)</label>
-                <div className="flex flex-wrap items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
+                  Apply Taxes (GST)
+                </label>
+                <div className="flex flex-wrap items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-none">
                   {taxSettings.map((t) => {
                     const isChecked = invoiceWizard.selectedTaxes.some((st) => st.name === t.name);
                     return (
-                      <label key={t.id} className="flex items-center space-x-2 cursor-pointer font-bold text-slate-800">
+                      <label key={t.id} className="flex items-center space-x-2 cursor-pointer font-bold text-slate-800 text-xs">
                         <input
                           type="checkbox"
                           checked={isChecked}
@@ -1326,7 +1714,7 @@ export default function AdminBillingDesk({
                               });
                             }
                           }}
-                          className="w-4 h-4 rounded text-blue-600"
+                          className="w-4 h-4 rounded-none text-blue-600 focus:ring-0"
                         />
                         <span>{t.name} @ {t.rate}%</span>
                       </label>
@@ -1336,7 +1724,7 @@ export default function AdminBillingDesk({
               </div>
 
               {/* Financial Summary Box */}
-              <div className="p-4 bg-blue-50/60 border border-blue-200 rounded-xl space-y-2">
+              <div className="p-4 bg-blue-50/70 border border-blue-200 rounded-none space-y-2">
                 <div className="flex justify-between font-bold text-slate-700">
                   <span>Sub Total:</span>
                   <span className="font-mono">₹{wizardSubTotal.toLocaleString("en-IN")}</span>
@@ -1359,7 +1747,7 @@ export default function AdminBillingDesk({
                     min={0}
                     value={invoiceWizard.tdsDeducted}
                     onChange={(e) => setInvoiceWizard({ ...invoiceWizard, tdsDeducted: Number(e.target.value) })}
-                    className="w-32 px-2 py-1 text-right rounded border border-slate-300 font-mono text-xs bg-white"
+                    className="w-32 px-2 py-1 text-right rounded-none border border-slate-300 font-mono text-xs bg-white outline-none min-h-[36px]"
                   />
                 </div>
 
@@ -1374,18 +1762,18 @@ export default function AdminBillingDesk({
                 </div>
               </div>
 
-              <div className="pt-4 flex items-center justify-end space-x-2 border-t border-slate-100">
+              <div className="pt-3 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowGenerateModal(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold"
+                  className="px-4 py-2.5 rounded-none border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold uppercase tracking-wider min-h-[44px]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isGeneratingInvoice}
-                  className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md transition"
+                  className="px-6 py-2.5 rounded-none bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-wider shadow-2xs transition-colors min-h-[44px]"
                 >
                   {isGeneratingInvoice ? "Generating..." : "Generate & Send Official Invoice"}
                 </button>
@@ -1397,111 +1785,123 @@ export default function AdminBillingDesk({
 
       {/* MODAL 2: Edit Candidate Details */}
       {editingCandidate && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="relative w-full max-w-lg bg-white rounded-none shadow-2xl border border-slate-300 p-4 sm:p-6">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-blue-600 block">
                   Admin Candidate Billing Override
                 </span>
-                <h3 className="text-lg font-bold text-slate-900">{editingCandidate.fullName}</h3>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 font-heading">{editingCandidate.fullName}</h3>
                 <p className="text-xs text-slate-500">
                   Client: {editingCandidate.clientCompanyName}
                 </p>
               </div>
               <button
                 onClick={() => setEditingCandidate(null)}
-                className="p-1 text-slate-400 hover:text-slate-700 rounded-lg"
+                className="p-2 text-slate-400 hover:text-slate-700 rounded-none min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveCandidateEdit} className="space-y-4 mt-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleSaveCandidateEdit} className="space-y-3.5 mt-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Employee ID (Emp ID)</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Employee ID (Emp ID)
+                  </label>
                   <input
                     type="text"
                     value={editCandidateForm.empId}
                     onChange={(e) => setEditCandidateForm({ ...editCandidateForm, empId: e.target.value })}
                     placeholder="1520417"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 font-mono text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 font-mono text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Date of Joining (DOJ)</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Date of Joining (DOJ)
+                  </label>
                   <input
                     type="date"
                     value={editCandidateForm.dateOfJoining}
                     onChange={(e) => setEditCandidateForm({ ...editCandidateForm, dateOfJoining: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Process / Team</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Process / Team
+                  </label>
                   <input
                     type="text"
                     value={editCandidateForm.process}
                     onChange={(e) => setEditCandidateForm({ ...editCandidateForm, process: e.target.value })}
                     placeholder="TCS GEM"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Designation</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Designation
+                  </label>
                   <input
                     type="text"
                     value={editCandidateForm.designation}
                     onChange={(e) => setEditCandidateForm({ ...editCandidateForm, designation: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Billing Amount (₹)</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Billing Amount (₹)
+                  </label>
                   <input
                     type="number"
                     min={0}
                     value={editCandidateForm.billingAmount}
                     onChange={(e) => setEditCandidateForm({ ...editCandidateForm, billingAmount: Number(e.target.value) })}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 font-mono text-slate-900 font-bold"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 font-mono text-slate-900 font-bold outline-none min-h-[44px]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Billing Status</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                    Billing Status
+                  </label>
                   <select
                     value={editCandidateForm.billingInfoStatus}
                     onChange={(e) => setEditCandidateForm({ ...editCandidateForm, billingInfoStatus: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 font-bold text-slate-900 bg-white"
+                    className="w-full px-3 py-2 rounded-none border border-slate-300 font-bold text-slate-900 bg-white outline-none min-h-[44px]"
                   >
-                    <option value="PENDING_INFO">🟡 Pending Info</option>
-                    <option value="INFO_SUBMITTED">🟢 Ready to Bill (Submitted)</option>
-                    <option value="INVOICED">🔵 Invoiced</option>
+                    <option value="PENDING_INFO">Pending Info</option>
+                    <option value="INFO_SUBMITTED">Ready to Bill (Submitted)</option>
+                    <option value="INVOICED">Invoiced</option>
                   </select>
                 </div>
               </div>
 
-              <div className="pt-4 flex items-center justify-end space-x-2 border-t border-slate-100">
+              <div className="pt-3 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setEditingCandidate(null)}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold"
+                  className="px-4 py-2.5 rounded-none border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold uppercase tracking-wider min-h-[44px]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSavingCandidate}
-                  className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-xs transition"
+                  className="px-5 py-2.5 rounded-none bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-wider shadow-2xs transition-colors min-h-[44px]"
                 >
                   {isSavingCandidate ? "Saving..." : "Save Candidate Details"}
                 </button>
@@ -1513,64 +1913,64 @@ export default function AdminBillingDesk({
 
       {/* MODAL 3: Mark Paid Form */}
       {payingInvoice && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="relative w-full max-w-md bg-white rounded-none shadow-2xl border border-slate-300 p-4 sm:p-6">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="flex items-center space-x-2">
                 <CreditCard className="w-5 h-5 text-emerald-600" />
-                <h3 className="text-lg font-bold text-slate-900">Mark Invoice Paid</h3>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 font-heading">Mark Invoice Paid</h3>
               </div>
               <button
                 onClick={() => setPayingInvoice(null)}
-                className="p-1 text-slate-400 hover:text-slate-700 rounded-lg"
+                className="p-2 text-slate-400 hover:text-slate-700 rounded-none min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmitPayment} className="space-y-4 mt-4 text-xs">
-              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900">
-                <p className="font-bold text-sm">{payingInvoice.invoiceNumber}</p>
+            <form onSubmit={handleSubmitPayment} className="space-y-3.5 mt-4 text-xs">
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-none text-emerald-900">
+                <p className="font-bold text-sm font-mono">{payingInvoice.invoiceNumber}</p>
                 <p className="text-xs">
                   Client: {payingInvoice.clientName} • Grand Total: <strong>₹{payingInvoice.grandTotal.toLocaleString("en-IN")}</strong>
                 </p>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Payment Date</label>
+                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">Payment Date</label>
                 <input
                   type="date"
                   required
                   value={paymentForm.paymentDate}
                   onChange={(e) => setPaymentForm({ ...paymentForm, paymentDate: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900"
+                  className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Reference / UTR / Cheque No.</label>
+                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">Reference / UTR / Cheque No.</label>
                 <input
                   type="text"
                   required
                   value={paymentForm.paymentReference}
                   onChange={(e) => setPaymentForm({ ...paymentForm, paymentReference: e.target.value })}
                   placeholder="UTR129837198273"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 font-mono text-slate-900"
+                  className="w-full px-3 py-2 rounded-none border border-slate-300 font-mono text-slate-900 outline-none min-h-[44px]"
                 />
               </div>
 
-              <div className="pt-4 flex items-center justify-end space-x-2 border-t border-slate-100">
+              <div className="pt-3 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setPayingInvoice(null)}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold"
+                  className="px-4 py-2.5 rounded-none border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold uppercase tracking-wider min-h-[44px]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingPayment}
-                  className="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-xs transition"
+                  className="px-5 py-2.5 rounded-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-wider shadow-2xs transition-colors min-h-[44px]"
                 >
                   {isSubmittingPayment ? "Updating..." : "Confirm Payment"}
                 </button>

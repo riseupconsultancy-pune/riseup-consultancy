@@ -5,6 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, ChevronDown, Check, Globe } from "lucide-react";
 
+import { useRouter } from "next/navigation";
+import { getActiveLocationsAction } from "@/app/actions/location-actions";
+
 interface LocationOption {
   country: string;
   code: string;
@@ -12,7 +15,7 @@ interface LocationOption {
   cities: string[];
 }
 
-const LOCATIONS: LocationOption[] = [
+const DEFAULT_LOCATIONS: LocationOption[] = [
   {
     country: "India",
     code: "IN",
@@ -25,7 +28,7 @@ const LOCATIONS: LocationOption[] = [
         <div className="h-1/3 bg-[#138808]" />
       </div>
     ),
-    cities: ["Pune", "Mumbai", "Bengaluru", "Delhi NCR", "Hyderabad"],
+    cities: ["Pune", "Mumbai", "Bengaluru", "Delhi NCR", "Hyderabad", "Chennai", "Kolkata", "Coimbatore"],
   },
   {
     country: "Nigeria",
@@ -42,10 +45,37 @@ const LOCATIONS: LocationOption[] = [
 ];
 
 export default function Header() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<LocationOption>(LOCATIONS[0]);
+  const [locations, setLocations] = useState<LocationOption[]>(DEFAULT_LOCATIONS);
+  const [selectedCountry, setSelectedCountry] = useState<LocationOption>(DEFAULT_LOCATIONS[0]);
   const [selectedCity, setSelectedCity] = useState("Pune");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Load dynamically registered serving cities from Client Profiles & Vacancies
+    getActiveLocationsAction().then((data) => {
+      if (data && data.citiesByCountry) {
+        setLocations((prev) => {
+          const updated = prev.map((loc) => ({
+            ...loc,
+            cities: data.citiesByCountry[loc.country] || loc.cities,
+          }));
+          return updated;
+        });
+      }
+    }).catch(() => {
+      // safe fallback to defaults
+    });
+  }, []);
+
+  useEffect(() => {
+    // Keep selectedCountry in sync with updated locations list
+    const current = locations.find((l) => l.country === selectedCountry.country);
+    if (current) {
+      setSelectedCountry(current);
+    }
+  }, [locations, selectedCountry.country]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -65,6 +95,7 @@ export default function Header() {
   const handleCitySelect = (city: string) => {
     setSelectedCity(city);
     setIsOpen(false);
+    router.push(`/jobs?city=${encodeURIComponent(city)}`);
   };
 
   return (
@@ -163,7 +194,7 @@ export default function Header() {
                   Select Country
                 </span>
                 <div className="grid grid-cols-2 gap-2">
-                  {LOCATIONS.map((loc) => {
+                  {locations.map((loc) => {
                     const isCountryActive = selectedCountry.country === loc.country;
                     return (
                       <button

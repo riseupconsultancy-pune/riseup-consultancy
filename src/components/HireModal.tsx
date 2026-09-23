@@ -59,8 +59,8 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-white border border-slate-300 shadow-2xl p-6 sm:p-8 rounded-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+      <div className="relative w-full max-w-lg max-h-[92dvh] overflow-y-auto bg-white border border-slate-300 shadow-2xl p-5 sm:p-8 rounded-none">
         {/* Close Button */}
         <button
           type="button"

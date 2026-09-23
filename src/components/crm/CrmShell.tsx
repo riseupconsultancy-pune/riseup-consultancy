@@ -44,6 +44,7 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { href: "/admin/vacancies", label: "Vacancies & Broadcast", icon: Briefcase },
   { href: "/admin/agreements", label: "Client Agreements", icon: FileText },
   { href: "/admin/candidates", label: "Website Candidate Pool", icon: UserCheck },
+  { href: "/admin/inquiries", label: "Talent Requests & Queries", icon: MessageSquareShare },
   { href: "/admin/billing", label: "Billing & Invoices", icon: Receipt },
 ];
 

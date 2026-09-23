@@ -22,7 +22,7 @@ async function assertAdmin() {
 
 const createClientSchema = z.object({
   companyName: z.string().min(2, "Company name must be at least 2 characters").trim(),
-  country: z.enum(["India", "Nigeria"]),
+  country: z.string().min(2, "Country is required").trim(),
   city: z.string().min(2, "City is required").trim(),
   industry: z.string().trim().default("BPO / BPM / Back Office"),
   contactPerson: z.string().min(2, "Contact person name is required").trim(),
@@ -262,6 +262,59 @@ export async function toggleVacancyStatusAction(vacancyId: string, status: strin
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to change vacancy status." };
+  }
+}
+
+const updateVacancyVenueSchema = z.object({
+  vacancyId: z.string().min(1, "Vacancy ID is required"),
+  interviewVenue: z.string().min(3, "Interview venue is required").trim(),
+  interviewLocationUrl: z.string().optional().nullable(),
+  interviewContactPerson: z.string().optional().nullable(),
+  interviewContactPhone: z.string().optional().nullable(),
+  interviewInstructions: z.string().optional().nullable(),
+});
+
+export async function updateVacancyVenueAction(params: {
+  vacancyId: string;
+  interviewVenue: string;
+  interviewLocationUrl?: string | null;
+  interviewContactPerson?: string | null;
+  interviewContactPhone?: string | null;
+  interviewInstructions?: string | null;
+}) {
+  try {
+    await assertAdmin();
+    const parsed = updateVacancyVenueSchema.safeParse(params);
+    if (!parsed.success) {
+      return { success: false, error: parsed.error.issues[0]?.message || "Invalid venue data." };
+    }
+
+    const {
+      vacancyId,
+      interviewVenue,
+      interviewLocationUrl,
+      interviewContactPerson,
+      interviewContactPhone,
+      interviewInstructions,
+    } = parsed.data;
+
+    const updated = await prisma.vacancy.update({
+      where: { id: vacancyId },
+      data: {
+        interviewVenue,
+        interviewLocationUrl: interviewLocationUrl || null,
+        interviewContactPerson: interviewContactPerson || null,
+        interviewContactPhone: interviewContactPhone || null,
+        interviewInstructions: interviewInstructions || null,
+      },
+    });
+
+    revalidatePath("/admin/vacancies");
+    revalidatePath("/hr/candidates");
+    revalidatePath("/hr/vacancies");
+    return { success: true, vacancy: updated };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to update vacancy venue." };
   }
 }
 

@@ -24,7 +24,10 @@ import {
   AlertTriangle,
   UserX,
   RotateCcw,
-  Trash2
+  Trash2,
+  ExternalLink,
+  Copy,
+  Check
 } from "lucide-react";
 import { 
   updateCandidateStatusByHrAction,
@@ -64,6 +67,11 @@ export interface CandidateItem {
   vacancyCity: string;
   vacancyStatus: string;
   clientCompanyName: string;
+  vacancyInterviewVenue?: string | null;
+  vacancyInterviewLocationUrl?: string | null;
+  vacancyInterviewContactPerson?: string | null;
+  vacancyInterviewContactPhone?: string | null;
+  vacancyInterviewInstructions?: string | null;
   isMyLead: boolean;
   recentHistory: {
     id: string;
@@ -85,6 +93,11 @@ export interface ActiveVacancyOption {
   expMax: number;
   availabilityRequired: string;
   clientCompanyName: string;
+  interviewVenue?: string | null;
+  interviewLocationUrl?: string | null;
+  interviewContactPerson?: string | null;
+  interviewContactPhone?: string | null;
+  interviewInstructions?: string | null;
 }
 
 export interface AppliedVacancyOption {
@@ -99,24 +112,129 @@ interface HrCandidatePipelineProps {
   activeVacancies: ActiveVacancyOption[];
   appliedVacancies: AppliedVacancyOption[];
   recruiterName: string;
+  recruiterPhone?: string | null;
   employeeCode: string;
   whatsappTemplate?: string | null;
 }
 
-const DEFAULT_WHATSAPP_TEMPLATE = `Hello {candidate_name}, this is {recruiter_name} from RiseUp Consultancy regarding your application for {job_title} ({work_city}).
+export const DEFAULT_WHATSAPP_TEMPLATE = `Dear {candidate_name},
 
-We have reviewed your profile and would like to schedule you for an interview. 
+Congratulations! You have been shortlisted for an interview with {company_name} for the position of *{job_title}* (Job ID: *{job_id}*).
+
+📅 *Interview Date & Time:*
+{interview_date}
+
+📍 *Interview Venue:*
+{interview_venue}
+
+🗺️ *Google Maps GPS Location:*
+{venue_location_url}
+
+👤 *Contact Person / SPOC:* {contact_person}
+📞 *Contact Phone:* {contact_phone}
+
+⚠️ *Important Instructions:*
+1. Kindly call {contact_phone} once you reach the venue.
+2. At the company reception desk, please don't forget to mention *RiseUp Consultancy* as your consultancy referral.
+3. Carry 2 printed hard copies of your updated resume and a valid Government Photo ID.
+{interview_instructions}
+
+Best of luck!
+— {recruiter_name} | RiseUp Consultancy
+📞 {recruiter_phone}`;
+
+function formatInterviewDateTime(dateStr?: string | null): string {
+  if (!dateStr) return "To be confirmed by recruiter";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleString("en-IN", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+function buildInterviewWhatsAppMessage({
+  template,
+  candidate,
+  targetVacancy,
+  interviewDateStr,
+  recruiterName,
+  recruiterPhone,
+}: {
+  template: string;
+  candidate: CandidateItem;
+  targetVacancy?: ActiveVacancyOption | null;
+  interviewDateStr?: string | null;
+  recruiterName: string;
+  recruiterPhone?: string | null;
+}): string {
+  const company = targetVacancy?.clientCompanyName || candidate.clientCompanyName || "Company Office";
+  const title = targetVacancy?.title || candidate.vacancyTitle;
+  const jobId = targetVacancy?.jobId || candidate.vacancyJobId;
+  const city = targetVacancy?.city || candidate.vacancyCity;
+
+  const venue = targetVacancy?.interviewVenue || candidate.vacancyInterviewVenue || "Company Office (Reach SPOC on arrival)";
+  const mapsUrl = targetVacancy?.interviewLocationUrl || candidate.vacancyInterviewLocationUrl || "Location link will be shared";
+  const contactPerson = targetVacancy?.interviewContactPerson || candidate.vacancyInterviewContactPerson || "Reception / HR Desk";
+  const contactPhone = targetVacancy?.interviewContactPhone || candidate.vacancyInterviewContactPhone || recruiterPhone || "Reception Desk";
+  const instructions = (targetVacancy?.interviewInstructions || candidate.vacancyInterviewInstructions)
+    ? `\n📌 *Special Note:* ${targetVacancy?.interviewInstructions || candidate.vacancyInterviewInstructions}`
+    : "";
+
+  const formattedDate = formatInterviewDateTime(interviewDateStr);
+
+  return template
+    .replace(/{candidate_name}/g, candidate.fullName)
+    .replace(/{company_name}/g, company)
+    .replace(/{job_title}/g, title)
+    .replace(/{job_id}/g, jobId)
+    .replace(/{work_city}/g, city)
+    .replace(/{interview_date}/g, formattedDate)
+    .replace(/{interview_venue}/g, venue)
+    .replace(/{venue_location_url}/g, mapsUrl)
+    .replace(/{contact_person}/g, contactPerson)
+    .replace(/{contact_phone}/g, contactPhone)
+    .replace(/{interview_instructions}/g, instructions)
+    .replace(/{recruiter_name}/g, recruiterName)
+    .replace(/{recruiter_phone}/g, recruiterPhone || "RiseUp Helpdesk")
+    .replace(/{referral_tag}/g, candidate.referralTag);
+}
+
+function buildScreeningWhatsAppMessage({
+  candidate,
+  recruiterName,
+  recruiterPhone,
+}: {
+  candidate: CandidateItem;
+  recruiterName: string;
+  recruiterPhone?: string | null;
+}): string {
+  return `Hello ${candidate.fullName}, this is ${recruiterName} from RiseUp Consultancy regarding your application for ${candidate.vacancyTitle} at ${candidate.clientCompanyName}.
+
+We have reviewed your profile and would like to connect for a quick screening round before scheduling your client interview.
 
 *Mandatory Referral Code at Interview:*
-{referral_tag}
+${candidate.referralTag}
 
-Please reply to confirm your availability.`;
+Please reply to confirm your availability.
+— ${recruiterName} | RiseUp Consultancy (${recruiterPhone || "Pune HQ"})`;
+}
 
 export default function HrCandidatePipeline({
   initialCandidates,
   activeVacancies,
   appliedVacancies,
   recruiterName,
+  recruiterPhone,
   employeeCode,
   whatsappTemplate,
 }: HrCandidatePipelineProps) {
@@ -146,7 +264,9 @@ export default function HrCandidatePipeline({
   const [interviewDate, setInterviewDate] = useState(
     new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0]
   );
+  const [interviewTime, setInterviewTime] = useState("10:30 AM");
   const [interviewNote, setInterviewNote] = useState("");
+  const [copiedNotice, setCopiedNotice] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Bulk Dispatch Modal
@@ -219,16 +339,30 @@ export default function HrCandidatePipeline({
 
   // 1-Tap WhatsApp Handler
   const handleWhatsAppConnect = async (candidate: CandidateItem) => {
-    const template = whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE;
     const cleanPhone = candidate.phone.replace(/[^0-9]/g, "");
 
-    const formattedMessage = template
-      .replace(/{candidate_name}/g, candidate.fullName)
-      .replace(/{recruiter_name}/g, recruiterName)
-      .replace(/{job_title}/g, candidate.vacancyTitle)
-      .replace(/{work_city}/g, candidate.vacancyCity)
-      .replace(/{company_name}/g, candidate.clientCompanyName)
-      .replace(/{referral_tag}/g, candidate.referralTag);
+    // If candidate is already scheduled for interview, open interview call letter with full venue details
+    if (candidate.status === "GOING_FOR_INTERVIEW") {
+      const targetVac = activeVacancies.find((v) => v.id === candidate.vacancyId);
+      const formattedMessage = buildInterviewWhatsAppMessage({
+        template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
+        candidate,
+        targetVacancy: targetVac,
+        interviewDateStr: candidate.interviewDate,
+        recruiterName,
+        recruiterPhone,
+      });
+      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
+      window.open(waUrl, "_blank");
+      return;
+    }
+
+    // Default outreach message for new or connected leads
+    const formattedMessage = buildScreeningWhatsAppMessage({
+      candidate,
+      recruiterName,
+      recruiterPhone,
+    });
 
     const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
     window.open(waUrl, "_blank");
@@ -255,17 +389,52 @@ export default function HrCandidatePipeline({
   // Open Single Dispatch Modal
   const openDispatchModal = (candidate: CandidateItem) => {
     setDispatchModalCandidate(candidate);
-    // If candidate's current vacancy is active, default to it; otherwise default to first active vacancy
     const isCurrentActive = activeVacancies.some((v) => v.id === candidate.vacancyId);
     setModalTargetVacancyId(isCurrentActive ? candidate.vacancyId : (activeVacancies[0]?.id || ""));
+    setInterviewDate(
+      candidate.interviewDate 
+        ? new Date(candidate.interviewDate).toISOString().split("T")[0] 
+        : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+    );
+    setInterviewTime("10:30 AM");
     setInterviewNote("");
+    setCopiedNotice(false);
   };
 
   // Confirm Single Dispatch
-  const handleConfirmSingleDispatch = async () => {
+  const handleConfirmSingleDispatch = async (openWhatsApp = false) => {
     if (!dispatchModalCandidate || !modalTargetVacancyId) {
       setErrorMessage("Please select an active target opening.");
       return;
+    }
+
+    const targetVac = activeVacancies.find((v) => v.id === modalTargetVacancyId);
+    const combinedDateStr = `${interviewDate} ${interviewTime}`.trim();
+
+    let dateToStore = interviewDate;
+    try {
+      const dt = new Date(`${interviewDate} ${interviewTime}`);
+      if (!isNaN(dt.getTime())) {
+        dateToStore = dt.toISOString();
+      } else {
+        dateToStore = new Date(interviewDate).toISOString();
+      }
+    } catch {
+      dateToStore = new Date(interviewDate).toISOString();
+    }
+
+    if (openWhatsApp) {
+      const callLetter = buildInterviewWhatsAppMessage({
+        template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
+        candidate: dispatchModalCandidate,
+        targetVacancy: targetVac,
+        interviewDateStr: combinedDateStr,
+        recruiterName,
+        recruiterPhone,
+      });
+      const cleanPhone = dispatchModalCandidate.phone.replace(/[^0-9]/g, "");
+      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(callLetter)}`;
+      window.open(waUrl, "_blank");
     }
 
     setIsSubmitting(true);
@@ -276,30 +445,38 @@ export default function HrCandidatePipeline({
       const res = await dispatchCandidateToInterviewAction({
         candidateId: dispatchModalCandidate.id,
         targetVacancyId: modalTargetVacancyId,
-        interviewDate,
-        note: interviewNote || `Dispatched for interview on ${interviewDate}`,
+        interviewDate: dateToStore,
+        note: interviewNote || `Dispatched for interview on ${combinedDateStr}`,
       });
 
       if (res.success) {
-        const targetVac = activeVacancies.find((v) => v.id === modalTargetVacancyId);
         setCandidates((prev) =>
           prev.map((c) =>
             c.id === dispatchModalCandidate.id
               ? {
                   ...c,
                   status: "GOING_FOR_INTERVIEW",
-                  interviewDate: new Date(interviewDate).toISOString(),
+                  interviewDate: dateToStore,
                   vacancyId: modalTargetVacancyId,
                   vacancyJobId: targetVac?.jobId || c.vacancyJobId,
                   vacancyTitle: targetVac?.title || c.vacancyTitle,
                   vacancyCity: targetVac?.city || c.vacancyCity,
                   clientCompanyName: targetVac?.clientCompanyName || c.clientCompanyName,
+                  vacancyInterviewVenue: targetVac?.interviewVenue || null,
+                  vacancyInterviewLocationUrl: targetVac?.interviewLocationUrl || null,
+                  vacancyInterviewContactPerson: targetVac?.interviewContactPerson || null,
+                  vacancyInterviewContactPhone: targetVac?.interviewContactPhone || null,
+                  vacancyInterviewInstructions: targetVac?.interviewInstructions || null,
                   vacancyStatus: "ACTIVE",
                 }
               : c
           )
         );
-        setActionMessage(res.message || "Candidate successfully dispatched for interview.");
+        setActionMessage(
+          openWhatsApp
+            ? "Candidate dispatched & WhatsApp Call Letter launched!"
+            : (res.message || "Candidate successfully dispatched for interview.")
+        );
         setDispatchModalCandidate(null);
       } else {
         setErrorMessage(res.error || "Failed to dispatch candidate.");
@@ -423,6 +600,21 @@ export default function HrCandidatePipeline({
       setIsSubmitting(false);
     }
   };
+
+  const selectedTargetVac = activeVacancies.find((v) => v.id === modalTargetVacancyId);
+  const combinedDateStr = `${interviewDate} ${interviewTime}`.trim();
+  const currentCallLetter = dispatchModalCandidate
+    ? buildInterviewWhatsAppMessage({
+        template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
+        candidate: dispatchModalCandidate,
+        targetVacancy: selectedTargetVac,
+        interviewDateStr: combinedDateStr,
+        recruiterName,
+        recruiterPhone,
+      })
+    : "";
+
+  const selectedBulkVac = activeVacancies.find((v) => v.id === bulkTargetVacancyId);
 
   return (
     <div className="space-y-4 sm:space-y-5">
@@ -812,6 +1004,44 @@ export default function HrCandidatePipeline({
                       <p className="mt-0.5">{candidate.clientFeedback}</p>
                     </div>
                   )}
+
+                  {/* Scheduled Interview Details & Venue Strip */}
+                  {isInterview && candidate.interviewDate && (
+                    <div className="p-2.5 bg-purple-50/75 border-l-2 border-purple-600 text-xs text-slate-800 space-y-1">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 font-bold text-purple-900 text-[11.5px]">
+                          <Calendar className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                          <span>
+                            Interview: {formatInterviewDateTime(candidate.interviewDate)}
+                          </span>
+                        </div>
+                        {candidate.vacancyInterviewLocationUrl && (
+                          <a
+                            href={candidate.vacancyInterviewLocationUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[10.5px] font-bold text-blue-700 hover:text-blue-900 underline"
+                          >
+                            <MapPin className="w-3 h-3" />
+                            <span>GPS Location</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
+                      </div>
+                      {candidate.vacancyInterviewVenue && (
+                        <p className="text-[11px] text-slate-700">
+                          <strong className="text-slate-900">Venue:</strong> {candidate.vacancyInterviewVenue}
+                        </p>
+                      )}
+                      {(candidate.vacancyInterviewContactPerson || candidate.vacancyInterviewContactPhone) && (
+                        <p className="text-[11px] text-slate-700">
+                          <strong className="text-slate-900">On-site SPOC:</strong>{" "}
+                          {candidate.vacancyInterviewContactPerson || "Reception Desk"}{" "}
+                          {candidate.vacancyInterviewContactPhone ? `(Tel: ${candidate.vacancyInterviewContactPhone})` : ""}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Bottom Action Buttons Bar: Neat, Minimalist, Consistent Borders */}
@@ -838,10 +1068,15 @@ export default function HrCandidatePipeline({
                       <button
                         type="button"
                         onClick={() => handleWhatsAppConnect(candidate)}
-                        className="h-7.5 inline-flex items-center gap-1 px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[10.5px] font-bold uppercase tracking-wider rounded-none border border-emerald-600 transition-colors cursor-pointer"
+                        className={`h-7.5 inline-flex items-center gap-1 px-2.5 text-white text-[10.5px] font-bold uppercase tracking-wider rounded-none border transition-colors cursor-pointer ${
+                          isInterview
+                            ? "bg-emerald-700 hover:bg-emerald-800 border-emerald-700"
+                            : "bg-emerald-600 hover:bg-emerald-700 border-emerald-600"
+                        }`}
+                        title={isInterview ? "Open WhatsApp with auto-filled Interview Call Letter" : "Initiate screening WhatsApp"}
                       >
                         <MessageSquare className="w-3 h-3" />
-                        <span>WhatsApp</span>
+                        <span>{isInterview ? "WhatsApp Call Letter" : "WhatsApp"}</span>
                       </button>
                     )}
 
@@ -941,14 +1176,14 @@ export default function HrCandidatePipeline({
         </div>
       )}
 
-      {/* MODAL 2: SEND FOR INTERVIEW (CHOOSE TARGET OPENING) */}
+      {/* MODAL 2: SEND FOR INTERVIEW (CHOOSE TARGET OPENING & WHATSAPP DISPATCH) */}
       {dispatchModalCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-none shadow-2xl w-full max-w-lg p-5 sm:p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-3 sm:p-4 animate-fadeIn overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-none shadow-2xl w-full max-w-xl p-5 sm:p-6 space-y-3.5 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-blue-600" />
-                Schedule Candidate Interview
+                Schedule Interview & WhatsApp Dispatch
               </h3>
               <button
                 type="button"
@@ -959,16 +1194,20 @@ export default function HrCandidatePipeline({
               </button>
             </div>
 
+            {/* Candidate & Origin Lead Summary */}
             <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 border border-slate-200">
+              <div className="flex flex-wrap items-center justify-between gap-1">
+                <p>
+                  Candidate: <strong className="text-slate-900">{dispatchModalCandidate.fullName}</strong> ({dispatchModalCandidate.candidateId})
+                </p>
+                <span className="font-mono font-semibold text-slate-800">{dispatchModalCandidate.phone}</span>
+              </div>
               <p>
-                Candidate: <strong className="text-slate-900">{dispatchModalCandidate.fullName}</strong> ({dispatchModalCandidate.candidateId})
-              </p>
-              <p>
-                Original Lead: <span className="font-semibold text-slate-700">{dispatchModalCandidate.vacancyJobId}: {dispatchModalCandidate.vacancyTitle}</span>
+                Original Applied Role: <span className="font-semibold text-slate-700">{dispatchModalCandidate.vacancyJobId}: {dispatchModalCandidate.vacancyTitle}</span> ({dispatchModalCandidate.clientCompanyName})
               </p>
               {dispatchModalCandidate.vacancyStatus !== "ACTIVE" && (
                 <div className="mt-1.5 p-2 bg-amber-50 border-l-2 border-amber-500 text-amber-900 text-[11px]">
-                  ⚠️ Original opening is closed or disabled. Choose an active vacancy below to dispatch this candidate.
+                  ⚠️ Original opening is closed or filled. Choose any active vacancy below to dispatch this candidate.
                 </div>
               )}
             </div>
@@ -995,17 +1234,76 @@ export default function HrCandidatePipeline({
               </select>
             </div>
 
-            {/* Date Picker */}
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                Scheduled Interview Date
-              </label>
-              <input
-                type="date"
-                value={interviewDate}
-                onChange={(e) => setInterviewDate(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
-              />
+            {/* Selected Vacancy Venue & SPOC Details Card */}
+            {selectedTargetVac && (
+              <div className="p-3 bg-blue-50/70 border border-blue-200 text-xs space-y-1.5">
+                <div className="flex flex-wrap items-center justify-between gap-1">
+                  <span className="font-bold text-blue-900 uppercase text-[10.5px]">
+                    {selectedTargetVac.jobId}: {selectedTargetVac.title} ({selectedTargetVac.clientCompanyName})
+                  </span>
+                  {selectedTargetVac.interviewLocationUrl && (
+                    <a
+                      href={selectedTargetVac.interviewLocationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[10.5px] font-bold text-blue-700 hover:text-blue-900 underline"
+                    >
+                      <MapPin className="w-3 h-3" />
+                      <span>Test Maps GPS</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+
+                {selectedTargetVac.interviewVenue ? (
+                  <p className="text-slate-700 text-[11px]">
+                    <strong className="text-slate-900">Physical Venue:</strong> {selectedTargetVac.interviewVenue}
+                  </p>
+                ) : (
+                  <p className="text-amber-800 text-[10.5px]">
+                    ⚠️ Exact venue not added by client yet. (Candidate will be instructed to call SPOC on arrival).
+                  </p>
+                )}
+
+                {(selectedTargetVac.interviewContactPerson || selectedTargetVac.interviewContactPhone) && (
+                  <p className="text-slate-700 text-[11px]">
+                    <strong className="text-slate-900">On-site SPOC:</strong> {selectedTargetVac.interviewContactPerson || "Reception"} {selectedTargetVac.interviewContactPhone ? `(Tel: ${selectedTargetVac.interviewContactPhone})` : ""}
+                  </p>
+                )}
+
+                {selectedTargetVac.interviewInstructions && (
+                  <p className="text-slate-600 text-[10.5px] italic">
+                    Note: {selectedTargetVac.interviewInstructions}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Date & Time Picker */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Scheduled Interview Date
+                </label>
+                <input
+                  type="date"
+                  value={interviewDate}
+                  onChange={(e) => setInterviewDate(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Scheduled Interview Time
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 10:30 AM"
+                  value={interviewTime}
+                  onChange={(e) => setInterviewTime(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+                />
+              </div>
             </div>
 
             {/* Screening Remarks */}
@@ -1014,7 +1312,7 @@ export default function HrCandidatePipeline({
                 Recruiter Screening Remarks (Optional)
               </label>
               <textarea
-                rows={2}
+                rows={1}
                 value={interviewNote}
                 onChange={(e) => setInterviewNote(e.target.value)}
                 placeholder="e.g. Screened profile, cleared basic English communication..."
@@ -1022,23 +1320,70 @@ export default function HrCandidatePipeline({
               />
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+            {/* Live Auto-Generated WhatsApp Call Letter Preview */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Auto-Generated WhatsApp Call Letter</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!currentCallLetter) return;
+                    navigator.clipboard.writeText(currentCallLetter);
+                    setCopiedNotice(true);
+                    setTimeout(() => setCopiedNotice(false), 2000);
+                  }}
+                  className="inline-flex items-center gap-1 text-[10.5px] font-bold uppercase tracking-wider text-slate-600 hover:text-slate-900 cursor-pointer"
+                >
+                  {copiedNotice ? (
+                    <>
+                      <Check className="w-3 h-3 text-emerald-600" />
+                      <span className="text-emerald-700">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3 text-slate-400" />
+                      <span>Copy Message</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="p-2.5 bg-emerald-50/70 border border-emerald-300 text-[11px] text-slate-800 leading-relaxed font-sans max-h-36 overflow-y-auto whitespace-pre-wrap">
+                {currentCallLetter}
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setDispatchModalCandidate(null)}
                 disabled={isSubmitting}
-                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
+                className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
               >
                 Cancel
               </button>
-              <button
-                type="button"
-                onClick={handleConfirmSingleDispatch}
-                disabled={isSubmitting || !modalTargetVacancyId}
-                className="px-5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer"
-              >
-                {isSubmitting ? "Dispatching..." : "Confirm & Send to Client"}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleConfirmSingleDispatch(false)}
+                  disabled={isSubmitting || !modalTargetVacancyId}
+                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer"
+                >
+                  {isSubmitting ? "Dispatching..." : "Confirm Dispatch Only"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleConfirmSingleDispatch(true)}
+                  disabled={isSubmitting || !modalTargetVacancyId}
+                  className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>Confirm & Open WhatsApp</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1078,6 +1423,39 @@ export default function HrCandidatePipeline({
                 ))}
               </select>
             </div>
+
+            {/* Bulk Destination Venue Details */}
+            {selectedBulkVac && (
+              <div className="p-2.5 bg-blue-50/70 border border-blue-200 text-xs space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-blue-900 uppercase text-[10px]">
+                    Drive Destination: {selectedBulkVac.title}
+                  </span>
+                  {selectedBulkVac.interviewLocationUrl && (
+                    <a
+                      href={selectedBulkVac.interviewLocationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[10.5px] font-bold text-blue-700 hover:text-blue-900 underline"
+                    >
+                      <MapPin className="w-3 h-3" />
+                      <span>GPS Maps</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+                {selectedBulkVac.interviewVenue && (
+                  <p className="text-slate-700 text-[11px]">
+                    <strong className="text-slate-900">Venue:</strong> {selectedBulkVac.interviewVenue}
+                  </p>
+                )}
+                {(selectedBulkVac.interviewContactPerson || selectedBulkVac.interviewContactPhone) && (
+                  <p className="text-slate-700 text-[11px]">
+                    <strong className="text-slate-900">On-site SPOC:</strong> {selectedBulkVac.interviewContactPerson || "Reception"} {selectedBulkVac.interviewContactPhone ? `(Tel: ${selectedBulkVac.interviewContactPhone})` : ""}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">

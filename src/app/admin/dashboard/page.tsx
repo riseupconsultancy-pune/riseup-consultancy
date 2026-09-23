@@ -58,7 +58,8 @@ export default async function AdminDashboardPage({
     candidatesRejected,
     candidatesAbsent,
     recentCandidates,
-    hrTeamList
+    hrTeamList,
+    newInquiriesCount,
   ] = await Promise.all([
     prisma.user.count({ where: { role: "HR_RECRUITER", status: "ACTIVE" } }),
     prisma.user.count({ 
@@ -97,6 +98,7 @@ export default async function AdminDashboardPage({
       orderBy: { lastActiveAt: "desc" },
       include: { hrProfile: true },
     }),
+    prisma.inquiry.count({ where: { status: "NEW" } }),
   ]);
 
   const hrsAbsentToday = Math.max(0, totalHRs - hrsLoggedInToday);
@@ -142,6 +144,30 @@ export default async function AdminDashboardPage({
           })}
         </div>
       </div>
+
+      {/* New Inquiries Action Alert Banner */}
+      {newInquiriesCount > 0 && (
+        <div className="p-4 bg-rose-50 border border-rose-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+          <div className="flex items-center gap-3">
+            <span className="w-2.5 h-2.5 bg-rose-600 animate-ping shrink-0" />
+            <div>
+              <div className="text-xs font-bold text-rose-900">
+                Action Required: {newInquiriesCount} New Website Talent Request{newInquiriesCount > 1 ? "s" : ""} / Inquiry Awaiting Response
+              </div>
+              <div className="text-[11px] text-rose-700">
+                Prospective corporate clients and candidates submitted direct intake mandates through the public website.
+              </div>
+            </div>
+          </div>
+          <Link
+            href="/admin/inquiries"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold uppercase tracking-wider transition-colors shrink-0"
+          >
+            <span>Open Inquiries Desk</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
 
       {/* SECTION 1: Real-Time HR Presence & Attendance Tracker */}
       <div>

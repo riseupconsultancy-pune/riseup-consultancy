@@ -19,7 +19,8 @@ import {
   Sparkles,
   Phone,
   Mail,
-  Filter
+  Filter,
+  ExternalLink
 } from "lucide-react";
 import { updateCandidateStatusByClientAction } from "@/app/actions/client-actions";
 
@@ -41,11 +42,16 @@ interface CandidateRecord {
   hrPhone: string | null;
   status: string;
   clientFeedback: string | null;
+  interviewDate: string | null;
   updatedAt: string;
   vacancyId: string;
   vacancyJobId: string;
   vacancyTitle: string;
   vacancyCity: string;
+  vacancyInterviewVenue?: string | null;
+  vacancyInterviewLocationUrl?: string | null;
+  vacancyInterviewContactPerson?: string | null;
+  vacancyInterviewContactPhone?: string | null;
   recentHistory: {
     id: string;
     newStatus: string;
@@ -171,6 +177,17 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
     }
   };
 
+  // Dynamic counts for status tabs
+  const pool = selectedVacancyId === "ALL" ? candidates : candidates.filter((c) => c.vacancyId === selectedVacancyId);
+  const counts = {
+    all: pool.length,
+    going: pool.filter((c) => c.status === "GOING_FOR_INTERVIEW").length,
+    interviewed: pool.filter((c) => c.status === "INTERVIEWED").length,
+    selected: pool.filter((c) => c.status === "SELECTED").length,
+    rejected: pool.filter((c) => c.status === "REJECTED").length,
+    absent: pool.filter((c) => c.status === "ABSENT").length,
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Banner */}
@@ -233,7 +250,7 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
             <select
               value={selectedVacancyId}
               onChange={(e) => setSelectedVacancyId(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 px-3 py-2 text-xs text-slate-900 font-medium rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+              className="w-full bg-slate-50 border border-slate-300 px-3 py-2 text-xs text-slate-900 font-medium rounded-none focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
             >
               <option value="ALL">All Vacancy Mandates</option>
               {vacancies.map((v) => (
@@ -245,26 +262,33 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
           </div>
         </div>
 
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1 overflow-x-auto pt-2 border-t border-slate-100">
+        {/* Status Filter Tabs with Counts */}
+        <div className="flex items-center gap-1 overflow-x-auto pt-2 border-t border-slate-100 pb-0.5">
           {[
-            { key: "ALL", label: "All Candidates" },
-            { key: "GOING_FOR_INTERVIEW", label: "Scheduled for Interview" },
-            { key: "INTERVIEWED", label: "Interview Completed" },
-            { key: "SELECTED", label: "Selected" },
-            { key: "REJECTED", label: "Rejected" },
-            { key: "ABSENT", label: "Absent / No-Show" },
+            { key: "ALL", label: "All Candidates", count: counts.all },
+            { key: "GOING_FOR_INTERVIEW", label: "Scheduled for Interview", count: counts.going },
+            { key: "INTERVIEWED", label: "Interview Completed", count: counts.interviewed },
+            { key: "SELECTED", label: "Selected", count: counts.selected },
+            { key: "REJECTED", label: "Rejected", count: counts.rejected },
+            { key: "ABSENT", label: "Absent / No-Show", count: counts.absent },
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setStatusFilter(tab.key)}
-              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-none whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-none whitespace-nowrap transition-colors cursor-pointer flex items-center gap-1.5 ${
                 statusFilter === tab.key
                   ? "bg-slate-900 text-white"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
-              {tab.label}
+              <span>{tab.label}</span>
+              <span className={`text-[10px] px-1.5 py-0.2 font-mono font-bold ${
+                statusFilter === tab.key
+                  ? "bg-slate-700 text-white"
+                  : "bg-slate-200 text-slate-700"
+              }`}>
+                {tab.count}
+              </span>
             </button>
           ))}
         </div>
@@ -363,7 +387,75 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
                           {candidate.city}, {candidate.country}
                         </span>
                       </div>
+
+                      {/* Candidate Phone & Email Contacts */}
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] text-slate-600 pt-1.5">
+                        <a 
+                          href={`tel:${candidate.phone}`}
+                          className="inline-flex items-center gap-1 hover:text-blue-600 font-mono font-semibold text-slate-800"
+                        >
+                          <Phone className="w-3 h-3 text-slate-400" />
+                          <span>{candidate.phone}</span>
+                        </a>
+                        <span>&bull;</span>
+                        <a 
+                          href={`mailto:${candidate.email}`}
+                          className="inline-flex items-center gap-1 hover:text-blue-600 text-slate-600"
+                        >
+                          <Mail className="w-3 h-3 text-slate-400" />
+                          <span>{candidate.email}</span>
+                        </a>
+                      </div>
                     </div>
+
+                    {/* Interview Schedule & Venue Strip (for Scheduled or Interviewed Candidates) */}
+                    {(isGoingForInterview || isInterviewed) && candidate.interviewDate && (
+                      <div className="p-3 bg-blue-50/80 border-l-4 border-blue-600 text-xs text-slate-800 space-y-1.5">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 font-bold text-blue-900">
+                            <Calendar className="w-4 h-4 text-blue-600 shrink-0" />
+                            <span>
+                              Scheduled Interview:{" "}
+                              {new Date(candidate.interviewDate).toLocaleString("en-IN", {
+                                weekday: "short",
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                                hour: "numeric",
+                                minute: "2-digit",
+                                hour12: true,
+                              })}
+                            </span>
+                          </div>
+                          {candidate.vacancyInterviewLocationUrl && (
+                            <a
+                              href={candidate.vacancyInterviewLocationUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 hover:text-blue-900 underline"
+                            >
+                              <MapPin className="w-3 h-3" />
+                              <span>Google Maps GPS</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
+
+                        {candidate.vacancyInterviewVenue && (
+                          <p className="text-[11px] text-slate-700">
+                            <strong className="text-slate-900">Interview Venue:</strong> {candidate.vacancyInterviewVenue}
+                          </p>
+                        )}
+
+                        {(candidate.vacancyInterviewContactPerson || candidate.vacancyInterviewContactPhone) && (
+                          <p className="text-[11px] text-slate-700">
+                            <strong className="text-slate-900">On-site SPOC:</strong>{" "}
+                            {candidate.vacancyInterviewContactPerson || "Reception Desk"}{" "}
+                            {candidate.vacancyInterviewContactPhone ? `(Tel: ${candidate.vacancyInterviewContactPhone})` : ""}
+                          </p>
+                        )}
+                      </div>
+                    )}
 
                     {/* Qualifications & Attributes Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-3 border border-slate-200 text-xs">
@@ -389,7 +481,9 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
                         <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                           Assigned Recruiter
                         </div>
-                        <div className="font-semibold text-slate-800">{candidate.hrName}</div>
+                        <div className="font-semibold text-slate-800">
+                          {candidate.hrName} {candidate.hrPhone ? `(${candidate.hrPhone})` : ""}
+                        </div>
                       </div>
                     </div>
 
@@ -418,7 +512,7 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
                           resumeFileName: candidate.resumeFileName,
                         })
                       }
-                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs text-center"
+                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs text-center cursor-pointer"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>View Resume PDF</span>
@@ -428,7 +522,7 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
                     <div className="grid grid-cols-2 gap-1.5 pt-1">
                       <button
                         onClick={() => handleOpenEvaluation(candidate, "SELECTED")}
-                        className="inline-flex items-center justify-center gap-1 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs text-center"
+                        className="inline-flex items-center justify-center gap-1 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs text-center cursor-pointer"
                       >
                         <CheckCircle2 className="w-3 h-3" />
                         <span>Select</span>
@@ -436,7 +530,7 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
 
                       <button
                         onClick={() => handleOpenEvaluation(candidate, "REJECTED")}
-                        className="inline-flex items-center justify-center gap-1 px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs text-center"
+                        className="inline-flex items-center justify-center gap-1 px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs text-center cursor-pointer"
                       >
                         <XCircle className="w-3 h-3" />
                         <span>Reject</span>
@@ -446,14 +540,14 @@ export default function ClientCandidateReview({ initialCandidates, vacancies }: 
                     <div className="grid grid-cols-2 gap-1.5">
                       <button
                         onClick={() => handleOpenEvaluation(candidate, "INTERVIEWED")}
-                        className="inline-flex items-center justify-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold uppercase tracking-wider transition-colors rounded-none border border-slate-300 text-center"
+                        className="inline-flex items-center justify-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold uppercase tracking-wider transition-colors rounded-none border border-slate-300 text-center cursor-pointer"
                       >
                         <span>Interviewed</span>
                       </button>
 
                       <button
                         onClick={() => handleOpenEvaluation(candidate, "ABSENT")}
-                        className="inline-flex items-center justify-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold uppercase tracking-wider transition-colors rounded-none border border-slate-300 text-center"
+                        className="inline-flex items-center justify-center gap-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold uppercase tracking-wider transition-colors rounded-none border border-slate-300 text-center cursor-pointer"
                       >
                         <span>No-Show</span>
                       </button>

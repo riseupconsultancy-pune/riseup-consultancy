@@ -57,6 +57,11 @@ export default async function HrCandidatesPage() {
       expMin: true,
       expMax: true,
       availabilityRequired: true,
+      interviewVenue: true,
+      interviewLocationUrl: true,
+      interviewContactPerson: true,
+      interviewContactPhone: true,
+      interviewInstructions: true,
       client: {
         select: {
           companyName: true,
@@ -84,6 +89,11 @@ export default async function HrCandidatesPage() {
           city: true,
           workMode: true,
           status: true,
+          interviewVenue: true,
+          interviewLocationUrl: true,
+          interviewContactPerson: true,
+          interviewContactPhone: true,
+          interviewInstructions: true,
           client: {
             select: {
               companyName: true,
@@ -152,6 +162,11 @@ export default async function HrCandidatesPage() {
     vacancyCategory: c.vacancy.category,
     vacancyCity: c.vacancy.city,
     vacancyStatus: c.vacancy.status,
+    vacancyInterviewVenue: c.vacancy.interviewVenue || null,
+    vacancyInterviewLocationUrl: c.vacancy.interviewLocationUrl || null,
+    vacancyInterviewContactPerson: c.vacancy.interviewContactPerson || null,
+    vacancyInterviewContactPhone: c.vacancy.interviewContactPhone || null,
+    vacancyInterviewInstructions: c.vacancy.interviewInstructions || null,
     clientCompanyName: c.vacancy.client.companyName,
     isMyLead: c.hrId === hrProfileId,
     recentHistory: c.statusHistory.map((h) => ({
@@ -173,6 +188,11 @@ export default async function HrCandidatesPage() {
     expMin: v.expMin,
     expMax: v.expMax,
     availabilityRequired: v.availabilityRequired,
+    interviewVenue: v.interviewVenue || null,
+    interviewLocationUrl: v.interviewLocationUrl || null,
+    interviewContactPerson: v.interviewContactPerson || null,
+    interviewContactPhone: v.interviewContactPhone || null,
+    interviewInstructions: v.interviewInstructions || null,
     clientCompanyName: v.client.companyName,
   }));
 
@@ -183,6 +203,7 @@ export default async function HrCandidatesPage() {
         activeVacancies={formattedActiveVacancies}
         appliedVacancies={Array.from(appliedVacancyMap.values())}
         recruiterName={hrProfile.user.fullName}
+        recruiterPhone={hrProfile.user.phone || null}
         employeeCode={hrProfile.employeeCode}
         whatsappTemplate={hrProfile.whatsappTemplate}
       />

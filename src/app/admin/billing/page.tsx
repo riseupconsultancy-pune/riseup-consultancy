@@ -78,8 +78,16 @@ export default async function AdminBillingPage() {
     select: {
       id: true,
       companyName: true,
+      city: true,
+      country: true,
+      contactPerson: true,
+      phone: true,
       billingAddress: true,
       billingGstin: true,
+      billingPan: true,
+      billingContactPerson: true,
+      billingEmail: true,
+      billingPhone: true,
     },
     orderBy: { companyName: "asc" },
   });
@@ -87,8 +95,16 @@ export default async function AdminBillingPage() {
   const clients: ClientSelectItem[] = clientsRaw.map((cl) => ({
     id: cl.id,
     companyName: cl.companyName,
+    city: cl.city,
+    country: cl.country,
+    contactPerson: cl.contactPerson,
+    phone: cl.phone,
     billingAddress: cl.billingAddress,
     billingGstin: cl.billingGstin,
+    billingPan: cl.billingPan,
+    billingContactPerson: cl.billingContactPerson,
+    billingEmail: cl.billingEmail,
+    billingPhone: cl.billingPhone,
   }));
 
   // 3. Fetch Invoices
@@ -113,6 +129,7 @@ export default async function AdminBillingPage() {
   const formattedInvoices: InvoiceData[] = invoicesRaw.map((inv) => ({
     id: inv.id,
     invoiceNumber: inv.invoiceNumber,
+    clientId: inv.clientId,
     invoiceDate: formatDateStr(inv.invoiceDate) || "",
     dueDate: formatDateStr(inv.dueDate),
     terms: inv.terms,

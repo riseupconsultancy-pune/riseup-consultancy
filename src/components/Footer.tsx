@@ -134,8 +134,12 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {new Date().getFullYear()} Rise Up Consultancy Pune. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <span className="hover:text-slate-400 transition-colors cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-slate-400 transition-colors cursor-pointer">Terms of Service</span>
+            <Link href="/privacy" className="hover:text-slate-300 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-slate-300 transition-colors">
+              Terms of Service
+            </Link>
             <Link href="/login" className="text-slate-400 hover:text-blue-400 transition-colors font-medium">
               CRM Portal Login
             </Link>

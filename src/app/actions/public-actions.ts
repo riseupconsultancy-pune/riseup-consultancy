@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
-import { generateCandidateId } from "@/lib/id-generator";
+import { generateCandidateId, generateInquiryId } from "@/lib/id-generator";
 import { getSession } from "@/lib/auth";
 
 const MAX_RESUME_SIZE = 2 * 1024 * 1024; // 2MB
@@ -19,9 +19,12 @@ const directApplySchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters").max(100).trim(),
   email: z.string().email("Please enter a valid email address").toLowerCase().trim(),
   phone: z.string().min(7, "Phone number must be at least 7 digits").max(20).trim(),
-  location: z.string().min(2, "City / Location is required").max(100).trim(),
-  qualification: z.string().default("Any Graduate"),
-  experience: z.string().min(1, "Experience is required").default("Fresher"),
+  country: z.string().min(2).default("India"),
+  city: z.string().min(2, "City / Location is required").max(100).trim(),
+  qualification: z.string().min(1, "Qualification is required").default("Any Graduate"),
+  totalExperience: z.string().min(1, "Experience is required").default("Fresher (0 Months)"),
+  availability: z.enum(["Immediate Joiner", "15 Days", "30 Days"]).default("Immediate Joiner"),
+  interestedRoles: z.string().optional().default("[]"),
   vacancyId: z.string().optional().nullable(),
   jobTitle: z.string().optional().nullable(),
 });
@@ -32,9 +35,12 @@ export async function applyDirectJobAction(formData: FormData) {
       fullName: formData.get("fullName"),
       email: formData.get("email"),
       phone: formData.get("phone"),
-      location: formData.get("location") || "Pune",
+      country: formData.get("country") || "India",
+      city: formData.get("city") || formData.get("location") || "Pune",
       qualification: formData.get("qualification") || "Any Graduate",
-      experience: formData.get("experience") || "Fresher",
+      totalExperience: formData.get("totalExperience") || formData.get("experience") || "Fresher (0 Months)",
+      availability: formData.get("availability") || "Immediate Joiner",
+      interestedRoles: formData.get("interestedRoles") || "[]",
       vacancyId: formData.get("vacancyId") || null,
       jobTitle: formData.get("jobTitle") || null,
     };
@@ -44,7 +50,7 @@ export async function applyDirectJobAction(formData: FormData) {
       return { success: false, error: parsed.error.issues[0]?.message || "Invalid application details." };
     }
 
-    const { fullName, email, phone, location, qualification, experience, vacancyId } = parsed.data;
+    const { fullName, email, phone, country, city, qualification, totalExperience, availability, interestedRoles, vacancyId } = parsed.data;
 
     // File Validation & Binary Magic Byte Check
     const resumeFile = formData.get("resume");
@@ -117,6 +123,19 @@ export async function applyDirectJobAction(formData: FormData) {
 
     const candidateId = await generateCandidateId();
 
+    // Parse interested roles
+    let finalInterestedRoles = JSON.stringify([targetVacancy.category]);
+    try {
+      if (interestedRoles) {
+        const parsedRoles = JSON.parse(interestedRoles);
+        if (Array.isArray(parsedRoles) && parsedRoles.length > 0) {
+          finalInterestedRoles = JSON.stringify(parsedRoles);
+        }
+      }
+    } catch {
+      // fallback
+    }
+
     // Create Candidate in Admin Website Candidate Pool
     await prisma.candidate.create({
       data: {
@@ -124,12 +143,12 @@ export async function applyDirectJobAction(formData: FormData) {
         fullName,
         email,
         phone,
-        country: targetVacancy.country || "India",
-        city: location,
+        country: country || targetVacancy.country || "India",
+        city,
         qualification,
-        totalExperience: experience,
-        availability: "Immediate Joiner",
-        interestedRoles: JSON.stringify([targetVacancy.category]),
+        totalExperience,
+        availability,
+        interestedRoles: finalInterestedRoles,
         resumeUrl,
         resumeFileName: sanitizedOriginalName || "Resume.pdf",
         resumeFileSize: file.size,
@@ -198,6 +217,25 @@ export async function submitCorporateInquiryAction(formData: FormData) {
 
     const { companyName, contactPerson, email, phone, location, roleRequirement } = parsed.data;
 
+    // 1. Save corporate inquiry to CRM Inquiry database
+    const inquiryNumber = await generateInquiryId();
+    await prisma.inquiry.create({
+      data: {
+        inquiryNumber,
+        type: "TALENT_REQUEST",
+        fullName: contactPerson,
+        companyName,
+        email,
+        phone,
+        city: location,
+        country: location.toLowerCase().includes("nigeria") || location.toLowerCase().includes("lagos") ? "Nigeria" : "India",
+        roleRequirement,
+        message: `Hiring requirement for ${companyName}: ${roleRequirement}`,
+        source: "HERO_REQUEST_TALENT",
+        status: "NEW",
+      },
+    });
+
     // Check if user already exists
     const existing = await prisma.user.findUnique({ where: { email } });
     if (!existing) {
@@ -229,6 +267,7 @@ export async function submitCorporateInquiryAction(formData: FormData) {
     }
 
     try {
+      revalidatePath("/admin/inquiries");
       revalidatePath("/admin/clients");
       revalidatePath("/admin/dashboard");
     } catch {
@@ -313,6 +352,73 @@ export async function assignCandidateToHrAction(candidateId: string, hrId: strin
   }
 }
 
+export async function bulkAssignCandidatesToHrAction(candidateIds: string[], hrId: string) {
+  try {
+    const session = await getSession();
+    if (!session || session.role !== "SUPER_ADMIN") {
+      throw new Error("Unauthorized: Super Admin access required.");
+    }
+
+    if (!candidateIds || candidateIds.length === 0) {
+      return { success: false, error: "No candidates selected." };
+    }
+
+    const hr = await prisma.hrProfile.findUnique({
+      where: { id: hrId },
+      include: { user: true },
+    });
+
+    if (!hr) {
+      return { success: false, error: "Recruiter not found." };
+    }
+
+    const newReferralTag = `Referral: ${hr.user.fullName} | RiseUp Consultancy`;
+
+    const targetCandidates = await prisma.candidate.findMany({
+      where: { id: { in: candidateIds } },
+      select: { id: true, status: true },
+    });
+
+    await prisma.$transaction([
+      prisma.candidate.updateMany({
+        where: { id: { in: candidateIds } },
+        data: {
+          hrId: hr.id,
+          referralTag: newReferralTag,
+        },
+      }),
+      ...targetCandidates.map((c) =>
+        prisma.candidateStatusHistory.create({
+          data: {
+            candidateId: c.id,
+            previousStatus: c.status,
+            newStatus: c.status,
+            changedByUserId: session.userId,
+            changedByRole: "SUPER_ADMIN",
+            note: `Bulk assigned to recruiter ${hr.user.fullName} (${hr.employeeCode}) by Super Admin`,
+          },
+        })
+      ),
+    ]);
+
+    try {
+      revalidatePath("/admin/candidates");
+      revalidatePath("/hr/candidates");
+      revalidatePath("/hr/dashboard");
+    } catch {
+      // safe fallback
+    }
+
+    return {
+      success: true,
+      message: `Successfully assigned ${candidateIds.length} candidate(s) to ${hr.user.fullName} (${hr.employeeCode}).`,
+    };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to bulk assign candidates.";
+    return { success: false, error: message };
+  }
+}
+
 // -------------------------------------------------------------
 // 4. PUBLIC CONTACT FORM INQUIRY (CONTACT PAGE & SECTION)
 // -------------------------------------------------------------
@@ -343,6 +449,26 @@ export async function submitContactInquiryAction(formData: FormData) {
     }
 
     const { fullName, email, phone, userType, subject, message } = parsed.data;
+
+    // 1. Save contact inquiry to CRM Inquiry database
+    const inquiryNumber = await generateInquiryId();
+    const inquiryType = userType === "EMPLOYER" ? "EMPLOYER_QUERY" : "CANDIDATE_QUERY";
+    await prisma.inquiry.create({
+      data: {
+        inquiryNumber,
+        type: inquiryType,
+        fullName,
+        companyName: userType === "EMPLOYER" ? subject : null,
+        email,
+        phone,
+        city: "Pune",
+        country: "India",
+        subject,
+        message,
+        source: "CONTACT_PAGE",
+        status: "NEW",
+      },
+    });
 
     // If it's an employer inquiry, check if user exists or register as pending client lead
     if (userType === "EMPLOYER") {
@@ -376,6 +502,7 @@ export async function submitContactInquiryAction(formData: FormData) {
     }
 
     try {
+      revalidatePath("/admin/inquiries");
       revalidatePath("/admin/clients");
       revalidatePath("/admin/dashboard");
     } catch {

@@ -34,8 +34,20 @@ const createVacancySchema = z.object({
   salaryMax: z.coerce.number().optional().nullable(),
   salaryCurrency: z.string().trim().default("INR"),
   availabilityRequired: z.string().trim().default("Immediate Joiner"),
-  description: z.string().min(20, "Job description must be at least 20 characters").trim(),
+  description: z
+    .string()
+    .min(50, "Job description must be at least two sentences (minimum 50 characters) for portal indexing.")
+    .trim()
+    .refine((val) => {
+      const sentences = val.split(/[.!?]+/).filter((s) => s.trim().length >= 5);
+      return sentences.length >= 2;
+    }, "Job description must contain at least two complete sentences for search engine indexing (Indeed, LinkedIn, Google for Jobs, Naukri)."),
   requirements: z.string().optional().nullable(),
+  interviewVenue: z.string().optional().nullable(),
+  interviewLocationUrl: z.string().optional().nullable(),
+  interviewContactPerson: z.string().optional().nullable(),
+  interviewContactPhone: z.string().optional().nullable(),
+  interviewInstructions: z.string().optional().nullable(),
 });
 
 export async function createClientVacancyAction(formData: FormData) {
@@ -59,6 +71,11 @@ export async function createClientVacancyAction(formData: FormData) {
       availabilityRequired: formData.get("availabilityRequired") || "Immediate Joiner",
       description: formData.get("description"),
       requirements: formData.get("requirements") || null,
+      interviewVenue: formData.get("interviewVenue") ? String(formData.get("interviewVenue")).trim() : null,
+      interviewLocationUrl: formData.get("interviewLocationUrl") ? String(formData.get("interviewLocationUrl")).trim() : null,
+      interviewContactPerson: formData.get("interviewContactPerson") ? String(formData.get("interviewContactPerson")).trim() : null,
+      interviewContactPhone: formData.get("interviewContactPhone") ? String(formData.get("interviewContactPhone")).trim() : null,
+      interviewInstructions: formData.get("interviewInstructions") ? String(formData.get("interviewInstructions")).trim() : null,
     };
 
     const parsed = createVacancySchema.safeParse(rawData);
@@ -82,6 +99,11 @@ export async function createClientVacancyAction(formData: FormData) {
       availabilityRequired,
       description,
       requirements,
+      interviewVenue,
+      interviewLocationUrl,
+      interviewContactPerson,
+      interviewContactPhone,
+      interviewInstructions,
     } = parsed.data;
 
     if (expMax < expMin) {
@@ -108,6 +130,11 @@ export async function createClientVacancyAction(formData: FormData) {
         availabilityRequired,
         description,
         requirements: requirements || "",
+        interviewVenue: interviewVenue || null,
+        interviewLocationUrl: interviewLocationUrl || null,
+        interviewContactPerson: interviewContactPerson || null,
+        interviewContactPhone: interviewContactPhone || null,
+        interviewInstructions: interviewInstructions || null,
         status: "PENDING_REVIEW",
         clientId: clientProfileId,
         isBroadcastedToHR: false,

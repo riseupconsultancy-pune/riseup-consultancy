@@ -50,3 +50,21 @@ h1, h2, h3, h4, .font-heading {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Prevent iOS Safari and Android Chrome Auto-Zoom on Form Input Focus */
+@media screen and (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Fast tap response & prevent double-tap zoom delay on interactive elements */
+button,
+input,
+select,
+textarea,
+a {
+  touch-action: manipulation;
+}

@@ -84,6 +84,11 @@ model Vacancy {
   availabilityRequired String    @default("Immediate Joiner") // Immediate Joiner, 15 Days, 30 Days
   description          String
   requirements         String?
+  interviewVenue         String?   // Physical interview venue / building / landmark
+  interviewLocationUrl   String?   // Google Maps navigation URL
+  interviewContactPerson String?   // Reception / On-site HR SPOC
+  interviewContactPhone  String?   // Contact phone to call upon arrival
+  interviewInstructions  String?   // Candidate instructions (e.g. CV copies, dress code)
   status               String    @default("PENDING_REVIEW") // PENDING_REVIEW, ACTIVE, FULFILLED, CLOSED, DISABLED
   isBroadcastedToHR    Boolean   @default(false)
   isPostedOnWebsite    Boolean   @default(false)
@@ -281,6 +286,27 @@ model InvoiceItem {
 }
 
 model SystemCounter {
-  id           String @id // "JOB_COUNTER", "CANDIDATE_COUNTER", "AGREEMENT_COUNTER", "HR_COUNTER", "INVOICE_COUNTER"
+  id           String @id // "JOB_COUNTER", "CANDIDATE_COUNTER", "AGREEMENT_COUNTER", "HR_COUNTER", "INVOICE_COUNTER", "INQUIRY_COUNTER"
   currentValue Int    @default(1000)
+}
+
+model Inquiry {
+  id              String   @id @default(uuid())
+  inquiryNumber   String   @unique // Formatted: RUP-INQ-1001
+  type            String   // TALENT_REQUEST, CANDIDATE_QUERY, EMPLOYER_QUERY, GENERAL
+  fullName        String
+  companyName     String?
+  email           String
+  phone           String
+  city            String?
+  country         String   @default("India")
+  subject         String?
+  roleRequirement String?  // Headcount & role details for talent requests
+  message         String?  // Message/query text
+  source          String   @default("WEBSITE") // HERO_REQUEST_TALENT, CONTACT_PAGE, CONTACT_SECTION
+  status          String   @default("NEW") // NEW, IN_PROGRESS, CONNECTED, CONVERTED, CLOSED
+  adminNotes      String?
+  assignedTo      String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

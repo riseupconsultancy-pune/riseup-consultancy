@@ -106,6 +106,13 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
     availabilityRequired: "Immediate Joiner",
     description: "",
     requirements: "",
+
+    // Interview Venue & Location
+    interviewVenue: "",
+    interviewLocationUrl: "",
+    interviewContactPerson: clientProfile.user.fullName || "",
+    interviewContactPhone: clientProfile.user.phone || "",
+    interviewInstructions: "Carry 2 hard copies of CV, formal attire, mention RiseUp Consultancy at the gate/reception.",
   });
 
   const cityOptions = formData.country === "Nigeria" ? NIGERIA_CITIES : INDIA_CITIES;
@@ -119,6 +126,10 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
   const validateStep1 = () => {
     if (!formData.city.trim()) {
       setErrorMessage("Please specify the office / work location city.");
+      return false;
+    }
+    if (formData.workMode !== "Remote" && !formData.interviewVenue.trim()) {
+      setErrorMessage("Please specify the exact physical interview venue address for candidates.");
       return false;
     }
     return true;
@@ -137,8 +148,13 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
       setErrorMessage("Maximum experience cannot be less than minimum experience.");
       return false;
     }
-    if (!formData.description.trim() || formData.description.trim().length < 20) {
-      setErrorMessage("Please provide a job description of at least 20 characters.");
+    if (!formData.description.trim() || formData.description.trim().length < 50) {
+      setErrorMessage("Job description must be at least two sentences (minimum 50 characters) for search engine indexing.");
+      return false;
+    }
+    const sentences = formData.description.split(/[.!?]+/).filter((s) => s.trim().length >= 5);
+    if (sentences.length < 2) {
+      setErrorMessage("Please provide at least two complete sentences in the job description for automated job board indexing (Google for Jobs, Indeed, LinkedIn, Naukri).");
       return false;
     }
     return true;
@@ -405,6 +421,93 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 ))}
               </select>
             </div>
+
+            {/* Dedicated Interview Venue & GPS Navigation Card */}
+            <div className="sm:col-span-2 bg-slate-50 border border-slate-200 p-4 space-y-4 rounded-none">
+              <div className="flex items-center space-x-2 border-b border-slate-200 pb-2">
+                <MapPin className="w-4 h-4 text-blue-600" />
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading">
+                  Interview Venue & GPS Navigation (Google Maps)
+                </h3>
+              </div>
+              <p className="text-[11px] text-slate-600">
+                This exact venue address and Google Maps location URL will be auto-filled into candidate WhatsApp call letters when RiseUp HR schedules interviews.
+              </p>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                  Exact Interview Venue / Office Address {formData.workMode !== "Remote" && <span className="text-rose-500">*</span>}
+                </label>
+                <textarea
+                  name="interviewVenue"
+                  rows={2}
+                  value={formData.interviewVenue}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Digitide Business Solutions, 4th Floor, Cerebrum IT Park, Near Mariplex Mall, Kalyani Nagar, Pune - 411014"
+                  className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                  Interview Venue Location URL (Google Maps Link)
+                </label>
+                <input
+                  type="url"
+                  name="interviewLocationUrl"
+                  value={formData.interviewLocationUrl}
+                  onChange={handleInputChange}
+                  placeholder="e.g. https://maps.app.goo.gl/abcdef123 or https://goo.gl/maps/xyz"
+                  className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-mono rounded-none focus:border-blue-600 focus:outline-none"
+                />
+                <span className="text-[10px] text-slate-500 mt-1 block">
+                  Candidates will tap this Google Maps link on WhatsApp to navigate directly to your office gate.
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    On-Site Contact Person / SPOC (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="interviewContactPerson"
+                    value={formData.interviewContactPerson}
+                    onChange={handleInputChange}
+                    placeholder="e.g. Ms. Pooja Sharma (HR Reception)"
+                    className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    Contact Phone to Call Upon Arrival
+                  </label>
+                  <input
+                    type="text"
+                    name="interviewContactPhone"
+                    value={formData.interviewContactPhone}
+                    onChange={handleInputChange}
+                    placeholder="e.g. +91 98765 43210"
+                    className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                  Special Candidate Instructions / Gate Pass Notes
+                </label>
+                <input
+                  type="text"
+                  name="interviewInstructions"
+                  value={formData.interviewInstructions}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Carry 2 physical CV copies, formal attire, mention RiseUp Consultancy at the security gate"
+                  className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="flex justify-end pt-4 border-t border-slate-100">
@@ -566,19 +669,27 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
               </select>
             </div>
 
-            <div className="sm:col-span-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Detailed Job Description <span className="text-rose-500">*</span>
-              </label>
-              <textarea
-                name="description"
-                rows={4}
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Explain the day-to-day responsibilities, process flow, and targets for this role..."
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
-              />
-            </div>
+              <div className="sm:col-span-2">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                    Detailed Job Description <span className="text-rose-500">*</span>
+                  </label>
+                  <span className="text-[10px] font-medium text-slate-400">
+                    Min 2 sentences required for portal indexing
+                  </span>
+                </div>
+                <textarea
+                  name="description"
+                  rows={4}
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Explain the day-to-day responsibilities, process flow, and targets for this role. Minimum two complete sentences required so search engines (Google for Jobs, Indeed, LinkedIn, Naukri) can index this opening..."
+                  className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                />
+                <p className="mt-1 text-[10px] text-slate-500">
+                  Must contain at least 2 complete sentences (min. 50 characters). This description is automatically formatted with Schema.org JobPosting tags for search engine bots.
+                </p>
+              </div>
 
             <div className="sm:col-span-2">
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
@@ -667,6 +778,26 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                   : "As per company standards"}
               </span>
             </div>
+            {formData.interviewVenue && (
+              <div className="sm:col-span-2 border-t border-slate-200 pt-3">
+                <span className="font-bold text-slate-500 uppercase text-[10px] block">
+                  Interview Venue & GPS Navigation
+                </span>
+                <span className="font-semibold text-slate-900 block mt-0.5">
+                  {formData.interviewVenue}
+                </span>
+                {formData.interviewLocationUrl && (
+                  <span className="font-mono text-blue-700 text-[11px] block mt-1 break-all">
+                    Maps Link: {formData.interviewLocationUrl}
+                  </span>
+                )}
+                {formData.interviewContactPerson && (
+                  <span className="text-slate-600 text-[11px] block mt-1">
+                    Contact: {formData.interviewContactPerson} {formData.interviewContactPhone && `(${formData.interviewContactPhone})`}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Commercial & Operational Notice */}

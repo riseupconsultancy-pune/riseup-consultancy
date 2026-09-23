@@ -35,3 +35,12 @@ export async function generateHREmployeeCode(): Promise<string> {
   });
   return `RUP-HR-${counter.currentValue}`;
 }
+
+export async function generateInquiryId(): Promise<string> {
+  const counter = await prisma.systemCounter.upsert({
+    where: { id: "INQUIRY_COUNTER" },
+    update: { currentValue: { increment: 1 } },
+    create: { id: "INQUIRY_COUNTER", currentValue: 1001 },
+  });
+  return `RUP-INQ-${counter.currentValue}`;
+}

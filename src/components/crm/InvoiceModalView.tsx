@@ -17,6 +17,7 @@ import {
 export interface InvoiceData {
   id: string;
   invoiceNumber: string;
+  clientId?: string;
   invoiceDate: string;
   dueDate: string | null;
   terms: string;
@@ -103,18 +104,18 @@ export default function InvoiceModalView({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
-      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="relative w-full max-w-4xl bg-white rounded-none shadow-2xl border border-slate-300 overflow-hidden flex flex-col max-h-[92vh]">
         {/* Top Control Bar (Hidden when printing) */}
-        <div className="print:hidden flex items-center justify-between px-6 py-4 bg-slate-900 text-white border-b border-slate-800">
+        <div className="print:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-900 text-white border-b border-slate-800">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-sm">
+            <div className="w-9 h-9 rounded-none bg-blue-600 flex items-center justify-center font-bold text-white shadow-2xs shrink-0">
               <FileText className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-bold text-base tracking-tight">{invoice.invoiceNumber}</span>
+                <span className="font-bold text-base tracking-tight font-mono">{invoice.invoiceNumber}</span>
                 <span
-                  className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                  className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-none ${
                     invoice.status === "PAID"
                       ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                       : invoice.status === "REVISION_REQUESTED"
@@ -126,7 +127,7 @@ export default function InvoiceModalView({
                     ? "Paid"
                     : invoice.status === "REVISION_REQUESTED"
                     ? "Revision Requested"
-                    : "Sent / Pending Payment"}
+                    : "Sent / Pending"}
                 </span>
               </div>
               <p className="text-xs text-slate-400">
@@ -135,11 +136,11 @@ export default function InvoiceModalView({
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-2">
             {canMarkPaid && invoice.status !== "PAID" && onMarkPaid && (
               <button
                 onClick={onMarkPaid}
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition"
+                className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-none bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider shadow-2xs transition min-h-[44px]"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Mark Paid</span>
@@ -149,7 +150,7 @@ export default function InvoiceModalView({
             {canRequestRevision && invoice.status !== "PAID" && onRequestRevision && (
               <button
                 onClick={onRequestRevision}
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow-xs transition"
+                className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-none bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold uppercase tracking-wider shadow-2xs transition min-h-[44px]"
               >
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>Request Revision</span>
@@ -158,16 +159,16 @@ export default function InvoiceModalView({
 
             <a
               href={`/api/invoices/${invoice.id}/download-docx`}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition"
+              className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-none bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider shadow-2xs transition min-h-[44px]"
               title="Download Editable Microsoft Word (.docx)"
             >
               <Download className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Word (.docx)</span>
+              <span>Word (.docx)</span>
             </a>
 
             <button
               onClick={handlePrint}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition"
+              className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-none bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold uppercase tracking-wider transition min-h-[44px]"
               title="Print / Save PDF"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -176,7 +177,8 @@ export default function InvoiceModalView({
 
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-none transition min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Close Modal"
             >
               <X className="w-5 h-5" />
             </button>
@@ -223,7 +225,7 @@ export default function InvoiceModalView({
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="inline-block px-3 py-1 bg-slate-900 text-white font-black text-sm tracking-widest uppercase rounded">
+                  <span className="inline-block px-3 py-1 bg-slate-900 text-white font-black text-sm tracking-widest uppercase rounded-none">
                     INVOICE
                   </span>
                 </div>
@@ -305,8 +307,8 @@ export default function InvoiceModalView({
             </div>
 
             {/* Table 2: Candidate Line Items */}
-            <div className="border border-slate-400 overflow-hidden mb-4">
-              <table className="w-full text-xs text-left border-collapse">
+            <div className="border border-slate-400 overflow-x-auto mb-4">
+              <table className="w-full text-xs text-left border-collapse min-w-[600px]">
                 <thead>
                   <tr className="bg-slate-200 border-b border-slate-400 font-bold text-slate-900">
                     <th className="py-2 px-2 border-r border-slate-400 text-center w-12">SR No.</th>
