@@ -19,7 +19,8 @@ import {
   UserCheck,
   PlusCircle,
   FileCheck,
-  MessageSquareShare
+  MessageSquareShare,
+  Receipt
 } from "lucide-react";
 import { logoutAction } from "@/app/actions/auth-actions";
 import { SessionUser } from "@/lib/auth";
@@ -43,6 +44,7 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { href: "/admin/vacancies", label: "Vacancies & Broadcast", icon: Briefcase },
   { href: "/admin/agreements", label: "Client Agreements", icon: FileText },
   { href: "/admin/candidates", label: "Website Candidate Pool", icon: UserCheck },
+  { href: "/admin/billing", label: "Billing & Invoices", icon: Receipt },
 ];
 
 const CLIENT_NAV_ITEMS: NavItem[] = [
@@ -51,6 +53,7 @@ const CLIENT_NAV_ITEMS: NavItem[] = [
   { href: "/client/vacancies", label: "Posted Vacancies", icon: Briefcase },
   { href: "/client/candidates", label: "Interview Candidates", icon: Users },
   { href: "/client/agreements", label: "Client Agreements", icon: FileCheck },
+  { href: "/client/billing", label: "Billing & Invoices", icon: Receipt },
 ];
 
 const HR_NAV_ITEMS: NavItem[] = [

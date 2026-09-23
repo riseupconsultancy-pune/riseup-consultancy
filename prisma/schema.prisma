@@ -36,11 +36,18 @@ model ClientProfile {
   industry      String?  @default("BPO / BPM")
   contactPerson String?
   phone         String?
+  billingAddress       String?
+  billingGstin         String?
+  billingPan           String?
+  billingContactPerson String?
+  billingEmail         String?
+  billingPhone         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   vacancies  Vacancy[]
   agreements ClientAgreement[]
+  invoices   Invoice[]
 }
 
 model HrProfile {
@@ -132,6 +139,17 @@ model Candidate {
   selectedAt      DateTime?
   placementFee    Float?
   commissionAmount Float?
+
+  // Billing & Invoicing Fields
+  empId           String?   // Client Employee ID, e.g., 1520417
+  process         String?   // Process / Team, e.g., TCS GEM, Meesho
+  designation     String?   // Role Designation, e.g., Tele sales Executive
+  dateOfJoining   DateTime? // DOJ
+  billingAmount   Float?    // Invoiced Amount (₹)
+  billingInfoStatus String  @default("PENDING_INFO") // PENDING_INFO, INFO_SUBMITTED, INVOICED
+  invoiceId       String?
+  invoice         Invoice?  @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -174,7 +192,95 @@ model ClientAgreement {
   updatedAt                DateTime  @updatedAt
 }
 
+model ConsultancyBillingConfig {
+  id                String   @id @default("RISEUP_BILLING_CONFIG")
+  companyName       String   @default("Rise Up Consultancy Pune")
+  tagline           String?  @default("Staffing and Recruiting Services")
+  address           String   @default("1st floor, S.No-49, opp. Hari-Krushna Complex, Chandan Nagar, Pune, Maharashtra 411014.")
+  gstin             String   @default("27ABLFR4477Q1Z4")
+  pan               String   @default("ABLFR4477Q")
+  hsnSac            String   @default("998512")
+  placeOfSupply     String   @default("Pune")
+  bankName          String   @default("AU Small Finance Bank")
+  bankAccountName   String   @default("Rise Up Consultancy Pune")
+  bankAccountNumber String   @default("2502261678246645")
+  bankIfsc          String   @default("AUBL0002616")
+  termsText         String   @default("Payment Due: Net 30 days from invoice date. Late Payments: Overdue invoices incur a 1.5% monthly interest fee plus recovery costs. Queries: Raise billing discrepancies within 7 days of invoice receipt.")
+  updatedAt         DateTime @updatedAt
+}
+
+model TaxSetting {
+  id                  String   @id @default(uuid())
+  name                String   // e.g. "CGST", "SGST", "IGST"
+  rate                Float    // e.g. 9.0, 18.0
+  isSelectedByDefault Boolean  @default(true)
+  createdAt           DateTime @default(now())
+}
+
+model Invoice {
+  id               String        @id @default(uuid())
+  invoiceNumber    String        @unique // Formatted: RUP-INV-1001
+  clientId         String
+  client           ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  invoiceDate      DateTime      @default(now())
+  dueDate          DateTime?
+  terms            String        @default("Net 30 Days")
+  billingCycle     String?       // e.g., "October 2026 Batch", "Q3 Placement"
+  placeOfSupply    String        @default("Pune")
+
+  // Immutable snapshots of Consultancy (Seller) & Client details at generation time
+  sellerName          String
+  sellerAddress       String
+  sellerGstin         String
+  sellerPan           String
+  sellerHsnSac        String
+  sellerBankName      String
+  sellerAccountName   String
+  sellerAccountNumber String
+  sellerIfsc          String
+  termsText           String
+
+  clientName          String
+  clientAddress       String
+  clientGstin         String?
+  clientContactPerson String?
+
+  // Financial figures
+  subTotal         Float
+  taxesJson        String        @default("[]") // JSON array of [{ name: "CGST", rate: 9, amount: 157.5 }]
+  taxTotal         Float         @default(0)
+  tdsDeducted      Float         @default(0)
+  grandTotal       Float
+  totalInWords     String
+  balanceDue       Float
+
+  // Lifecycle
+  status           String        @default("SENT") // DRAFT, SENT, PAID, REVISION_REQUESTED
+  paymentDate      DateTime?
+  paymentReference String?
+  clientFeedback   String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  candidates       Candidate[]
+  items            InvoiceItem[]
+}
+
+model InvoiceItem {
+  id            String    @id @default(uuid())
+  invoiceId     String
+  invoice       Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  candidateId   String?
+  srNo          Int
+  empId         String?
+  candidateName String
+  process       String?
+  designation   String?
+  dateOfJoining DateTime?
+  billingAmount Float
+}
+
 model SystemCounter {
-  id           String @id // "JOB_COUNTER", "CANDIDATE_COUNTER", "AGREEMENT_COUNTER", "HR_COUNTER"
+  id           String @id // "JOB_COUNTER", "CANDIDATE_COUNTER", "AGREEMENT_COUNTER", "HR_COUNTER", "INVOICE_COUNTER"
   currentValue Int    @default(1000)
 }
