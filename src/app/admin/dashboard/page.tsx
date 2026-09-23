@@ -53,6 +53,7 @@ export default async function AdminDashboardPage({
     websitePublishedVacancies,
     totalCandidatesSourced,
     candidatesGoingForInterview,
+    candidatesInterviewed,
     candidatesSelected,
     candidatesRejected,
     candidatesAbsent,
@@ -78,6 +79,7 @@ export default async function AdminDashboardPage({
     prisma.vacancy.count({ where: { status: "ACTIVE", isPostedOnWebsite: true } }),
     prisma.candidate.count({ where: { createdAt: { gte: filterDate } } }),
     prisma.candidate.count({ where: { status: "GOING_FOR_INTERVIEW", updatedAt: { gte: filterDate } } }),
+    prisma.candidate.count({ where: { status: "INTERVIEWED", updatedAt: { gte: filterDate } } }),
     prisma.candidate.count({ where: { status: "SELECTED", updatedAt: { gte: filterDate } } }),
     prisma.candidate.count({ where: { status: "REJECTED", updatedAt: { gte: filterDate } } }),
     prisma.candidate.count({ where: { status: "ABSENT", updatedAt: { gte: filterDate } } }),
@@ -198,7 +200,7 @@ export default async function AdminDashboardPage({
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
           <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs">
             <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Leads Sourced</div>
             <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">{totalCandidatesSourced}</div>
@@ -206,9 +208,15 @@ export default async function AdminDashboardPage({
           </div>
 
           <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Going for Interview</div>
-            <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-indigo-700 font-heading">{candidatesGoingForInterview}</div>
+            <div className="text-[11px] font-bold uppercase tracking-wider text-purple-600">Interview Scheduled</div>
+            <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-purple-700 font-heading">{candidatesGoingForInterview}</div>
             <div className="mt-1 text-[11px] text-slate-400">Approved by HR</div>
+          </div>
+
+          <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-sky-600">Interviewed</div>
+            <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-sky-700 font-heading">{candidatesInterviewed}</div>
+            <div className="mt-1 text-[11px] text-slate-400">Evaluated by client</div>
           </div>
 
           <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs">
@@ -331,12 +339,14 @@ export default async function AdminDashboardPage({
                   <div className="flex items-center gap-2 shrink-0">
                     <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-none ${
                       c.status === "SELECTED" ? "bg-emerald-100 text-emerald-800" :
-                      c.status === "GOING_FOR_INTERVIEW" ? "bg-indigo-100 text-indigo-800" :
+                      c.status === "GOING_FOR_INTERVIEW" ? "bg-purple-100 text-purple-800" :
+                      c.status === "INTERVIEWED" ? "bg-sky-100 text-sky-800" :
                       c.status === "REJECTED" ? "bg-rose-100 text-rose-800" :
                       c.status === "ABSENT" ? "bg-amber-100 text-amber-800" :
-                      "bg-slate-100 text-slate-700"
+                      c.status === "PLACED_OUTSIDE" ? "bg-slate-200 text-slate-700" :
+                      "bg-blue-50 text-blue-700"
                     }`}>
-                      {c.status.replace(/_/g, " ")}
+                      {c.status === "PLACED_OUTSIDE" ? "PLACED OUTSIDE" : c.status.replace(/_/g, " ")}
                     </span>
                   </div>
                 </div>

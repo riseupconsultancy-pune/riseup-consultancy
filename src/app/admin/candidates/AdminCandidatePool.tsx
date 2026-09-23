@@ -15,9 +15,12 @@ import {
   Building2, 
   MapPin, 
   Briefcase,
-  Share2
+  Share2,
+  Trash2,
+  UserX
 } from "lucide-react";
 import { assignCandidateToHrAction } from "@/app/actions/public-actions";
+import { deleteCandidateAction, setCandidatePlacedOutsideAction } from "@/app/actions/hr-actions";
 
 interface CandidateRecord {
   id: string;
@@ -76,6 +79,47 @@ export default function AdminCandidatePool({
   const [assignCandidate, setAssignCandidate] = useState<CandidateRecord | null>(null);
   const [selectedHrId, setSelectedHrId] = useState<string>(recruiters[0]?.id || "");
   const [isAssigning, setIsAssigning] = useState(false);
+
+  // Deletion State
+  const [deletingCandidate, setDeletingCandidate] = useState<CandidateRecord | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleMarkPlacedOutside = async (candidateId: string) => {
+    setActionMessage(null);
+    try {
+      const res = await setCandidatePlacedOutsideAction(candidateId);
+      if (res.success) {
+        setCandidates((prev) =>
+          prev.map((c) => (c.id === candidateId ? { ...c, status: "PLACED_OUTSIDE" } : c))
+        );
+        setActionMessage(res.message || "Candidate marked as placed outside.");
+      } else {
+        setActionMessage(res.error || "Failed to update candidate status.");
+      }
+    } catch {
+      setActionMessage("Network error updating status.");
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingCandidate) return;
+    setIsDeleting(true);
+    setActionMessage(null);
+    try {
+      const res = await deleteCandidateAction(deletingCandidate.id);
+      if (res.success) {
+        setCandidates((prev) => prev.filter((c) => c.id !== deletingCandidate.id));
+        setActionMessage(res.message || "Candidate record permanently deleted.");
+        setDeletingCandidate(null);
+      } else {
+        setActionMessage(res.error || "Failed to delete candidate.");
+      }
+    } catch {
+      setActionMessage("Network error during candidate deletion.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const filteredCandidates = candidates.filter((c) => {
     const q = searchQuery.toLowerCase();
@@ -216,9 +260,48 @@ export default function AdminCandidatePool({
                     <span className="font-mono text-xs font-bold bg-slate-100 text-slate-800 px-2 py-0.5 border border-slate-200">
                       {candidate.candidateId}
                     </span>
-                    <span className="text-[11px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5">
-                      Website Direct Intake
-                    </span>
+                    
+                    {/* Status Badges */}
+                    {candidate.status === "APPLIED" && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5">
+                        New Intake
+                      </span>
+                    )}
+                    {candidate.status === "CONNECTED" && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5">
+                        Connected
+                      </span>
+                    )}
+                    {candidate.status === "GOING_FOR_INTERVIEW" && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5">
+                        Interview Scheduled
+                      </span>
+                    )}
+                    {candidate.status === "INTERVIEWED" && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-sky-50 text-sky-700 border border-sky-200 px-2 py-0.5">
+                        Interview Completed
+                      </span>
+                    )}
+                    {candidate.status === "SELECTED" && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5">
+                        Selected by Client
+                      </span>
+                    )}
+                    {candidate.status === "REJECTED" && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5">
+                        Rejected
+                      </span>
+                    )}
+                    {candidate.status === "ABSENT" && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5">
+                        Absent
+                      </span>
+                    )}
+                    {candidate.status === "PLACED_OUTSIDE" && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-300 px-2 py-0.5">
+                        Placed Outside
+                      </span>
+                    )}
 
                     {/* Assigned Recruiter Tag */}
                     <span className="text-[11px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-0.5">
@@ -271,6 +354,7 @@ export default function AdminCandidatePool({
                 {/* Right Actions */}
                 <div className="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0 w-full lg:w-52">
                   <button
+                    type="button"
                     onClick={() =>
                       setResumeModalData({
                         candidateName: candidate.fullName,
@@ -278,26 +362,48 @@ export default function AdminCandidatePool({
                         resumeFileName: candidate.resumeFileName,
                       })
                     }
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs text-center"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs text-center cursor-pointer"
                   >
                     <Eye className="w-3.5 h-3.5" />
                     <span>View Resume PDF</span>
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => handleOpenAssign(candidate)}
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs text-center"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs text-center cursor-pointer"
                   >
                     <UserCheck className="w-3.5 h-3.5" />
                     <span>Assign to Recruiter</span>
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => handleWhatsAppDirect(candidate)}
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs text-center"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs text-center cursor-pointer"
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
                     <span>1-Tap WhatsApp</span>
+                  </button>
+
+                  {candidate.status !== "PLACED_OUTSIDE" && candidate.status !== "SELECTED" && (
+                    <button
+                      type="button"
+                      onClick={() => handleMarkPlacedOutside(candidate.id)}
+                      className="inline-flex items-center justify-center gap-1.5 px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-[11px] font-semibold uppercase tracking-wider rounded-none text-center cursor-pointer"
+                    >
+                      <UserX className="w-3 h-3" />
+                      <span>Mark Placed Outside</span>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => setDeletingCandidate(candidate)}
+                    className="inline-flex items-center justify-center gap-1 px-4 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 text-[10.5px] font-bold uppercase tracking-wider rounded-none text-center cursor-pointer"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Delete Candidate</span>
                   </button>
                 </div>
               </div>
@@ -410,6 +516,43 @@ export default function AdminCandidatePool({
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50"
               >
                 {isAssigning ? "Assigning..." : "Confirm Assignment"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* DELETE CONFIRMATION MODAL */}
+      {deletingCandidate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-none shadow-2xl w-full max-w-md p-6 space-y-4">
+            <div className="flex items-center gap-2 text-red-600">
+              <AlertCircle className="w-5 h-5 shrink-0" />
+              <h3 className="text-sm font-bold uppercase tracking-wider">
+                Permanently Delete Candidate?
+              </h3>
+            </div>
+
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Are you sure you want to permanently delete <strong className="text-slate-900">{deletingCandidate.fullName}</strong> ({deletingCandidate.candidateId})? This will delete their database profile and remove their resume document from storage.
+            </p>
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setDeletingCandidate(null)}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                disabled={isDeleting}
+                className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer"
+              >
+                {isDeleting ? "Deleting..." : "Permanently Delete"}
               </button>
             </div>
           </div>

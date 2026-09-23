@@ -30,6 +30,7 @@ export default async function HRDashboardPage() {
     myLinksCount,
     totalLeadsSourced,
     candidatesGoingForInterview,
+    candidatesInterviewed,
     candidatesSelected,
     recentCandidates
   ] = await Promise.all([
@@ -41,6 +42,7 @@ export default async function HRDashboardPage() {
     prisma.hrPublicLink.count({ where: { hrId: hrProfileId, status: "ACTIVE" } }),
     prisma.candidate.count({ where: { hrId: hrProfileId } }),
     prisma.candidate.count({ where: { hrId: hrProfileId, status: "GOING_FOR_INTERVIEW" } }),
+    prisma.candidate.count({ where: { hrId: hrProfileId, status: "INTERVIEWED" } }),
     prisma.candidate.count({ where: { hrId: hrProfileId, status: "SELECTED" } }),
     prisma.candidate.findMany({
       where: { hrId: hrProfileId },
@@ -88,7 +90,7 @@ export default async function HRDashboardPage() {
       </div>
 
       {/* Recruiter Performance KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs border-l-4 border-l-blue-600">
           <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Active Mandates</div>
           <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">{activeOpeningsCount}</div>
@@ -101,14 +103,20 @@ export default async function HRDashboardPage() {
           <div className="mt-1 text-[11px] text-slate-400">Total applications received</div>
         </div>
 
-        <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs border-l-4 border-l-indigo-600">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-indigo-700">Interview Pipeline</div>
-          <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-indigo-700 font-heading">{candidatesGoingForInterview}</div>
+        <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs border-l-4 border-l-purple-600">
+          <div className="text-[11px] font-bold uppercase tracking-wider text-purple-700">Interview Pipeline</div>
+          <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-purple-700 font-heading">{candidatesGoingForInterview}</div>
           <div className="mt-1 text-[11px] text-slate-400">Sent with official referral</div>
         </div>
 
+        <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs border-l-4 border-l-sky-600">
+          <div className="text-[11px] font-bold uppercase tracking-wider text-sky-700">Interviewed</div>
+          <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-sky-700 font-heading">{candidatesInterviewed}</div>
+          <div className="mt-1 text-[11px] text-slate-400">Evaluated by clients</div>
+        </div>
+
         <div className="bg-white p-4 border border-slate-200 rounded-none shadow-xs border-l-4 border-l-emerald-600">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Selected Candidates</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Selected</div>
           <div className="mt-1 text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{candidatesSelected}</div>
           <div className="mt-1 text-[11px] text-slate-400">Successful placements</div>
         </div>
@@ -188,12 +196,14 @@ export default async function HRDashboardPage() {
                   <div className="shrink-0 flex items-center gap-2">
                     <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-none ${
                       cand.status === "SELECTED" ? "bg-emerald-100 text-emerald-800" :
-                      cand.status === "GOING_FOR_INTERVIEW" ? "bg-indigo-100 text-indigo-800" :
+                      cand.status === "GOING_FOR_INTERVIEW" ? "bg-purple-100 text-purple-800" :
+                      cand.status === "INTERVIEWED" ? "bg-sky-100 text-sky-800" :
                       cand.status === "REJECTED" ? "bg-rose-100 text-rose-800" :
                       cand.status === "ABSENT" ? "bg-amber-100 text-amber-800" :
-                      "bg-slate-100 text-slate-700"
+                      cand.status === "PLACED_OUTSIDE" ? "bg-slate-200 text-slate-700" :
+                      "bg-blue-50 text-blue-700"
                     }`}>
-                      {cand.status.replace(/_/g, " ")}
+                      {cand.status === "PLACED_OUTSIDE" ? "PLACED OUTSIDE" : cand.status.replace(/_/g, " ")}
                     </span>
                   </div>
                 </div>

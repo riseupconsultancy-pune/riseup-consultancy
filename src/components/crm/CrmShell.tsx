@@ -153,7 +153,15 @@ export default function CrmShell({ user, children }: CrmShellProps) {
             <nav className="mt-5 space-y-1 flex-1 overflow-y-auto">
               {navItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                const isExactMatch = pathname === item.href;
+                const isChildMatch = pathname.startsWith(item.href + "/");
+                const hasMoreSpecificSibling = navItems.some(
+                  (other) =>
+                    other.href !== item.href &&
+                    other.href.startsWith(item.href) &&
+                    (pathname === other.href || pathname.startsWith(other.href + "/"))
+                );
+                const isActive = isExactMatch || (isChildMatch && !hasMoreSpecificSibling);
                 return (
                   <Link
                     key={item.href}
@@ -252,7 +260,15 @@ export default function CrmShell({ user, children }: CrmShellProps) {
           </div>
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+            const isExactMatch = pathname === item.href;
+            const isChildMatch = pathname.startsWith(item.href + "/");
+            const hasMoreSpecificSibling = navItems.some(
+              (other) =>
+                other.href !== item.href &&
+                other.href.startsWith(item.href) &&
+                (pathname === other.href || pathname.startsWith(other.href + "/"))
+            );
+            const isActive = isExactMatch || (isChildMatch && !hasMoreSpecificSibling);
             return (
               <Link
                 key={item.href}

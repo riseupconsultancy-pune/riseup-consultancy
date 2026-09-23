@@ -2,6 +2,8 @@
 
 import { z } from "zod";
 import crypto from "crypto";
+import fs from "fs";
+import path from "path";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
@@ -11,6 +13,15 @@ async function assertHR() {
   const session = await getSession();
   if (!session || session.role !== "HR_RECRUITER" || !session.hrProfileId) {
     throw new Error("Unauthorized: HR Recruiter access required.");
+  }
+  return session;
+}
+
+// Guard: verify HR Recruiter or Super Admin session
+async function assertHRorAdmin() {
+  const session = await getSession();
+  if (!session || (session.role !== "HR_RECRUITER" && session.role !== "SUPER_ADMIN")) {
+    throw new Error("Unauthorized: Recruiter or Admin access required.");
   }
   return session;
 }
@@ -167,6 +178,7 @@ const updateStatusSchema = z.object({
     "SELECTED",
     "REJECTED",
     "ABSENT",
+    "PLACED_OUTSIDE",
   ]),
   interviewDate: z.string().optional().nullable(),
   note: z.string().max(500, "Note too long").optional().nullable(),
@@ -179,8 +191,8 @@ export async function updateCandidateStatusByHrAction(
   note?: string | null
 ) {
   try {
-    const session = await assertHR();
-    const hrProfileId = session.hrProfileId!;
+    const session = await assertHRorAdmin();
+    const hrProfileId = session.role === "HR_RECRUITER" ? session.hrProfileId! : null;
 
     const parsed = updateStatusSchema.safeParse({
       candidateId,
@@ -193,12 +205,9 @@ export async function updateCandidateStatusByHrAction(
       return { success: false, error: parsed.error.issues[0]?.message || "Invalid status update data." };
     }
 
-    // Security check: Tenant isolation — candidate must belong to this HR
-    const candidate = await prisma.candidate.findFirst({
-      where: {
-        id: candidateId,
-        hrId: hrProfileId,
-      },
+    // Security check: Candidate exists and accessible
+    const candidate = await prisma.candidate.findUnique({
+      where: { id: candidateId },
       include: {
         vacancy: {
           include: { client: true },
@@ -207,13 +216,18 @@ export async function updateCandidateStatusByHrAction(
     });
 
     if (!candidate) {
-      return { success: false, error: "Candidate not found in your candidate pool." };
+      return { success: false, error: "Candidate not found." };
+    }
+
+    if (session.role === "HR_RECRUITER" && candidate.hrId && candidate.hrId !== hrProfileId) {
+      return { success: false, error: "Candidate belongs to another recruiter's pool." };
     }
 
     const previousStatus = candidate.status;
     const updateData: {
       status: string;
       interviewDate?: Date | null;
+      hrId?: string;
     } = {
       status: parsed.data.newStatus,
     };
@@ -222,6 +236,10 @@ export async function updateCandidateStatusByHrAction(
       updateData.interviewDate = parsed.data.interviewDate
         ? new Date(parsed.data.interviewDate)
         : new Date();
+    }
+
+    if (!candidate.hrId && hrProfileId) {
+      updateData.hrId = hrProfileId;
     }
 
     await prisma.$transaction([
@@ -235,8 +253,8 @@ export async function updateCandidateStatusByHrAction(
           previousStatus,
           newStatus: parsed.data.newStatus,
           changedByUserId: session.userId,
-          changedByRole: "HR_RECRUITER",
-          note: parsed.data.note || `Stage updated by recruiter to ${parsed.data.newStatus}`,
+          changedByRole: session.role === "SUPER_ADMIN" ? "SUPER_ADMIN" : "HR_RECRUITER",
+          note: parsed.data.note || `Stage updated to ${parsed.data.newStatus}`,
         },
       }),
     ]);
@@ -246,6 +264,7 @@ export async function updateCandidateStatusByHrAction(
     revalidatePath("/client/candidates");
     revalidatePath("/client/dashboard");
     revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/candidates");
 
     return {
       success: true,
@@ -253,6 +272,373 @@ export async function updateCandidateStatusByHrAction(
     };
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Failed to update candidate status.";
+    return { success: false, error: message };
+  }
+}
+
+// -------------------------------------------------------------
+// 3B. DISPATCH CANDIDATE TO TARGET VACANCY (CROSS-JOB SOURCING)
+// -------------------------------------------------------------
+
+const dispatchInterviewSchema = z.object({
+  candidateId: z.string().min(1, "Candidate ID is required"),
+  targetVacancyId: z.string().min(1, "Target Vacancy is required"),
+  interviewDate: z.string().min(1, "Interview date is required"),
+  note: z.string().max(500, "Note too long").optional().nullable(),
+});
+
+export async function dispatchCandidateToInterviewAction(params: {
+  candidateId: string;
+  targetVacancyId: string;
+  interviewDate: string;
+  note?: string | null;
+}) {
+  try {
+    const session = await assertHRorAdmin();
+    const hrProfileId = session.role === "HR_RECRUITER" ? session.hrProfileId! : null;
+
+    const parsed = dispatchInterviewSchema.safeParse(params);
+    if (!parsed.success) {
+      return { success: false, error: parsed.error.issues[0]?.message || "Invalid dispatch data." };
+    }
+
+    const { candidateId, targetVacancyId, interviewDate, note } = parsed.data;
+
+    // Verify target vacancy is ACTIVE and approved for broadcast
+    const targetVacancy = await prisma.vacancy.findFirst({
+      where: {
+        id: targetVacancyId,
+        status: "ACTIVE",
+        isBroadcastedToHR: true,
+      },
+      include: { client: true },
+    });
+
+    if (!targetVacancy) {
+      return {
+        success: false,
+        error: "Target vacancy is either closed, disabled, or not approved for recruiter broadcast.",
+      };
+    }
+
+    // Verify candidate exists
+    const candidate = await prisma.candidate.findUnique({
+      where: { id: candidateId },
+      include: {
+        vacancy: {
+          include: { client: true },
+        },
+      },
+    });
+
+    if (!candidate) {
+      return { success: false, error: "Candidate record not found." };
+    }
+
+    if (session.role === "HR_RECRUITER" && candidate.hrId && candidate.hrId !== hrProfileId) {
+      return { success: false, error: "Candidate is assigned to another recruiter." };
+    }
+
+    const previousStatus = candidate.status;
+    const isReassigned = candidate.vacancyId !== targetVacancyId;
+    const dateObj = new Date(interviewDate);
+
+    const updateData: {
+      vacancyId: string;
+      status: string;
+      interviewDate: Date;
+      hrId?: string;
+    } = {
+      vacancyId: targetVacancyId,
+      status: "GOING_FOR_INTERVIEW",
+      interviewDate: dateObj,
+    };
+
+    if (!candidate.hrId && hrProfileId) {
+      updateData.hrId = hrProfileId;
+    }
+
+    const historyNote = note
+      ? note
+      : isReassigned
+      ? `Reassigned from ${candidate.vacancy.jobId} (${candidate.vacancy.title}) and scheduled for interview with ${targetVacancy.client.companyName} on ${dateObj.toLocaleDateString()}`
+      : `Scheduled for interview with ${targetVacancy.client.companyName} on ${dateObj.toLocaleDateString()}`;
+
+    await prisma.$transaction([
+      prisma.candidate.update({
+        where: { id: candidateId },
+        data: updateData,
+      }),
+      prisma.candidateStatusHistory.create({
+        data: {
+          candidateId,
+          previousStatus,
+          newStatus: "GOING_FOR_INTERVIEW",
+          changedByUserId: session.userId,
+          changedByRole: session.role === "SUPER_ADMIN" ? "SUPER_ADMIN" : "HR_RECRUITER",
+          note: historyNote,
+        },
+      }),
+    ]);
+
+    revalidatePath("/hr/candidates");
+    revalidatePath("/hr/dashboard");
+    revalidatePath("/client/candidates");
+    revalidatePath("/client/dashboard");
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/candidates");
+
+    return {
+      success: true,
+      message: `Candidate ${candidate.fullName} successfully dispatched to ${targetVacancy.jobId}: ${targetVacancy.title} (${targetVacancy.client.companyName}).`,
+    };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to dispatch candidate.";
+    return { success: false, error: message };
+  }
+}
+
+// -------------------------------------------------------------
+// 3C. BULK DISPATCH CANDIDATES TO TARGET VACANCY
+// -------------------------------------------------------------
+
+export async function bulkDispatchCandidatesToInterviewAction(params: {
+  candidateIds: string[];
+  targetVacancyId: string;
+  interviewDate: string;
+  note?: string | null;
+}) {
+  try {
+    const session = await assertHRorAdmin();
+    const hrProfileId = session.role === "HR_RECRUITER" ? session.hrProfileId! : null;
+
+    if (!params.candidateIds || params.candidateIds.length === 0) {
+      return { success: false, error: "Please select at least one candidate." };
+    }
+
+    if (!params.targetVacancyId) {
+      return { success: false, error: "Target active vacancy is required." };
+    }
+
+    // Verify target vacancy is ACTIVE
+    const targetVacancy = await prisma.vacancy.findFirst({
+      where: {
+        id: params.targetVacancyId,
+        status: "ACTIVE",
+        isBroadcastedToHR: true,
+      },
+      include: { client: true },
+    });
+
+    if (!targetVacancy) {
+      return {
+        success: false,
+        error: "Target vacancy is closed, disabled, or not approved for broadcast.",
+      };
+    }
+
+    const dateObj = new Date(params.interviewDate);
+
+    // Fetch all candidates
+    const candidates = await prisma.candidate.findMany({
+      where: {
+        id: { in: params.candidateIds },
+      },
+    });
+
+    const validCandidates = candidates.filter((c) => {
+      if (session.role === "SUPER_ADMIN") return true;
+      return !c.hrId || c.hrId === hrProfileId;
+    });
+
+    if (validCandidates.length === 0) {
+      return { success: false, error: "No accessible candidates found in selection." };
+    }
+
+    // Process transactions
+    await prisma.$transaction(
+      validCandidates.flatMap((c) => [
+        prisma.candidate.update({
+          where: { id: c.id },
+          data: {
+            vacancyId: targetVacancy.id,
+            status: "GOING_FOR_INTERVIEW",
+            interviewDate: dateObj,
+            ...(hrProfileId && !c.hrId ? { hrId: hrProfileId } : {}),
+          },
+        }),
+        prisma.candidateStatusHistory.create({
+          data: {
+            candidateId: c.id,
+            previousStatus: c.status,
+            newStatus: "GOING_FOR_INTERVIEW",
+            changedByUserId: session.userId,
+            changedByRole: session.role === "SUPER_ADMIN" ? "SUPER_ADMIN" : "HR_RECRUITER",
+            note:
+              params.note ||
+              `Bulk dispatched for interview to ${targetVacancy.jobId}: ${targetVacancy.title} (${targetVacancy.client.companyName})`,
+          },
+        }),
+      ])
+    );
+
+    revalidatePath("/hr/candidates");
+    revalidatePath("/hr/dashboard");
+    revalidatePath("/client/candidates");
+    revalidatePath("/client/dashboard");
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/candidates");
+
+    return {
+      success: true,
+      count: validCandidates.length,
+      message: `Successfully dispatched ${validCandidates.length} candidate(s) for interview to ${targetVacancy.jobId}: ${targetVacancy.title}.`,
+    };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Bulk dispatch failed.";
+    return { success: false, error: message };
+  }
+}
+
+// -------------------------------------------------------------
+// 3D. CANDIDATE ARCHIVAL & "PLACED OUTSIDE" MANAGEMENT
+// -------------------------------------------------------------
+
+export async function setCandidatePlacedOutsideAction(candidateId: string, note?: string | null) {
+  try {
+    const session = await assertHRorAdmin();
+    const candidate = await prisma.candidate.findUnique({ where: { id: candidateId } });
+
+    if (!candidate) {
+      return { success: false, error: "Candidate not found." };
+    }
+
+    const previousStatus = candidate.status;
+
+    await prisma.$transaction([
+      prisma.candidate.update({
+        where: { id: candidateId },
+        data: { status: "PLACED_OUTSIDE" },
+      }),
+      prisma.candidateStatusHistory.create({
+        data: {
+          candidateId,
+          previousStatus,
+          newStatus: "PLACED_OUTSIDE",
+          changedByUserId: session.userId,
+          changedByRole: session.role === "SUPER_ADMIN" ? "SUPER_ADMIN" : "HR_RECRUITER",
+          note: note || "Candidate marked as Placed Outside / Inactive to prevent repeat outreach.",
+        },
+      }),
+    ]);
+
+    revalidatePath("/hr/candidates");
+    revalidatePath("/hr/dashboard");
+    revalidatePath("/client/candidates");
+    revalidatePath("/client/dashboard");
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/candidates");
+
+    return {
+      success: true,
+      message: `Candidate ${candidate.fullName} marked as Placed Outside. Removed from active outreach queues.`,
+    };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to mark candidate as placed outside.";
+    return { success: false, error: message };
+  }
+}
+
+export async function reactivateCandidateAction(candidateId: string) {
+  try {
+    const session = await assertHRorAdmin();
+    const candidate = await prisma.candidate.findUnique({ where: { id: candidateId } });
+
+    if (!candidate) {
+      return { success: false, error: "Candidate not found." };
+    }
+
+    const previousStatus = candidate.status;
+
+    await prisma.$transaction([
+      prisma.candidate.update({
+        where: { id: candidateId },
+        data: { status: "APPLIED" },
+      }),
+      prisma.candidateStatusHistory.create({
+        data: {
+          candidateId,
+          previousStatus,
+          newStatus: "APPLIED",
+          changedByUserId: session.userId,
+          changedByRole: session.role === "SUPER_ADMIN" ? "SUPER_ADMIN" : "HR_RECRUITER",
+          note: "Candidate profile reactivated into candidate talent pool.",
+        },
+      }),
+    ]);
+
+    revalidatePath("/hr/candidates");
+    revalidatePath("/hr/dashboard");
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/candidates");
+
+    return {
+      success: true,
+      message: `Candidate ${candidate.fullName} profile reactivated as New Lead in talent pool.`,
+    };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to reactivate candidate.";
+    return { success: false, error: message };
+  }
+}
+
+// -------------------------------------------------------------
+// 3E. PERMANENT CANDIDATE DELETION WITH RESUME DISK CLEANUP
+// -------------------------------------------------------------
+
+export async function deleteCandidateAction(candidateId: string) {
+  try {
+    const session = await assertHRorAdmin();
+    const candidate = await prisma.candidate.findUnique({ where: { id: candidateId } });
+
+    if (!candidate) {
+      return { success: false, error: "Candidate not found." };
+    }
+
+    if (session.role === "HR_RECRUITER" && candidate.hrId && candidate.hrId !== session.hrProfileId) {
+      return { success: false, error: "Unauthorized to delete another recruiter's candidate." };
+    }
+
+    // Delete uploaded resume PDF from disk if it exists
+    if (candidate.resumeUrl && candidate.resumeUrl.startsWith("/uploads/resumes/")) {
+      try {
+        const filePath = path.join(process.cwd(), "public", candidate.resumeUrl);
+        if (fs.existsSync(filePath)) {
+          await fs.promises.unlink(filePath);
+        }
+      } catch (err) {
+        console.error("Failed to delete resume file from disk:", err);
+      }
+    }
+
+    // Delete candidate record (cascade removes CandidateStatusHistory)
+    await prisma.candidate.delete({
+      where: { id: candidateId },
+    });
+
+    revalidatePath("/hr/candidates");
+    revalidatePath("/hr/dashboard");
+    revalidatePath("/client/candidates");
+    revalidatePath("/client/dashboard");
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/candidates");
+
+    return {
+      success: true,
+      message: `Candidate ${candidate.fullName} and associated resume document permanently deleted.`,
+    };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to delete candidate.";
     return { success: false, error: message };
   }
 }

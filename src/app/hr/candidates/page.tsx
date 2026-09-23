@@ -7,7 +7,7 @@ import HrCandidatePipeline from "./HrCandidatePipeline";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Candidate ATS Pipeline | RiseUp Recruiter Portal",
+  title: "Candidate ATS Pipeline & Talent Pool | RiseUp Recruiter Portal",
   robots: {
     index: false,
     follow: false,
@@ -40,9 +40,39 @@ export default async function HrCandidatesPage() {
     redirect("/login");
   }
 
-  // Fetch candidates sourced through this recruiter's links
+  // Fetch all active, broadcasted vacancies for interview dispatching
+  const activeVacancies = await prisma.vacancy.findMany({
+    where: {
+      status: "ACTIVE",
+      isBroadcastedToHR: true,
+    },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      jobId: true,
+      title: true,
+      category: true,
+      city: true,
+      workMode: true,
+      expMin: true,
+      expMax: true,
+      availabilityRequired: true,
+      client: {
+        select: {
+          companyName: true,
+        },
+      },
+    },
+  });
+
+  // Fetch candidates from recruiter's pool and unassigned general pool
   const candidates = await prisma.candidate.findMany({
-    where: { hrId: hrProfileId },
+    where: {
+      OR: [
+        { hrId: hrProfileId },
+        { hrId: null },
+      ],
+    },
     orderBy: { updatedAt: "desc" },
     include: {
       vacancy: {
@@ -53,6 +83,7 @@ export default async function HrCandidatesPage() {
           category: true,
           city: true,
           workMode: true,
+          status: true,
           client: {
             select: {
               companyName: true,
@@ -74,14 +105,15 @@ export default async function HrCandidatesPage() {
     },
   });
 
-  // Unique vacancies for filter dropdown
-  const vacancyMap = new Map<string, { id: string; jobId: string; title: string }>();
+  // Unique list of vacancies represented in the candidate records
+  const appliedVacancyMap = new Map<string, { id: string; jobId: string; title: string; status: string }>();
   candidates.forEach((c) => {
-    if (!vacancyMap.has(c.vacancy.id)) {
-      vacancyMap.set(c.vacancy.id, {
+    if (!appliedVacancyMap.has(c.vacancy.id)) {
+      appliedVacancyMap.set(c.vacancy.id, {
         id: c.vacancy.id,
         jobId: c.vacancy.jobId,
         title: c.vacancy.title,
+        status: c.vacancy.status,
       });
     }
   });
@@ -119,7 +151,9 @@ export default async function HrCandidatesPage() {
     vacancyTitle: c.vacancy.title,
     vacancyCategory: c.vacancy.category,
     vacancyCity: c.vacancy.city,
+    vacancyStatus: c.vacancy.status,
     clientCompanyName: c.vacancy.client.companyName,
+    isMyLead: c.hrId === hrProfileId,
     recentHistory: c.statusHistory.map((h) => ({
       id: h.id,
       newStatus: h.newStatus,
@@ -129,11 +163,25 @@ export default async function HrCandidatesPage() {
     })),
   }));
 
+  const formattedActiveVacancies = activeVacancies.map((v) => ({
+    id: v.id,
+    jobId: v.jobId,
+    title: v.title,
+    category: v.category,
+    city: v.city,
+    workMode: v.workMode,
+    expMin: v.expMin,
+    expMax: v.expMax,
+    availabilityRequired: v.availabilityRequired,
+    clientCompanyName: v.client.companyName,
+  }));
+
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       <HrCandidatePipeline
         initialCandidates={formattedCandidates}
-        vacancies={Array.from(vacancyMap.values())}
+        activeVacancies={formattedActiveVacancies}
+        appliedVacancies={Array.from(appliedVacancyMap.values())}
         recruiterName={hrProfile.user.fullName}
         employeeCode={hrProfile.employeeCode}
         whatsappTemplate={hrProfile.whatsappTemplate}
