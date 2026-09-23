@@ -38,7 +38,11 @@ const targetSchema = isMysql
 const activeSchema = path.join(prismaDir, 'schema.prisma');
 
 if (fs.existsSync(targetSchema)) {
-  fs.copyFileSync(targetSchema, activeSchema);
+  let schemaContent = fs.readFileSync(targetSchema, 'utf8');
+  if (schemaContent.charCodeAt(0) === 0xFEFF) {
+    schemaContent = schemaContent.slice(1);
+  }
+  fs.writeFileSync(activeSchema, schemaContent, 'utf8');
   console.log(`[RiseUp Auto-DB] Active schema set to ${targetMode.toUpperCase()}`);
 }
 
