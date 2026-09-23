@@ -418,6 +418,7 @@ async function main() {
         phone: c.phone,
         city: c.city,
         qualification: c.qualification,
+        interestedRoles: JSON.stringify(["Voice", "Customer Support", "Tele sales"]),
         vacancyId: digitideJob.id,
         resumeUrl: "/uploads/resumes/sample.pdf",
         resumeFileName: `${c.fullName.replace(/\s+/g, "_")}_Resume.pdf`,
