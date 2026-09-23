@@ -84,11 +84,11 @@ export default function Header() {
           </div>
 
           <div className="flex flex-col min-w-0">
-            <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight uppercase font-heading">
+            <span className="text-[13px] sm:text-lg font-black text-slate-900 tracking-tight uppercase font-heading whitespace-nowrap">
               RISE UP CONSULTANCY
             </span>
-            <span className="text-[9px] sm:text-[10px] font-bold text-blue-600 tracking-wider uppercase">
-              Staffing & Recruiting Services
+            <span className="text-[8px] sm:text-[10px] font-bold text-blue-600 tracking-wider uppercase whitespace-nowrap">
+              Staffing &amp; Recruiting Services
             </span>
           </div>
         </Link>

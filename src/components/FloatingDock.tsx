@@ -78,7 +78,7 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
                 }`}
               />
               <span
-                className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-center truncate max-w-full px-0.5 ${
+                className={`text-[9px] sm:text-[11px] font-bold uppercase tracking-tight sm:tracking-wider text-center truncate max-w-full px-0.5 ${
                   isActive ? "text-white" : "text-slate-700"
                 }`}
               >

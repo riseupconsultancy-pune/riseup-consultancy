@@ -19,38 +19,38 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
           <div className="lg:col-span-7 flex flex-col justify-center text-left z-10">
             
             {/* Primary Brand Lockup: Bigger Official Logo & Corporate Name */}
-            <div className="flex items-center gap-5 sm:gap-7 lg:gap-8 mb-8">
-              <div className="relative w-28 h-28 sm:w-52 sm:h-52 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 shrink-0">
+            <div className="flex flex-col items-center text-center sm:flex-row sm:items-center sm:text-left gap-5 sm:gap-7 lg:gap-8 mb-8">
+              <div className="relative w-32 h-32 sm:w-52 sm:h-52 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 shrink-0 mx-auto sm:mx-0">
                 <Image
                   src="/images/rise_up_consultancy_pune_logo.png"
                   alt="Rise Up Consultancy Official Logo"
                   fill
                   className="object-contain"
                   priority
-                  sizes="(max-width: 640px) 112px, (max-width: 1024px) 224px, 288px"
+                  sizes="(max-width: 640px) 128px, (max-width: 1024px) 224px, 288px"
                 />
               </div>
 
-              <div className="flex flex-col justify-center min-w-0">
-                <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-slate-900 tracking-tight uppercase font-heading leading-[1.04]">
+              <div className="flex flex-col items-center sm:items-start justify-center min-w-0">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-slate-900 tracking-tight uppercase font-heading leading-tight sm:leading-[1.04]">
                   RISE UP <span className="text-blue-600 block sm:inline">CONSULTANCY</span>
                 </h1>
-                <span className="mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base font-extrabold uppercase tracking-widest text-slate-500">
+                <span className="mt-1.5 sm:mt-2 text-xs sm:text-sm lg:text-base font-extrabold uppercase tracking-widest text-slate-500">
                   Staffing &amp; Recruiting Services
                 </span>
-                <p className="mt-3 text-xs sm:text-sm lg:text-base text-slate-600 font-normal leading-relaxed max-w-xl">
+                <p className="mt-3 text-xs sm:text-sm lg:text-base text-slate-600 font-normal leading-relaxed max-w-md sm:max-w-xl">
                   Direct company payroll staffing and verified recruitment across Pune, Pan-India, and international corridors. Connecting ambitious talent with premier organizations with 100% free placement assistance.
                 </p>
               </div>
             </div>
 
             {/* Two Square Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
               {/* Button 1: Request Talent (Employers) */}
               <button
                 onClick={onHireClick}
                 type="button"
-                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm tracking-wide transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 rounded-none cursor-pointer"
+                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm tracking-wide transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 rounded-none cursor-pointer w-full sm:w-auto"
               >
                 <Briefcase className="w-4 h-4 text-white" />
                 <span>Request Talent</span>
@@ -61,7 +61,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
               <button
                 onClick={onJobsClick}
                 type="button"
-                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-transparent border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-semibold text-sm tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 rounded-none cursor-pointer"
+                className="group inline-flex items-center justify-center gap-3 px-9 py-4 bg-transparent border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-semibold text-sm tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 rounded-none cursor-pointer w-full sm:w-auto"
               >
                 <Search className="w-4 h-4" />
                 <span>Browse Vacancies</span>
@@ -70,22 +70,22 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
             </div>
 
             {/* Architectural Proof Metrics with Square Hairlines */}
-            <div className="mt-14 pt-8 border-t border-slate-200 grid grid-cols-3 gap-6 max-w-lg">
-              <div className="border-l-2 border-blue-600 pl-4">
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Jan 2025</div>
-                <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
+            <div className="mt-12 sm:mt-14 pt-8 border-t border-slate-200 grid grid-cols-3 gap-3 sm:gap-6 max-w-lg w-full">
+              <div className="border-l-2 border-blue-600 pl-2.5 sm:pl-4">
+                <div className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">Jan 2025</div>
+                <div className="text-[9px] sm:text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
                   Est. in Pune
                 </div>
               </div>
-              <div className="border-l-2 border-slate-300 pl-4">
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Pan-India</div>
-                <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
-                  & Global Sourcing
+              <div className="border-l-2 border-slate-300 pl-2.5 sm:pl-4">
+                <div className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">Pan-India</div>
+                <div className="text-[9px] sm:text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
+                  &amp; Global Sourcing
                 </div>
               </div>
-              <div className="border-l-2 border-slate-300 pl-4">
-                <div className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">100%</div>
-                <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
+              <div className="border-l-2 border-slate-300 pl-2.5 sm:pl-4">
+                <div className="text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">100%</div>
+                <div className="text-[9px] sm:text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">
                   Direct Sourcing
                 </div>
               </div>
