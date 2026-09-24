@@ -1,14 +1,43 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://riseupconsultancy.in";
+  const baseUrl = SITE_URL;
 
   return {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/jobs", "/jobs/*", "/about", "/services", "/contact", "/llms.txt", "/llms-full.txt"],
+        allow: [
+          "/",
+          "/jobs",
+          "/jobs/*",
+          "/about",
+          "/services",
+          "/contact",
+          "/terms",
+          "/privacy",
+          "/llms.txt",
+          "/llms-full.txt",
+          "/favicon.ico",
+          "/favicon-48x48.png",
+          "/icons/*",
+          "/images/*",
+        ],
         disallow: ["/admin/", "/client/", "/hr/", "/api/", "/login"],
+      },
+      {
+        userAgent: [
+          "Googlebot",
+          "Googlebot-Image",
+        ],
+        allow: [
+          "/",
+          "/favicon.ico",
+          "/favicon-48x48.png",
+          "/icons/*",
+          "/images/*",
+        ],
       },
       {
         userAgent: [
@@ -21,7 +50,18 @@ export default function robots(): MetadataRoute.Robots {
           "CCBot",
           "cohere-ai",
         ],
-        allow: ["/", "/jobs", "/jobs/*", "/about", "/services", "/contact", "/llms.txt", "/llms-full.txt"],
+        allow: [
+          "/",
+          "/jobs",
+          "/jobs/*",
+          "/about",
+          "/services",
+          "/contact",
+          "/terms",
+          "/privacy",
+          "/llms.txt",
+          "/llms-full.txt",
+        ],
         disallow: ["/admin/", "/client/", "/hr/", "/api/", "/login"],
       },
     ],

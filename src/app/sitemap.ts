@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
 import { METRO_CITY_SEO_PROFILES } from "@/lib/seo-knowledge";
+import { SITE_URL } from "@/lib/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://riseupconsultancy.in";
+  const baseUrl = SITE_URL;
   const now = new Date();
 
   // 1. Core Primary Marketing Pages

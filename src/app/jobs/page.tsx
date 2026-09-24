@@ -2,6 +2,7 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import JobsDirectoryClient, { MinimalistJob } from "./JobsDirectoryClient";
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site-config";
 
 export const dynamic = "force-dynamic";
 
@@ -19,12 +20,12 @@ export const metadata: Metadata = {
     "Fresher jobs Pune",
   ],
   alternates: {
-    canonical: "https://riseupconsultancy.in/jobs",
+    canonical: `${SITE_URL}/jobs`,
   },
   openGraph: {
     title: "Open Job Vacancies | RiseUp Consultancy",
     description: "Browse verified corporate and BPO jobs in India & Nigeria. 100% Free candidate placement services.",
-    url: "https://riseupconsultancy.in/jobs",
+    url: `${SITE_URL}/jobs`,
     type: "website",
   },
 };
@@ -167,7 +168,7 @@ export default async function JobsPage() {
         hiringOrganization: {
           "@type": "Organization",
           name: "RiseUp Consultancy Client Partner",
-          sameAs: "https://riseupconsultancy.in",
+          sameAs: SITE_URL,
         },
         jobLocation: {
           "@type": "Place",

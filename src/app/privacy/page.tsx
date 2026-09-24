@@ -5,18 +5,19 @@ import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
 import Link from "next/link";
 import { ShieldCheck, Lock, Eye, FileCheck } from "lucide-react";
+import { SITE_URL } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Rise Up Consultancy Pune",
   description:
     "Official privacy policy of Rise Up Consultancy Pune. Details how candidate resumes, applicant data, and client inquiries are securely managed and protected.",
   alternates: {
-    canonical: "https://riseupconsultancy.in/privacy",
+    canonical: `${SITE_URL}/privacy`,
   },
   openGraph: {
     title: "Privacy Policy | Rise Up Consultancy Pune",
     description: "Our commitment to candidate data privacy and secure recruitment operations.",
-    url: "https://riseupconsultancy.in/privacy",
+    url: `${SITE_URL}/privacy`,
     type: "website",
   },
 };

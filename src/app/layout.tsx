@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { SITE_URL, SITE_NAME, SITE_LEGAL_NAME, SITE_ALTERNATE_NAMES } from "@/lib/site-config";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -25,10 +26,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://riseupconsultancy.in"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Rise Up Consultancy Pune | Staffing & Recruiting Services",
-    template: "%s | Rise Up Consultancy",
+    default: `${SITE_NAME} | Staffing & Recruiting Services Pune`,
+    template: `%s | ${SITE_NAME}`,
   },
   description:
     "Official website of Rise Up Consultancy Pune. Talent Aligned. Futures Elevated. Direct company payroll staffing and verified recruitment across Pune, Pan-India, and international corridors. 100% Free placement for job seekers.",
@@ -58,14 +59,14 @@ export const metadata: Metadata = {
     "Back office jobs Mumbai",
   ],
   alternates: {
-    canonical: "https://riseupconsultancy.in",
+    canonical: SITE_URL,
   },
   openGraph: {
-    title: "Rise Up Consultancy Pune | Staffing & Recruiting Services",
+    title: `${SITE_NAME} | Staffing & Recruiting Services Pune`,
     description:
       "Direct company payroll staffing and verified recruitment across Pune, Pan-India, and international corridors. 100% Free placement for job seekers.",
-    url: "https://riseupconsultancy.in",
-    siteName: "Rise Up Consultancy Pune",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     locale: "en_IN",
     type: "website",
     images: [
@@ -79,20 +80,22 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rise Up Consultancy Pune | Staffing & Recruiting Services",
+    title: `${SITE_NAME} | Staffing & Recruiting Services Pune`,
     description: "Direct company payroll staffing across Pune & Pan-India. 100% Free candidate placement.",
     images: ["/images/rise_up_consultancy_pune_logo.png"],
   },
   icons: {
     icon: [
-      { url: "/images/rise_up_consultancy_pune_logo.png", sizes: "32x32", type: "image/png" },
-      { url: "/images/rise_up_consultancy_pune_logo.png", sizes: "192x192", type: "image/png" },
-      { url: "/images/rise_up_consultancy_pune_logo.png", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icons/icon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/images/rise_up_consultancy_pune_logo.png", sizes: "180x180", type: "image/png" },
+      { url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
-    shortcut: "/images/rise_up_consultancy_pune_logo.png",
+    shortcut: "/favicon.ico",
   },
   robots: {
     index: true,
@@ -112,17 +115,26 @@ const ORGANIZATION_SCHEMA = {
   "@graph": [
     {
       "@type": "EmploymentAgency",
-      "@id": "https://riseupconsultancy.in/#agency",
-      name: "Rise Up Consultancy Pune",
-      alternateName: ["RiseUp Recruitment", "Rise Up Staffing Services", "RiseUp Consultancy"],
-      url: "https://riseupconsultancy.in",
-      logo: "https://riseupconsultancy.in/images/rise_up_consultancy_pune_logo.png",
-      image: "https://riseupconsultancy.in/images/rise_up_consultancy_pune_logo.png",
+      "@id": `${SITE_URL}/#agency`,
+      name: SITE_NAME,
+      legalName: SITE_LEGAL_NAME,
+      alternateName: SITE_ALTERNATE_NAMES,
+      url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${SITE_URL}/#logo`,
+        url: `${SITE_URL}/images/rise_up_consultancy_pune_logo.png`,
+        contentUrl: `${SITE_URL}/images/rise_up_consultancy_pune_logo.png`,
+        caption: "Rise Up Consultancy Official Brand Mark",
+        width: 1254,
+        height: 1254,
+      },
+      image: `${SITE_URL}/images/rise_up_consultancy_pune_logo.png`,
       description:
         "Leading direct corporate staffing and authorized recruitment agency in Pune, India. Specializing in BPO, Voice, Non-Voice, Back Office, and KYC placements. 100% free placement for candidates.",
       foundingDate: "2025-01-01",
       telephone: "+919359892819",
-      email: "patelmeenakshi524@gmail.com",
+      email: "contact@riseupconsultancyy.com",
       priceRange: "Free for Job Seekers / Enterprise SLA",
       address: {
         "@type": "PostalAddress",
@@ -174,25 +186,26 @@ const ORGANIZATION_SCHEMA = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://riseupconsultancy.in/#website",
-      url: "https://riseupconsultancy.in",
-      name: "Rise Up Consultancy Pune",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: SITE_NAME,
+      alternateName: SITE_ALTERNATE_NAMES,
       description: "Direct corporate recruitment platform and verified job vacancy portal.",
       publisher: {
-        "@id": "https://riseupconsultancy.in/#agency",
+        "@id": `${SITE_URL}/#agency`,
       },
       potentialAction: {
         "@type": "SearchAction",
         target: {
           "@type": "EntryPoint",
-          urlTemplate: "https://riseupconsultancy.in/jobs?q={search_term_string}",
+          urlTemplate: `${SITE_URL}/jobs?q={search_term_string}`,
         },
         "query-input": "required name=search_term_string",
       },
     },
     {
       "@type": "ItemList",
-      "@id": "https://riseupconsultancy.in/#sitelinks",
+      "@id": `${SITE_URL}/#sitelinks`,
       name: "Rise Up Consultancy Site Navigation",
       itemListElement: [
         {
@@ -200,42 +213,42 @@ const ORGANIZATION_SCHEMA = {
           position: 1,
           name: "Jobs Directory",
           description: "Browse verified BPO, Voice, Non-Voice, and Back Office job openings with 100% free placement.",
-          url: "https://riseupconsultancy.in/jobs",
+          url: `${SITE_URL}/jobs`,
         },
         {
           "@type": "SiteNavigationElement",
           position: 2,
           name: "Corporate Talent Supply",
           description: "High-volume BPO staffing, back office manpower supply, and 24-48hr candidate pipelines.",
-          url: "https://riseupconsultancy.in/services",
+          url: `${SITE_URL}/services`,
         },
         {
           "@type": "SiteNavigationElement",
           position: 3,
           name: "About Us",
           description: "Learn about our zero candidate fee guarantee, Pune headquarters, and mission.",
-          url: "https://riseupconsultancy.in/about",
+          url: `${SITE_URL}/about`,
         },
         {
           "@type": "SiteNavigationElement",
           position: 4,
           name: "Contact Recruiter Desk",
-          description: "Get in touch with Meenakshi Patel and Shaziya Khan for recruitment inquiries.",
-          url: "https://riseupconsultancy.in/contact",
+          description: "Get in touch with recruitment desk for corporate requisitions.",
+          url: `${SITE_URL}/contact`,
         },
         {
           "@type": "SiteNavigationElement",
           position: 5,
           name: "Terms & Conditions",
           description: "Official terms of service, candidate rights, and corporate placement SLAs.",
-          url: "https://riseupconsultancy.in/terms",
+          url: `${SITE_URL}/terms`,
         },
         {
           "@type": "SiteNavigationElement",
           position: 6,
           name: "Privacy Policy",
           description: "Data confidentiality, resume protection, and privacy grievance contact.",
-          url: "https://riseupconsultancy.in/privacy",
+          url: `${SITE_URL}/privacy`,
         },
       ],
     },
@@ -250,6 +263,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${inter.variable} scroll-smooth`}>
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96x96.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <meta property="og:site_name" content={SITE_NAME} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_SCHEMA) }}

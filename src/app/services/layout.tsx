@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Corporate Talent Supply & BPO Staffing Services | Rise Up Consultancy Pune",
@@ -17,13 +18,13 @@ export const metadata: Metadata = {
     "RPO service provider India",
   ],
   alternates: {
-    canonical: "https://riseupconsultancy.in/services",
+    canonical: `${SITE_URL}/services`,
   },
   openGraph: {
     title: "Corporate Talent Supply & BPO Staffing Services | Rise Up Consultancy",
     description:
       "Direct company payroll staffing and talent supply across Pune & Pan-India. 24–48hr shortlist turnaround and 90-day free candidate replacement warranty.",
-    url: "https://riseupconsultancy.in/services",
+    url: `${SITE_URL}/services`,
     type: "website",
   },
 };

@@ -5,18 +5,19 @@ import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
 import Link from "next/link";
 import { CheckCircle2, Scale } from "lucide-react";
+import { SITE_URL } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Terms and Conditions | Rise Up Consultancy Pune",
   description:
     "Official terms and conditions governing candidate placement, corporate talent supply, and recruitment services provided by Rise Up Consultancy Pune.",
   alternates: {
-    canonical: "https://riseupconsultancy.in/terms",
+    canonical: `${SITE_URL}/terms`,
   },
   openGraph: {
     title: "Terms and Conditions | Rise Up Consultancy Pune",
     description: "Official candidate placement and corporate staffing terms of service.",
-    url: "https://riseupconsultancy.in/terms",
+    url: `${SITE_URL}/terms`,
     type: "website",
   },
 };

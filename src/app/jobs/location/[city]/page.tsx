@@ -12,6 +12,7 @@ import {
   B2B_SERVICE_OFFERINGS,
   CitySeoProfile 
 } from "@/lib/seo-knowledge";
+import { SITE_URL } from "@/lib/site-config";
 import { 
   MapPin, 
   Briefcase, 
@@ -75,12 +76,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `Free job consultancy in ${profile.name}`,
     ],
     alternates: {
-      canonical: `https://riseupconsultancy.in/jobs/location/${profile.slug}`,
+      canonical: `${SITE_URL}/jobs/location/${profile.slug}`,
     },
     openGraph: {
       title: `${profile.name} Job Vacancies & Corporate Talent Supply | Rise Up Consultancy`,
       description: `Verified job vacancies and B2B corporate talent supply solutions in ${profile.name}. 100% Free candidate placement, 24–48hr staffing SLA.`,
-      url: `https://riseupconsultancy.in/jobs/location/${profile.slug}`,
+      url: `${SITE_URL}/jobs/location/${profile.slug}`,
       siteName: "Rise Up Consultancy Pune",
       locale: "en_IN",
       type: "website",
@@ -158,19 +159,19 @@ export default async function CityLocationJobsPage({ params }: Props) {
             "@type": "ListItem",
             position: 1,
             name: "Home",
-            item: "https://riseupconsultancy.in",
+            item: SITE_URL,
           },
           {
             "@type": "ListItem",
             position: 2,
             name: "Jobs Directory",
-            item: "https://riseupconsultancy.in/jobs",
+            item: `${SITE_URL}/jobs`,
           },
           {
             "@type": "ListItem",
             position: 3,
             name: `${profile.name} Hub & Talent Supply`,
-            item: `https://riseupconsultancy.in/jobs/location/${profile.slug}`,
+            item: `${SITE_URL}/jobs/location/${profile.slug}`,
           },
         ],
       },
@@ -181,7 +182,7 @@ export default async function CityLocationJobsPage({ params }: Props) {
         provider: {
           "@type": "EmploymentAgency",
           name: "Rise Up Consultancy",
-          url: "https://riseupconsultancy.in",
+          url: SITE_URL,
           telephone: "+91-9359892819",
           address: {
             "@type": "PostalAddress",
