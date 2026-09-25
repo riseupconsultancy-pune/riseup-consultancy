@@ -9,7 +9,6 @@ import FeaturedClients from "@/components/FeaturedClients";
 import TrustBanner from "@/components/TrustBanner";
 import SpecializationMatrix from "@/components/SpecializationMatrix";
 import CandidateJourney from "@/components/CandidateJourney";
-import PuneHubsMatrix from "@/components/PuneHubsMatrix";
 import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
 import HireModal from "@/components/HireModal";
@@ -55,11 +54,8 @@ export default function HomePage() {
       {/* 4. Candidate Placement Pathway (48-Hour Roadmap) */}
       <CandidateJourney />
 
-      {/* 4. Official Trust & Verification Standards */}
+      {/* 5. Official Trust & Verification Standards */}
       <TrustBanner />
-
-      {/* 5. Key Employment Micro-Markets Across Pune (Kharadi, Magarpatta, Hinjewadi) */}
-      <PuneHubsMatrix />
 
       {/* 6. Current Hiring Specialization (BPO & Non-Technical) */}
       <SpecializationMatrix onJobsClick={handleJobsClick} />
