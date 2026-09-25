@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
 import HireModal from "@/components/HireModal";
 import VerificationBadge from "@/components/VerificationBadge";
+import FeaturedClients from "@/components/FeaturedClients";
 import { 
   Users, 
   Workflow, 
@@ -154,6 +155,12 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      {/* Featured Client Partners Marquee */}
+      <FeaturedClients 
+        headline="Our Corporate Clients & Hiring Partners"
+        subheadline="Trusted by top BPM, BPO, and enterprise leaders across Pune, Bengaluru, Hyderabad, and Pan-India."
+      />
 
       {/* Part 1: BPO & Non-Technical Specialization Grid */}
       <section className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200">

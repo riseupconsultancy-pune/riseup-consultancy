@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import FeaturedClients from "@/components/FeaturedClients";
 import TrustBanner from "@/components/TrustBanner";
 import SpecializationMatrix from "@/components/SpecializationMatrix";
 import CandidateJourney from "@/components/CandidateJourney";
@@ -48,7 +49,10 @@ export default function HomePage() {
       {/* 2. Executive Hero Section with Official Tagline & Dual CTAs */}
       <Hero onHireClick={handleHireClick} onJobsClick={handleJobsClick} />
 
-      {/* 3. Candidate Placement Pathway (48-Hour Roadmap) */}
+      {/* 3. Featured Corporate Clients Marquee (Continuous Right-to-Left Trust Showcase) */}
+      <FeaturedClients />
+
+      {/* 4. Candidate Placement Pathway (48-Hour Roadmap) */}
       <CandidateJourney />
 
       {/* 4. Official Trust & Verification Standards */}
