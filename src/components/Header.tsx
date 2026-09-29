@@ -113,21 +113,21 @@ export default function Header() {
   return (
     <header
       className={`sticky top-0 z-40 w-full transition-all duration-300 pointer-events-none ${
-        isHomePage ? "md:-mb-[72px]" : ""
+        isHomePage ? "-mb-14 sm:-mb-16 md:-mb-[72px]" : ""
       } ${
         isScrolled
-          ? "md:pt-3 md:px-4 lg:px-8"
-          : "md:pt-4 md:px-4 lg:px-8"
+          ? "pt-2 md:pt-3 px-3 sm:px-4 lg:px-8"
+          : "pt-2 md:pt-4 px-3 sm:px-4 lg:px-8"
       }`}
     >
       <div
-        className={`w-full transition-all duration-300 pointer-events-auto ${
+        className={`w-full max-w-7xl mx-auto transition-all duration-300 pointer-events-auto rounded-full flex items-center justify-between gap-2 px-3.5 sm:px-6 h-14 md:h-16 ${
           isScrolled
-            ? "bg-white/95 backdrop-blur-md border-b border-slate-200/80 md:border md:border-slate-200/80 md:liquid-glass md:max-w-7xl md:mx-auto md:rounded-full md:shadow-lg md:shadow-slate-900/5 md:h-16 md:px-6"
+            ? "liquid-glass border border-slate-200/80 shadow-md md:shadow-lg md:shadow-slate-900/5"
             : isHomePage
-            ? "bg-white/95 backdrop-blur-md border-b border-slate-200/80 md:bg-transparent md:border-transparent md:shadow-none md:max-w-7xl md:mx-auto md:rounded-full md:h-16 md:px-6"
-            : "bg-white/95 backdrop-blur-md border-b border-slate-200/80 md:border md:border-slate-200/80 md:bg-white/90 md:max-w-7xl md:mx-auto md:rounded-full md:shadow-xs md:h-16 md:px-6"
-        } h-16 sm:h-20 md:h-16 flex items-center justify-between gap-2 px-3 sm:px-6`}
+            ? "bg-transparent border-transparent shadow-none"
+            : "bg-white/95 backdrop-blur-md border border-slate-200/80 shadow-xs"
+        }`}
       >
         
         {/* Left: Official Brand Logo & Name (Borderless Logo as-is) */}

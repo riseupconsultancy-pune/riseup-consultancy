@@ -97,7 +97,41 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee-left {
+  .animate-marquee-left,
+  .animate-marquee-left-fast,
+  .animate-ambient-float,
+  .animate-ambient-float-reverse {
     animation-play-state: paused;
   }
+}
+
+/* Ambient breathing & float animation for hero lighting */
+@keyframes ambient-float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.06);
+    opacity: 1;
+  }
+}
+
+.animate-ambient-float {
+  animation: ambient-float 12s ease-in-out infinite;
+}
+
+.animate-ambient-float-reverse {
+  animation: ambient-float 15s ease-in-out infinite reverse;
+}
+
+.animate-marquee-left-fast {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll-left 25s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-left-fast:hover {
+  animation-play-state: paused;
 }
