@@ -145,11 +145,11 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
       />
 
       {/* Center Body: Vertically Centered Grid Layout */}
-      <div className="flex-1 flex items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-1 sm:py-2">
+      <div className="flex-1 flex items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full py-1 sm:py-2">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 xl:gap-12 items-center w-full">
           
           {/* Column 1: Desktop Left (Text & Services & Actions) | Mobile Order 2 */}
-          <div className="lg:col-span-7 order-2 lg:order-1 flex flex-col justify-center items-center text-center lg:items-start lg:text-left z-10">
+          <div className="lg:col-span-7 order-2 lg:order-1 flex flex-col justify-center items-center text-center lg:items-start lg:text-left">
             
             {/* Hero Text Headlines with Entrance Animation */}
             <div className="animate-hero-fade-up-1">
@@ -225,8 +225,8 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
 
           </div>
 
-          {/* Column 2: Desktop Right (Animated Video Logo with Halo & Gradient Blend) | Mobile Order 1 */}
-          <div className="lg:col-span-5 order-1 lg:order-2 flex items-center justify-center lg:justify-end animate-hero-scale-fade my-1 sm:my-2 lg:my-0">
+          {/* Column 2: Desktop Right (Animated Video Logo with Ambient Halo) | Mobile Order 1 */}
+          <div className="lg:col-span-5 order-1 lg:order-2 flex items-center justify-center lg:justify-end my-1 sm:my-2 lg:my-0">
             <div className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-56 md:h-56 lg:w-[420px] lg:h-[420px] xl:w-[460px] xl:h-[460px] 2xl:w-[500px] 2xl:h-[500px] aspect-square flex items-center justify-center shrink-0">
               
               {/* Subtle Ambient Halo behind Video Logo */}
@@ -244,44 +244,13 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
                   poster="/images/rise_up_consultancy_pune_logo.png"
                   onTimeUpdate={handleTimeUpdate}
                   onEnded={handleEnded}
-                  className="w-full h-full object-contain mix-blend-multiply contrast-[1.08] brightness-[1.05] select-none pointer-events-none"
-                  style={{
-                    WebkitMaskImage: "radial-gradient(circle at center, black 55%, transparent 82%)",
-                    maskImage: "radial-gradient(circle at center, black 55%, transparent 82%)",
-                  }}
+                  className="w-full h-full object-contain mix-blend-multiply select-none pointer-events-none"
                 >
                   <source src="/images/hero_video.mov" type="video/quicktime" />
                   <source src="/images/hero video.MOV" type="video/quicktime" />
                   <source src="/images/hero_video.mov" type="video/mp4" />
                   <source src="/images/hero video.MOV" type="video/mp4" />
-                  {/* Fallback Image */}
-                  <Image
-                    src="/images/rise_up_consultancy_pune_logo.png"
-                    alt="Rise Up Consultancy Official Logo"
-                    fill
-                    priority
-                    className="object-contain select-none mix-blend-multiply"
-                    sizes="(max-width: 640px) 176px, (max-width: 768px) 224px, (max-width: 1024px) 280px, (max-width: 1280px) 460px, 500px"
-                  />
                 </video>
-
-                {/* Gradient Color Layer Above Video: Seamlessly harmonizes video background with hero section */}
-                <div
-                  className="absolute inset-0 pointer-events-none bg-gradient-to-b from-slate-50/80 via-blue-50/40 to-white/70 mix-blend-multiply"
-                  aria-hidden="true"
-                />
-
-                {/* Peripheral Feathered Edge Softener: Eliminates any rectangular box border */}
-                <div
-                  className="absolute -inset-3 pointer-events-none bg-radial from-transparent via-transparent to-slate-50/90"
-                  aria-hidden="true"
-                />
-
-                {/* Ambient Sheen Overlay */}
-                <div
-                  className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-blue-500/5 via-transparent to-indigo-500/5"
-                  aria-hidden="true"
-                />
               </div>
             </div>
           </div>
