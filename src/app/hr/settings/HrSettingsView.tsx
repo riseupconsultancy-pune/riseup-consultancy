@@ -125,78 +125,79 @@ export default function HrSettingsView({
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2.5 h-2.5 bg-emerald-600 inline-block"></span>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-emerald-50 text-emerald-700 border border-emerald-200/60 shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
               Recruiter Preferences &bull; {employeeCode}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-heading">
             WhatsApp 1-Tap Message Template
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Configure the message automatically loaded when you click the 1-Tap WhatsApp button on candidate cards.
           </p>
         </div>
 
         <Link
           href="/hr/candidates"
-          className="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-slate-800 flex items-center gap-1 self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border border-slate-200 shadow-2xs min-h-[40px] self-start sm:self-auto"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Candidates
+          <span>Back to Candidates</span>
         </Link>
       </div>
 
       {/* Alert Notification */}
       {statusMessage && (
         <div
-          className={`p-4 border-l-4 text-xs font-medium flex items-center justify-between rounded-none animate-fadeIn ${
+          className={`p-4 border-l-4 text-xs font-medium flex items-center justify-between rounded-2xl shadow-2xs animate-fadeIn ${
             statusMessage.type === "success"
-              ? "bg-emerald-50 border-emerald-600 text-emerald-900"
-              : "bg-rose-50 border-rose-600 text-rose-900"
+              ? "bg-emerald-50/90 border-emerald-600 text-emerald-900"
+              : "bg-rose-50/90 border-rose-600 text-rose-900"
           }`}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             {statusMessage.type === "success" ? (
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             ) : (
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
             )}
-            <span>{statusMessage.text}</span>
+            <span className="font-semibold">{statusMessage.text}</span>
           </div>
           <button
             onClick={() => setStatusMessage(null)}
-            className="text-xs font-bold uppercase hover:opacity-75"
+            className="text-xs font-bold uppercase hover:opacity-75 cursor-pointer"
           >
             Dismiss
           </button>
         </div>
       )}
 
-      {/* Form & Editor */}
-      <form onSubmit={handleSave} className="bg-white border border-slate-200 rounded-none shadow-xs p-6 sm:p-8 space-y-6">
+      {/* Form & Editor Container */}
+      <form onSubmit={handleSave} className="relative bg-white border border-slate-200/80 rounded-3xl shadow-sm p-6 sm:p-8 space-y-6 overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent pointer-events-none" />
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-900 mb-1.5">
             Invitation Message Template
           </label>
-          <p className="text-[11px] text-slate-500 mb-3">
+          <p className="text-[11px] text-slate-500 mb-3.5">
             Click on any placeholder chip below to automatically insert it into your message draft.
           </p>
 
           {/* Placeholders Bar */}
-          <div className="flex flex-wrap gap-1.5 mb-3">
+          <div className="flex flex-wrap gap-2 mb-3.5">
             {PLACEHOLDERS.map((item) => (
               <button
                 key={item.tag}
                 type="button"
                 onClick={() => handleInsertTag(item.tag)}
-                className="inline-flex items-center gap-1 text-[11px] font-mono font-bold bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 px-2.5 py-1 border border-slate-300 transition-colors rounded-none"
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold bg-slate-50 hover:bg-blue-50 hover:text-blue-700 text-slate-700 px-3 py-1.5 border border-slate-200/80 hover:border-blue-200 transition-all rounded-xl shadow-2xs cursor-pointer"
               >
                 <span>{item.tag}</span>
-                <span className="text-[9px] text-slate-400 font-sans">({item.label})</span>
+                <span className="text-[10px] text-slate-400 font-sans">({item.label})</span>
               </button>
             ))}
           </div>
@@ -205,20 +206,20 @@ export default function HrSettingsView({
             rows={7}
             value={template}
             onChange={(e) => setTemplate(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-300 p-3.5 text-xs text-slate-900 font-mono leading-relaxed rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+            className="w-full bg-slate-50/60 border border-slate-200/80 p-4 text-xs text-slate-900 font-mono leading-relaxed rounded-2xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none transition-all"
             placeholder="Type your WhatsApp template here..."
           />
         </div>
 
         {/* Live WhatsApp Bubble Preview */}
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block">
             Live WhatsApp Message Bubble Preview
           </span>
-          <div className="bg-slate-900/5 p-4 border border-slate-200">
-            <div className="max-w-md bg-emerald-50 border border-emerald-300 p-3.5 rounded-none shadow-xs text-xs text-slate-800 leading-relaxed whitespace-pre-line font-sans relative">
-              <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-1.5 flex items-center gap-1">
-                <MessageSquare className="w-3 h-3 text-emerald-600" />
+          <div className="bg-slate-900/5 p-4 sm:p-6 border border-slate-200/80 rounded-2xl">
+            <div className="max-w-md bg-gradient-to-br from-emerald-50 to-teal-50/60 border border-emerald-200/80 p-4 rounded-2xl shadow-sm text-xs text-slate-800 leading-relaxed whitespace-pre-line font-sans relative">
+              <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-2 flex items-center gap-1.5 border-b border-emerald-200/60 pb-1.5">
+                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
                 <span>WhatsApp Message Simulation</span>
               </div>
               {previewText}
@@ -227,11 +228,11 @@ export default function HrSettingsView({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-100">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-5 border-t border-slate-100">
           <button
             type="button"
             onClick={handleResetDefault}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-none transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer min-h-[44px]"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset to Default Template</span>
@@ -240,7 +241,7 @@ export default function HrSettingsView({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs transition-colors disabled:opacity-50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-blue-500/20 transition-all cursor-pointer min-h-[44px] disabled:opacity-50"
           >
             {isSubmitting ? (
               <>
@@ -249,7 +250,7 @@ export default function HrSettingsView({
               </>
             ) : (
               <>
-                <CheckCircle2 className="w-4 h-4" />
+                <Sparkles className="w-4 h-4" />
                 <span>Save WhatsApp Template</span>
               </>
             )}

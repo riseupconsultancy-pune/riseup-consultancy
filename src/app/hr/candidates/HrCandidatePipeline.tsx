@@ -617,35 +617,35 @@ export default function HrCandidatePipeline({
   const selectedBulkVac = activeVacancies.find((v) => v.id === bulkTargetVacancyId);
 
   return (
-    <div className="space-y-4 sm:space-y-5">
+    <div className="space-y-5">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 bg-blue-600 inline-block"></span>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-blue-50 text-blue-700 border border-blue-200/60 shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
               Recruiter ATS Pipeline &bull; {employeeCode}
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-heading">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-heading">
             Candidate Screening & Interview Desk
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Filter candidate talent pool, schedule client interviews, and dispatch verified referrals.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Link
             href="/hr/settings"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-none transition-colors border border-slate-300"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border border-slate-200 shadow-2xs min-h-[40px]"
           >
             <MessageSquare className="w-3.5 h-3.5 text-blue-600" />
             <span>WhatsApp Template</span>
           </Link>
           <Link
             href="/hr/vacancies"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md shadow-blue-500/20 min-h-[40px]"
           >
             <Briefcase className="w-3.5 h-3.5" />
             <span>Active Mandates</span>
@@ -655,10 +655,10 @@ export default function HrCandidatePipeline({
 
       {/* Notifications */}
       {actionMessage && (
-        <div className="p-3 bg-emerald-50 border-l-4 border-emerald-600 text-emerald-900 text-xs font-medium flex items-center justify-between rounded-none animate-fadeIn">
-          <div className="flex items-center gap-2">
+        <div className="p-4 bg-emerald-50/90 border border-emerald-200/80 text-emerald-900 text-xs font-medium flex items-center justify-between rounded-2xl shadow-2xs animate-fadeIn">
+          <div className="flex items-center gap-2.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>{actionMessage}</span>
+            <span className="font-semibold">{actionMessage}</span>
           </div>
           <button
             onClick={() => setActionMessage(null)}
@@ -670,10 +670,10 @@ export default function HrCandidatePipeline({
       )}
 
       {errorMessage && (
-        <div className="p-3 bg-rose-50 border-l-4 border-rose-600 text-rose-900 text-xs font-medium flex items-center justify-between rounded-none animate-fadeIn">
-          <div className="flex items-center gap-2">
+        <div className="p-4 bg-rose-50/90 border border-rose-200/80 text-rose-900 text-xs font-medium flex items-center justify-between rounded-2xl shadow-2xs animate-fadeIn">
+          <div className="flex items-center gap-2.5">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-            <span>{errorMessage}</span>
+            <span className="font-semibold">{errorMessage}</span>
           </div>
           <button
             onClick={() => setErrorMessage(null)}
@@ -685,17 +685,18 @@ export default function HrCandidatePipeline({
       )}
 
       {/* SECTION: COMPACT SEARCH & FILTER BAR */}
-      <div className="bg-white border border-slate-200 rounded-none shadow-xs p-3 sm:p-4 space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5">
+      <div className="relative bg-white border border-slate-200/80 rounded-3xl shadow-sm p-4 sm:p-5 space-y-4 overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent pointer-events-none" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
           {/* Search Query */}
           <div className="sm:col-span-2 lg:col-span-5 relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             <input
               type="text"
               placeholder="Search by candidate name, ID, phone, city, or title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 pl-9 pr-3 py-1.5 text-xs text-slate-900 font-medium rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+              className="w-full bg-slate-50/60 border border-slate-200/80 pl-10 pr-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none min-h-[44px] transition-all"
             />
           </div>
 
@@ -704,7 +705,7 @@ export default function HrCandidatePipeline({
             <select
               value={selectedAppliedVacancyId}
               onChange={(e) => setSelectedAppliedVacancyId(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 px-2.5 py-1.5 text-xs text-slate-900 font-medium rounded-none focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
+              className="w-full bg-slate-50/60 border border-slate-200/80 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none cursor-pointer min-h-[44px] transition-all"
             >
               <option value="ALL">All Job Vacancies</option>
               {appliedVacancies.map((v) => (
@@ -720,7 +721,7 @@ export default function HrCandidatePipeline({
             <select
               value={experienceFilter}
               onChange={(e) => setExperienceFilter(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 px-2.5 py-1.5 text-xs text-slate-900 font-medium rounded-none focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
+              className="w-full bg-slate-50/60 border border-slate-200/80 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none cursor-pointer min-h-[44px] transition-all"
             >
               <option value="ALL">All Experience</option>
               <option value="Fresher">Fresher</option>
@@ -736,7 +737,7 @@ export default function HrCandidatePipeline({
             <select
               value={availabilityFilter}
               onChange={(e) => setAvailabilityFilter(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 px-2.5 py-1.5 text-xs text-slate-900 font-medium rounded-none focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
+              className="w-full bg-slate-50/60 border border-slate-200/80 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none cursor-pointer min-h-[44px] transition-all"
             >
               <option value="ALL">All Availability</option>
               <option value="Immediate Joiner">Immediate Joiner</option>
@@ -747,8 +748,8 @@ export default function HrCandidatePipeline({
         </div>
 
         {/* Stage Filter Tabs */}
-        <div className="flex items-center justify-between border-t border-slate-100 pt-2.5 flex-wrap gap-2">
-          <div className="flex items-center gap-1 overflow-x-auto pb-0.5 max-w-full">
+        <div className="flex items-center justify-between border-t border-slate-100 pt-3 flex-wrap gap-2.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
             {[
               { key: "ALL", label: `All (${candidates.length})` },
               { key: "ACTIVE_POOL", label: "Active Pool" },
@@ -763,9 +764,9 @@ export default function HrCandidatePipeline({
                 key={tab.key}
                 type="button"
                 onClick={() => setStatusFilter(tab.key)}
-                className={`px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider rounded-none whitespace-nowrap transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-full whitespace-nowrap transition-all cursor-pointer ${
                   statusFilter === tab.key
-                    ? "bg-slate-900 text-white"
+                    ? "bg-slate-900 text-white shadow-2xs"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
@@ -775,17 +776,17 @@ export default function HrCandidatePipeline({
           </div>
 
           {/* Multi-Selection Counter & Select All */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2.5 shrink-0">
             <button
               type="button"
               onClick={handleSelectAll}
-              className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-bold uppercase tracking-wider rounded-none cursor-pointer"
+              className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 text-slate-700 text-[11px] font-bold uppercase tracking-wider rounded-xl cursor-pointer transition-all shadow-2xs"
             >
               {selectedCandidateIds.length === filteredCandidates.length && filteredCandidates.length > 0
                 ? "Deselect All"
                 : "Select All"}
             </button>
-            <span className="text-[11px] text-slate-500 font-semibold">
+            <span className="text-[11px] text-slate-500 font-bold bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
               {filteredCandidates.length} candidate(s)
             </span>
           </div>
@@ -794,9 +795,9 @@ export default function HrCandidatePipeline({
 
       {/* STICKY BULK DISPATCH ACTION BAR */}
       {selectedCandidateIds.length > 0 && (
-        <div className="sticky top-14 z-30 bg-slate-900 text-white p-3 border border-slate-800 rounded-none shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fadeIn">
+        <div className="sticky top-14 z-30 bg-slate-900/95 backdrop-blur-md text-white p-3.5 border border-slate-800 rounded-2xl shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fadeIn">
           <div className="flex items-center gap-3">
-            <span className="w-5 h-5 bg-blue-600 font-bold flex items-center justify-center text-xs">
+            <span className="w-6 h-6 rounded-lg bg-blue-600 font-bold flex items-center justify-center text-xs shadow-2xs">
               {selectedCandidateIds.length}
             </span>
             <span className="text-xs font-bold uppercase tracking-wider text-slate-200">
@@ -808,7 +809,7 @@ export default function HrCandidatePipeline({
             <select
               value={bulkTargetVacancyId}
               onChange={(e) => setBulkTargetVacancyId(e.target.value)}
-              className="bg-slate-800 border border-slate-700 px-2.5 py-1 text-xs text-white rounded-none focus:outline-none focus:border-blue-500 cursor-pointer"
+              className="bg-slate-800 border border-slate-700 px-3 py-1.5 text-xs text-white rounded-xl focus:outline-none focus:border-blue-500 cursor-pointer min-h-[38px]"
             >
               {activeVacancies.map((v) => (
                 <option key={v.id} value={v.id}>
@@ -820,7 +821,7 @@ export default function HrCandidatePipeline({
               type="button"
               disabled={!bulkTargetVacancyId}
               onClick={() => setShowBulkDispatchModal(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-blue-500/20 disabled:opacity-50 cursor-pointer min-h-[38px] transition-all"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Bulk Send for Interview</span>
@@ -828,7 +829,7 @@ export default function HrCandidatePipeline({
             <button
               type="button"
               onClick={() => setSelectedCandidateIds([])}
-              className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
+              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer min-h-[38px] transition-all"
             >
               Clear
             </button>
@@ -836,13 +837,13 @@ export default function HrCandidatePipeline({
         </div>
       )}
 
-      {/* CANDIDATE PIPELINE CARDS: STREAMLINED & MINIMALIST */}
+      {/* CANDIDATE PIPELINE CARDS: STREAMLINED & ULTRA-PREMIUM */}
       {filteredCandidates.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-none shadow-xs p-10 text-center space-y-2">
-          <div className="w-10 h-10 bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
-            <Users className="w-5 h-5" />
+        <div className="bg-white border border-slate-200/80 rounded-3xl shadow-sm p-12 text-center space-y-3">
+          <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto">
+            <Users className="w-6 h-6" />
           </div>
-          <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
             No candidates found
           </h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
@@ -850,7 +851,7 @@ export default function HrCandidatePipeline({
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {filteredCandidates.map((candidate) => {
             const isSelectedCard = selectedCandidateIds.includes(candidate.id);
             const isApplied = candidate.status === "APPLIED";
@@ -866,73 +867,74 @@ export default function HrCandidatePipeline({
             return (
               <div
                 key={candidate.id}
-                className={`bg-white border rounded-none p-3.5 sm:p-4 transition-all duration-150 ${
+                className={`relative bg-white border rounded-3xl p-5 sm:p-6 transition-all duration-200 overflow-hidden ${
                   isSelectedCard
-                    ? "border-blue-600 bg-blue-50/15 shadow-xs"
-                    : "border-slate-200 hover:border-slate-300 shadow-2xs"
+                    ? "border-blue-500/80 bg-blue-50/20 shadow-md shadow-blue-500/5 ring-1 ring-blue-500/20"
+                    : "border-slate-200/80 hover:border-slate-300 shadow-2xs hover:shadow-md"
                 }`}
               >
+                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent pointer-events-none" />
                 {/* Header Row: Checkbox, Name, ID, Badges, Date */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-100">
                   <div className="flex items-center gap-2.5 flex-wrap">
                     <input
                       type="checkbox"
                       checked={isSelectedCard}
                       onChange={() => toggleSelectCandidate(candidate.id)}
-                      className="w-4 h-4 text-blue-600 border-slate-300 rounded-none focus:ring-blue-500 cursor-pointer"
+                      className="w-4 h-4 text-blue-600 border-slate-300 rounded-md focus:ring-blue-500 cursor-pointer"
                     />
 
-                    <h2 className="text-sm sm:text-base font-black text-slate-900 font-heading">
+                    <h2 className="text-base sm:text-lg font-black text-slate-900 font-heading">
                       {candidate.fullName}
                     </h2>
 
-                    <span className="font-mono text-[10.5px] font-bold bg-slate-100 text-slate-700 px-1.5 py-0.2 border border-slate-200">
+                    <span className="font-mono text-[11px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg border border-slate-200/80">
                       {candidate.candidateId}
                     </span>
 
                     {/* Status Badges */}
                     {isApplied && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/80 px-2.5 py-0.5 rounded-full shadow-2xs">
                         New Lead
                       </span>
                     )}
                     {isConnected && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200/80 px-2.5 py-0.5 rounded-full shadow-2xs">
                         Connected
                       </span>
                     )}
                     {isInterview && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.2">
-                        <Clock className="w-3 h-3" />
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <Clock className="w-3 h-3 text-purple-600" />
                         Interview Scheduled
                       </span>
                     )}
                     {isInterviewed && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-sky-50 text-sky-700 border border-sky-200 px-2 py-0.2">
-                        <Eye className="w-3 h-3" />
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-sky-50 text-sky-700 border border-sky-200/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <Eye className="w-3 h-3 text-sky-600" />
                         Interviewed
                       </span>
                     )}
                     {isSelected && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.2">
-                        <CheckCircle2 className="w-3 h-3" />
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                         Selected
                       </span>
                     )}
                     {isRejected && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.2">
-                        <XCircle className="w-3 h-3" />
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <XCircle className="w-3 h-3 text-rose-600" />
                         Rejected
                       </span>
                     )}
                     {isAbsent && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.2">
-                        <AlertCircle className="w-3 h-3" />
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/80 px-2.5 py-0.5 rounded-full shadow-2xs">
+                        <AlertCircle className="w-3 h-3 text-amber-600" />
                         Absent
                       </span>
                     )}
                     {isPlacedOutside && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-300 px-2 py-0.2">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-full shadow-2xs">
                         <UserX className="w-3 h-3" />
                         Placed Outside
                       </span>
@@ -940,7 +942,7 @@ export default function HrCandidatePipeline({
 
                     {/* Vacancy Closed Warning */}
                     {isVacancyClosed && (
-                      <span className="inline-flex items-center gap-1 text-[9.5px] font-bold uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-300 px-1.5 py-0.2">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-300/80 px-2.5 py-0.5 rounded-full">
                         <AlertTriangle className="w-3 h-3 text-amber-600" />
                         Opening Closed
                       </span>
@@ -953,22 +955,22 @@ export default function HrCandidatePipeline({
                 </div>
 
                 {/* Details Row: Compact Metadata */}
-                <div className="py-2.5 space-y-1.5 text-xs">
+                <div className="py-3 space-y-2 text-xs">
                   {/* Job and Client Info */}
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-slate-700">
-                    <span className="font-semibold text-slate-900 flex items-center gap-1">
+                    <span className="font-semibold text-slate-900 flex items-center gap-1.5">
                       <Briefcase className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                       {candidate.vacancyJobId}: {candidate.vacancyTitle}
                     </span>
                     <span className="text-slate-300">&bull;</span>
-                    <span className="text-slate-600 flex items-center gap-1">
+                    <span className="text-slate-600 flex items-center gap-1.5">
                       <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       {candidate.clientCompanyName} ({candidate.vacancyCity})
                     </span>
                   </div>
 
                   {/* Candidate Attributes Inline Strip */}
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] text-slate-600 pt-0.5">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] text-slate-600 bg-slate-50/80 rounded-2xl p-3 border border-slate-100">
                     <span>
                       <strong className="text-slate-500 font-medium uppercase text-[10px]">Phone:</strong>{" "}
                       <span className="font-mono text-slate-900 font-semibold">{candidate.phone}</span>
@@ -997,8 +999,8 @@ export default function HrCandidatePipeline({
 
                   {/* Client Feedback Strip (if present) */}
                   {candidate.clientFeedback && (
-                    <div className="p-2 bg-blue-50/70 border-l-2 border-blue-600 text-[11px] text-slate-800">
-                      <strong className="font-bold text-blue-900 uppercase text-[9.5px] block">
+                    <div className="p-3 bg-blue-50/80 border border-blue-200/80 rounded-2xl text-[11px] text-slate-800">
+                      <strong className="font-bold text-blue-900 uppercase text-[10px] block">
                         Employer Feedback ({candidate.clientCompanyName}):
                       </strong>
                       <p className="mt-0.5">{candidate.clientFeedback}</p>
@@ -1007,7 +1009,7 @@ export default function HrCandidatePipeline({
 
                   {/* Scheduled Interview Details & Venue Strip */}
                   {isInterview && candidate.interviewDate && (
-                    <div className="p-2.5 bg-purple-50/75 border-l-2 border-purple-600 text-xs text-slate-800 space-y-1">
+                    <div className="p-3 bg-purple-50/80 border border-purple-200/80 rounded-2xl text-xs text-slate-800 space-y-1.5 shadow-2xs">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div className="flex items-center gap-1.5 font-bold text-purple-900 text-[11.5px]">
                           <Calendar className="w-3.5 h-3.5 text-purple-600 shrink-0" />
@@ -1044,9 +1046,9 @@ export default function HrCandidatePipeline({
                   )}
                 </div>
 
-                {/* Bottom Action Buttons Bar: Neat, Minimalist, Consistent Borders */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-slate-100">
-                  <div className="flex flex-wrap items-center gap-1.5">
+                {/* Bottom Action Buttons Bar: Neat, Minimalist, Rounded-xl */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100">
+                  <div className="flex flex-wrap items-center gap-2">
                     {/* View Resume PDF */}
                     <button
                       type="button"
@@ -1057,9 +1059,9 @@ export default function HrCandidatePipeline({
                           resumeFileName: candidate.resumeFileName,
                         })
                       }
-                      className="h-7.5 inline-flex items-center gap-1 px-2.5 bg-slate-900 hover:bg-slate-800 text-white text-[10.5px] font-bold uppercase tracking-wider rounded-none border border-slate-900 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all shadow-2xs min-h-[36px] cursor-pointer"
                     >
-                      <Eye className="w-3 h-3" />
+                      <Eye className="w-3.5 h-3.5" />
                       <span>Resume PDF</span>
                     </button>
 
@@ -1068,14 +1070,14 @@ export default function HrCandidatePipeline({
                       <button
                         type="button"
                         onClick={() => handleWhatsAppConnect(candidate)}
-                        className={`h-7.5 inline-flex items-center gap-1 px-2.5 text-white text-[10.5px] font-bold uppercase tracking-wider rounded-none border transition-colors cursor-pointer ${
+                        className={`inline-flex items-center gap-1.5 px-3 py-2 text-white text-[11px] font-bold uppercase tracking-wider rounded-xl shadow-sm transition-all cursor-pointer min-h-[36px] ${
                           isInterview
-                            ? "bg-emerald-700 hover:bg-emerald-800 border-emerald-700"
-                            : "bg-emerald-600 hover:bg-emerald-700 border-emerald-600"
+                            ? "bg-emerald-700 hover:bg-emerald-800 shadow-emerald-700/20"
+                            : "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20"
                         }`}
                         title={isInterview ? "Open WhatsApp with auto-filled Interview Call Letter" : "Initiate screening WhatsApp"}
                       >
-                        <MessageSquare className="w-3 h-3" />
+                        <MessageSquare className="w-3.5 h-3.5" />
                         <span>{isInterview ? "WhatsApp Call Letter" : "WhatsApp"}</span>
                       </button>
                     )}
@@ -1085,23 +1087,23 @@ export default function HrCandidatePipeline({
                       <button
                         type="button"
                         onClick={() => openDispatchModal(candidate)}
-                        className="h-7.5 inline-flex items-center gap-1 px-3 bg-blue-600 hover:bg-blue-700 text-white text-[10.5px] font-bold uppercase tracking-wider rounded-none border border-blue-600 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold uppercase tracking-wider rounded-xl shadow-md shadow-blue-500/20 transition-all cursor-pointer min-h-[36px]"
                       >
-                        <Calendar className="w-3 h-3" />
+                        <Calendar className="w-3.5 h-3.5" />
                         <span>{isInterview ? "Reschedule" : "Send for Interview"}</span>
                       </button>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-2">
                     {/* Placed Outside / Reactivate */}
                     {isPlacedOutside ? (
                       <button
                         type="button"
                         onClick={() => handleReactivateCandidate(candidate.id)}
-                        className="h-7.5 inline-flex items-center gap-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10.5px] font-bold uppercase tracking-wider rounded-none border border-slate-300 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] font-bold uppercase tracking-wider rounded-xl border border-slate-200 transition-all cursor-pointer min-h-[36px]"
                       >
-                        <RotateCcw className="w-3 h-3 text-blue-600" />
+                        <RotateCcw className="w-3.5 h-3.5 text-blue-600" />
                         <span>Reactivate Lead</span>
                       </button>
                     ) : (
@@ -1109,21 +1111,21 @@ export default function HrCandidatePipeline({
                         <button
                           type="button"
                           onClick={() => handleMarkPlacedOutside(candidate.id)}
-                          className="h-7.5 inline-flex items-center gap-1 px-2.5 bg-white hover:bg-slate-100 text-slate-600 text-[10.5px] font-bold uppercase tracking-wider rounded-none border border-slate-300 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-100 text-slate-600 text-[11px] font-bold uppercase tracking-wider rounded-xl border border-slate-200 transition-all cursor-pointer min-h-[36px]"
                         >
-                          <UserX className="w-3 h-3 text-slate-500" />
+                          <UserX className="w-3.5 h-3.5 text-slate-500" />
                           <span>Placed Outside</span>
                         </button>
                       )
                     )}
 
-                    {/* Delete Profile (With proper matching border) */}
+                    {/* Delete Profile */}
                     <button
                       type="button"
                       onClick={() => setDeletingCandidate(candidate)}
-                      className="h-7.5 inline-flex items-center gap-1 px-2.5 bg-white hover:bg-red-50 text-red-600 hover:text-red-700 text-[10.5px] font-bold uppercase tracking-wider rounded-none border border-red-300 hover:border-red-400 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-red-50 text-red-600 hover:text-red-700 text-[11px] font-bold uppercase tracking-wider rounded-xl border border-red-200 hover:border-red-300 transition-all cursor-pointer min-h-[36px]"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 className="w-3.5 h-3.5" />
                       <span>Delete</span>
                     </button>
                   </div>
@@ -1136,12 +1138,15 @@ export default function HrCandidatePipeline({
 
       {/* MODAL 1: RESUME VIEWER */}
       {resumeModalData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-none shadow-2xl w-full max-w-4xl h-[85vh] flex flex-col">
-            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200 bg-slate-50">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-blue-600" />
-                <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-3 sm:p-4 animate-fadeIn">
+          <div className="relative bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent pointer-events-none" />
+            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-100 bg-slate-50/70">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shadow-2xs">
+                  <FileText className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider font-heading">
                   {resumeModalData.candidateName} &bull; Resume Preview
                 </h3>
               </div>
@@ -1150,7 +1155,7 @@ export default function HrCandidatePipeline({
                 <a
                   href={resumeModalData.resumeUrl}
                   download={resumeModalData.resumeFileName}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-blue-500/20 transition-all min-h-[38px]"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download</span>
@@ -1158,17 +1163,17 @@ export default function HrCandidatePipeline({
                 <button
                   type="button"
                   onClick={() => setResumeModalData(null)}
-                  className="p-1 text-slate-500 hover:text-slate-900 bg-white border border-slate-300 hover:bg-slate-100 rounded-none cursor-pointer"
+                  className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            <div className="flex-1 bg-slate-100 p-2 overflow-hidden">
+            <div className="flex-1 bg-slate-100 p-2 sm:p-4 overflow-hidden">
               <iframe
                 src={`${resumeModalData.resumeUrl}#toolbar=0`}
-                className="w-full h-full border border-slate-300 bg-white"
+                className="w-full h-full border border-slate-200 rounded-2xl bg-white shadow-inner"
                 title="Resume Document Preview"
               />
             </div>
@@ -1178,35 +1183,45 @@ export default function HrCandidatePipeline({
 
       {/* MODAL 2: SEND FOR INTERVIEW (CHOOSE TARGET OPENING & WHATSAPP DISPATCH) */}
       {dispatchModalCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-3 sm:p-4 animate-fadeIn overflow-y-auto">
-          <div className="bg-white border border-slate-200 rounded-none shadow-2xl w-full max-w-xl p-5 sm:p-6 space-y-3.5 max-h-[92vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-blue-600" />
-                Schedule Interview & WhatsApp Dispatch
-              </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-3 sm:p-4 animate-fadeIn overflow-y-auto">
+          <div className="relative bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-xl p-5 sm:p-7 space-y-4 max-h-[92vh] overflow-y-auto">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent pointer-events-none" />
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shadow-2xs">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 font-heading">
+                    Schedule Interview & WhatsApp Dispatch
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Verify client opening details & send formatted call letter
+                  </p>
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => setDispatchModalCandidate(null)}
-                className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl cursor-pointer transition-colors min-h-[40px] min-w-[40px] flex items-center justify-center"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Candidate & Origin Lead Summary */}
-            <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 border border-slate-200">
+            <div className="text-xs text-slate-600 space-y-1.5 bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/80">
               <div className="flex flex-wrap items-center justify-between gap-1">
                 <p>
-                  Candidate: <strong className="text-slate-900">{dispatchModalCandidate.fullName}</strong> ({dispatchModalCandidate.candidateId})
+                  Candidate: <strong className="text-slate-900 font-bold">{dispatchModalCandidate.fullName}</strong> ({dispatchModalCandidate.candidateId})
                 </p>
-                <span className="font-mono font-semibold text-slate-800">{dispatchModalCandidate.phone}</span>
+                <span className="font-mono font-semibold text-slate-800 bg-white px-2 py-0.5 rounded-md border border-slate-200">{dispatchModalCandidate.phone}</span>
               </div>
               <p>
-                Original Applied Role: <span className="font-semibold text-slate-700">{dispatchModalCandidate.vacancyJobId}: {dispatchModalCandidate.vacancyTitle}</span> ({dispatchModalCandidate.clientCompanyName})
+                Original Applied Role: <span className="font-semibold text-slate-800">{dispatchModalCandidate.vacancyJobId}: {dispatchModalCandidate.vacancyTitle}</span> ({dispatchModalCandidate.clientCompanyName})
               </p>
               {dispatchModalCandidate.vacancyStatus !== "ACTIVE" && (
-                <div className="mt-1.5 p-2 bg-amber-50 border-l-2 border-amber-500 text-amber-900 text-[11px]">
+                <div className="mt-2 p-2.5 bg-amber-50/80 border border-amber-200/80 rounded-xl text-amber-900 text-[11px]">
                   ⚠️ Original opening is closed or filled. Choose any active vacancy below to dispatch this candidate.
                 </div>
               )}
@@ -1214,13 +1229,13 @@ export default function HrCandidatePipeline({
 
             {/* Choose Target Vacancy Dropdown */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                 Select Interview Opening (Target Vacancy)
               </label>
               <select
                 value={modalTargetVacancyId}
                 onChange={(e) => setModalTargetVacancyId(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
+                className="w-full bg-slate-50/60 border border-slate-200/80 p-2.5 text-xs font-semibold text-slate-900 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none cursor-pointer min-h-[44px] transition-all"
               >
                 {activeVacancies.length === 0 ? (
                   <option value="">No active broadcasted openings available</option>
@@ -1236,7 +1251,7 @@ export default function HrCandidatePipeline({
 
             {/* Selected Vacancy Venue & SPOC Details Card */}
             {selectedTargetVac && (
-              <div className="p-3 bg-blue-50/70 border border-blue-200 text-xs space-y-1.5">
+              <div className="p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-2xl text-xs space-y-1.5 shadow-2xs">
                 <div className="flex flex-wrap items-center justify-between gap-1">
                   <span className="font-bold text-blue-900 uppercase text-[10.5px]">
                     {selectedTargetVac.jobId}: {selectedTargetVac.title} ({selectedTargetVac.clientCompanyName})
@@ -1280,20 +1295,20 @@ export default function HrCandidatePipeline({
             )}
 
             {/* Date & Time Picker */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                   Scheduled Interview Date
                 </label>
                 <input
                   type="date"
                   value={interviewDate}
                   onChange={(e) => setInterviewDate(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+                  className="w-full bg-slate-50/60 border border-slate-200/80 p-2.5 text-xs font-semibold text-slate-900 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none min-h-[44px] transition-all"
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                   Scheduled Interview Time
                 </label>
                 <input
@@ -1301,22 +1316,22 @@ export default function HrCandidatePipeline({
                   placeholder="e.g. 10:30 AM"
                   value={interviewTime}
                   onChange={(e) => setInterviewTime(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+                  className="w-full bg-slate-50/60 border border-slate-200/80 p-2.5 text-xs font-semibold text-slate-900 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none min-h-[44px] transition-all"
                 />
               </div>
             </div>
 
             {/* Screening Remarks */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                 Recruiter Screening Remarks (Optional)
               </label>
               <textarea
-                rows={1}
+                rows={2}
                 value={interviewNote}
                 onChange={(e) => setInterviewNote(e.target.value)}
                 placeholder="e.g. Screened profile, cleared basic English communication..."
-                className="w-full bg-slate-50 border border-slate-300 p-2 text-xs text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+                className="w-full bg-slate-50/60 border border-slate-200/80 p-2.5 text-xs text-slate-900 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none transition-all"
               />
             </div>
 
@@ -1335,7 +1350,7 @@ export default function HrCandidatePipeline({
                     setCopiedNotice(true);
                     setTimeout(() => setCopiedNotice(false), 2000);
                   }}
-                  className="inline-flex items-center gap-1 text-[10.5px] font-bold uppercase tracking-wider text-slate-600 hover:text-slate-900 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wider text-slate-600 hover:text-slate-900 cursor-pointer"
                 >
                   {copiedNotice ? (
                     <>
@@ -1350,18 +1365,18 @@ export default function HrCandidatePipeline({
                   )}
                 </button>
               </div>
-              <div className="p-2.5 bg-emerald-50/70 border border-emerald-300 text-[11px] text-slate-800 leading-relaxed font-sans max-h-36 overflow-y-auto whitespace-pre-wrap">
+              <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl text-[11px] text-slate-800 leading-relaxed font-sans max-h-36 overflow-y-auto whitespace-pre-wrap">
                 {currentCallLetter}
               </div>
             </div>
 
             {/* Modal Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pt-3 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setDispatchModalCandidate(null)}
                 disabled={isSubmitting}
-                className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
+                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer min-h-[44px] transition-all"
               >
                 Cancel
               </button>
@@ -1370,7 +1385,7 @@ export default function HrCandidatePipeline({
                   type="button"
                   onClick={() => handleConfirmSingleDispatch(false)}
                   disabled={isSubmitting || !modalTargetVacancyId}
-                  className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer"
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-2xs disabled:opacity-50 cursor-pointer min-h-[44px] transition-all"
                 >
                   {isSubmitting ? "Dispatching..." : "Confirm Dispatch Only"}
                 </button>
@@ -1378,7 +1393,7 @@ export default function HrCandidatePipeline({
                   type="button"
                   onClick={() => handleConfirmSingleDispatch(true)}
                   disabled={isSubmitting || !modalTargetVacancyId}
-                  className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-emerald-500/20 disabled:opacity-50 cursor-pointer flex items-center gap-1.5 min-h-[44px] transition-all"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   <span>Confirm & Open WhatsApp</span>
@@ -1391,30 +1406,40 @@ export default function HrCandidatePipeline({
 
       {/* MODAL 3: BULK INTERVIEW DISPATCH */}
       {showBulkDispatchModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-none shadow-2xl w-full max-w-lg p-5 sm:p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2">
-                <Send className="w-4 h-4 text-blue-600" />
-                Bulk Dispatch ({selectedCandidateIds.length} Candidates)
-              </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-3 sm:p-4 animate-fadeIn">
+          <div className="relative bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-lg p-5 sm:p-7 space-y-4 overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent pointer-events-none" />
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shadow-2xs">
+                  <Send className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 font-heading">
+                    Bulk Dispatch ({selectedCandidateIds.length} Candidates)
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Batch assign multiple candidates to a client interview drive
+                  </p>
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => setShowBulkDispatchModal(false)}
-                className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl cursor-pointer transition-colors min-h-[40px] min-w-[40px] flex items-center justify-center"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                 Destination Opening (Active Mandate)
               </label>
               <select
                 value={bulkTargetVacancyId}
                 onChange={(e) => setBulkTargetVacancyId(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none cursor-pointer"
+                className="w-full bg-slate-50/60 border border-slate-200/80 p-2.5 text-xs font-semibold text-slate-900 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none cursor-pointer min-h-[44px] transition-all"
               >
                 {activeVacancies.map((v) => (
                   <option key={v.id} value={v.id}>
@@ -1426,9 +1451,9 @@ export default function HrCandidatePipeline({
 
             {/* Bulk Destination Venue Details */}
             {selectedBulkVac && (
-              <div className="p-2.5 bg-blue-50/70 border border-blue-200 text-xs space-y-1">
+              <div className="p-3 bg-blue-50/70 border border-blue-200/80 rounded-2xl text-xs space-y-1 shadow-2xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-blue-900 uppercase text-[10px]">
+                  <span className="font-bold text-blue-900 uppercase text-[10.5px]">
                     Drive Destination: {selectedBulkVac.title}
                   </span>
                   {selectedBulkVac.interviewLocationUrl && (
@@ -1458,19 +1483,19 @@ export default function HrCandidatePipeline({
             )}
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                 Interview / Drive Date
               </label>
               <input
                 type="date"
                 value={bulkInterviewDate}
                 onChange={(e) => setBulkInterviewDate(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+                className="w-full bg-slate-50/60 border border-slate-200/80 p-2.5 text-xs font-semibold text-slate-900 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none min-h-[44px] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                 Batch Remarks (Optional)
               </label>
               <textarea
@@ -1478,16 +1503,16 @@ export default function HrCandidatePipeline({
                 value={bulkInterviewNote}
                 onChange={(e) => setBulkInterviewNote(e.target.value)}
                 placeholder="e.g. Batch screened for bulk drive..."
-                className="w-full bg-slate-50 border border-slate-300 p-2 text-xs text-slate-900 rounded-none focus:bg-white focus:border-blue-600 focus:outline-none"
+                className="w-full bg-slate-50/60 border border-slate-200/80 p-2.5 text-xs text-slate-900 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none transition-all"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setShowBulkDispatchModal(false)}
                 disabled={isSubmitting}
-                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
+                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer min-h-[44px] transition-all"
               >
                 Cancel
               </button>
@@ -1495,7 +1520,7 @@ export default function HrCandidatePipeline({
                 type="button"
                 onClick={handleConfirmBulkDispatch}
                 disabled={isSubmitting}
-                className="px-5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer"
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-blue-500/20 disabled:opacity-50 cursor-pointer min-h-[44px] transition-all"
               >
                 {isSubmitting ? "Dispatching..." : `Dispatch ${selectedCandidateIds.length} Candidates`}
               </button>
@@ -1506,25 +1531,31 @@ export default function HrCandidatePipeline({
 
       {/* MODAL 4: DELETE CONFIRMATION */}
       {deletingCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-none shadow-2xl w-full max-w-md p-5 space-y-3">
-            <div className="flex items-center gap-2 text-red-600">
-              <AlertCircle className="w-5 h-5 shrink-0" />
-              <h3 className="text-sm font-bold uppercase tracking-wider">
-                Permanently Delete Candidate?
-              </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-3 sm:p-4 animate-fadeIn">
+          <div className="relative bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-md p-5 sm:p-6 space-y-3.5 overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-rose-500/40 to-transparent pointer-events-none" />
+            <div className="flex items-center gap-2.5 text-rose-600">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shadow-2xs shrink-0">
+                <AlertCircle className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold uppercase tracking-wider text-slate-900 font-heading">
+                  Permanently Delete Candidate?
+                </h3>
+                <p className="text-xs text-slate-500">Irreversible deletion of applicant profile</p>
+              </div>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Are you sure you want to permanently delete <strong className="text-slate-900">{deletingCandidate.fullName}</strong> ({deletingCandidate.candidateId})? This will delete their profile and remove their resume document from storage.
+            <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/80">
+              Are you sure you want to permanently delete <strong className="text-slate-900 font-bold">{deletingCandidate.fullName}</strong> ({deletingCandidate.candidateId})? This will delete their profile and remove their resume document from storage.
             </p>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setDeletingCandidate(null)}
                 disabled={isSubmitting}
-                className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
+                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer min-h-[44px] transition-all"
               >
                 Cancel
               </button>
@@ -1532,7 +1563,7 @@ export default function HrCandidatePipeline({
                 type="button"
                 onClick={handleConfirmDelete}
                 disabled={isSubmitting}
-                className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-none shadow-xs disabled:opacity-50 cursor-pointer"
+                className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-red-500/20 disabled:opacity-50 cursor-pointer min-h-[44px] transition-all"
               >
                 {isSubmitting ? "Deleting..." : "Permanently Delete"}
               </button>

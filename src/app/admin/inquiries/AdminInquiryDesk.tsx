@@ -221,41 +221,41 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
     switch (status) {
       case "NEW":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
-            <span className="w-1.5 h-1.5 bg-rose-600 animate-pulse" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200/80 rounded-full shadow-2xs">
+            <span className="w-1.5 h-1.5 bg-rose-600 rounded-full animate-pulse" />
             NEW INTAKE
           </span>
         );
       case "IN_PROGRESS":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200">
-            <span className="w-1.5 h-1.5 bg-blue-600" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/80 rounded-full shadow-2xs">
+            <span className="w-1.5 h-1.5 bg-blue-600 rounded-full" />
             IN PROGRESS
           </span>
         );
       case "CONNECTED":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <span className="w-1.5 h-1.5 bg-emerald-600" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full shadow-2xs">
+            <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full" />
             CONNECTED / REACHED
           </span>
         );
       case "CONVERTED":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200/80 rounded-full shadow-2xs">
             <Sparkles className="w-3 h-3 text-purple-600" />
             CONVERTED CLIENT
           </span>
         );
       case "CLOSED":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-300">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200 rounded-full shadow-2xs">
             CLOSED / ARCHIVED
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+          <span className="inline-flex items-center px-2.5 py-1 text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 rounded-full shadow-2xs">
             {status}
           </span>
         );
@@ -267,11 +267,11 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
       case "TALENT_REQUEST":
         return (
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white rounded-full shadow-2xs">
               <Briefcase className="w-3 h-3" />
               Talent Request
             </span>
-            <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 border border-slate-200">
+            <span className="text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 border border-slate-200/70 rounded-full">
               {source === "HERO_REQUEST_TALENT" ? "Hero Modal" : source}
             </span>
           </div>
@@ -279,11 +279,11 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
       case "EMPLOYER_QUERY":
         return (
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-slate-900 text-white">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-slate-900 text-white rounded-full shadow-2xs">
               <Building2 className="w-3 h-3" />
               Employer Query
             </span>
-            <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 border border-slate-200">
+            <span className="text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 border border-slate-200/70 rounded-full">
               Contact Desk
             </span>
           </div>
@@ -291,18 +291,18 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
       case "CANDIDATE_QUERY":
         return (
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-600 text-white">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-600 text-white rounded-full shadow-2xs">
               <User className="w-3 h-3" />
               Candidate Query
             </span>
-            <span className="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 border border-slate-200">
+            <span className="text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 border border-slate-200/70 rounded-full">
               Contact Desk
             </span>
           </div>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-slate-700 text-white">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-slate-700 text-white rounded-full shadow-2xs">
             <MessageSquare className="w-3 h-3" />
             General Inquiry
           </span>
@@ -316,13 +316,13 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
       {/* Action Notification Toast */}
       {actionNotice && (
         <div
-          className={`p-4 text-xs font-bold flex items-center justify-between transition-all border rounded-none ${
+          className={`p-4 text-xs font-bold flex items-center justify-between transition-all border rounded-2xl shadow-sm ${
             actionNotice.type === "success"
-              ? "bg-emerald-50 text-emerald-900 border-emerald-300"
-              : "bg-rose-50 text-rose-900 border-rose-300"
+              ? "bg-emerald-50/90 text-emerald-900 border-emerald-300"
+              : "bg-rose-50/90 text-rose-900 border-rose-300"
           }`}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             {actionNotice.type === "success" ? (
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             ) : (
@@ -333,7 +333,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
           <button
             type="button"
             onClick={() => setActionNotice(null)}
-            className="text-slate-500 hover:text-slate-900 text-xs uppercase px-2 py-0.5 border border-slate-300 bg-white"
+            className="text-slate-500 hover:text-slate-900 text-xs font-bold uppercase px-2.5 py-1 border border-slate-300/80 bg-white rounded-lg transition-colors cursor-pointer"
           >
             Dismiss
           </button>
@@ -341,15 +341,16 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
       )}
 
       {/* Header Section */}
-      <div className="bg-white border border-slate-200 p-5 sm:p-6 rounded-none shadow-2xs">
+      <div className="relative bg-white border border-slate-200/80 p-5 sm:p-7 rounded-3xl shadow-sm overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent pointer-events-none" />
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="px-2 py-0.5 bg-slate-900 text-white text-[10px] font-extrabold uppercase tracking-widest">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-3 py-1 bg-slate-900 text-white text-[10px] font-extrabold uppercase tracking-widest rounded-full shadow-2xs">
                 CRM Master Desk
               </span>
               {newCount > 0 && (
-                <span className="px-2 py-0.5 bg-rose-600 text-white text-[10px] font-bold uppercase tracking-wider animate-pulse">
+                <span className="px-3 py-1 bg-rose-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-2xs animate-pulse">
                   {newCount} New Inquiries
                 </span>
               )}
@@ -368,7 +369,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
               onClick={() => {
                 window.location.reload();
               }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-xl transition-all shadow-2xs min-h-[44px] cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Refresh Desk</span>
@@ -378,7 +379,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
 
         {/* 4 Summary Metric Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-6 border-t border-slate-100">
-          <div className="bg-slate-50 border border-slate-200 p-3.5 sm:p-4">
+          <div className="bg-slate-50/80 border border-slate-200/80 p-4 sm:p-5 rounded-2xl shadow-2xs">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
               Total Inquiries
             </span>
@@ -390,7 +391,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
             </div>
           </div>
 
-          <div className="bg-rose-50/70 border border-rose-200 p-3.5 sm:p-4">
+          <div className="bg-rose-50/70 border border-rose-200/80 p-4 sm:p-5 rounded-2xl shadow-2xs">
             <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700 block mb-1">
               New / Unhandled
             </span>
@@ -402,7 +403,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
             </div>
           </div>
 
-          <div className="bg-blue-50/70 border border-blue-200 p-3.5 sm:p-4">
+          <div className="bg-blue-50/70 border border-blue-200/80 p-4 sm:p-5 rounded-2xl shadow-2xs">
             <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 block mb-1">
               Talent Requests
             </span>
@@ -414,7 +415,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
             </div>
           </div>
 
-          <div className="bg-purple-50/70 border border-purple-200 p-3.5 sm:p-4">
+          <div className="bg-purple-50/70 border border-purple-200/80 p-4 sm:p-5 rounded-2xl shadow-2xs">
             <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 block mb-1">
               Converted to Clients
             </span>
@@ -428,29 +429,29 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
         </div>
       </div>
 
-      {/* Filter Tabs & Search Bar */}
-      <div className="bg-white border border-slate-200 p-4 space-y-4 rounded-none shadow-2xs">
+      {/* Filter Tabs & Search Bar Container */}
+      <div className="relative bg-white border border-slate-200/80 p-4 sm:p-5 rounded-3xl shadow-sm space-y-4">
         {/* Search input */}
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Search inquiries by name, company, email, phone, ID (e.g. RUP-INQ-1001), city or keyword..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-300 focus:outline-none focus:border-slate-900 focus:bg-white text-slate-900 transition-colors rounded-none"
+            className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50/60 border border-slate-200/80 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 text-slate-900 transition-all rounded-xl outline-none min-h-[44px]"
           />
         </div>
 
-        {/* Tab Filters */}
+        {/* Tab Filters (Modern Pill Carousel) */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs border-t border-slate-100 pt-3">
           <button
             type="button"
             onClick={() => setActiveTab("ALL")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border cursor-pointer ${
               activeTab === "ALL"
-                ? "bg-slate-900 text-white border-slate-900"
-                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                ? "bg-slate-900 text-white border-slate-900 shadow-2xs"
+                : "bg-slate-50 text-slate-600 border-slate-200/70 hover:bg-slate-100"
             }`}
           >
             All ({totalCount})
@@ -459,23 +460,23 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
           <button
             type="button"
             onClick={() => setActiveTab("NEW")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border flex items-center gap-1.5 cursor-pointer ${
               activeTab === "NEW"
-                ? "bg-rose-600 text-white border-rose-600"
-                : "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100"
+                ? "bg-rose-600 text-white border-rose-600 shadow-2xs"
+                : "bg-rose-50 text-rose-700 border-rose-200/80 hover:bg-rose-100"
             }`}
           >
-            <span className="w-1.5 h-1.5 bg-current rounded-none animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-current rounded-full animate-pulse" />
             <span>New Intake ({newCount})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("TALENT_REQUESTS")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border cursor-pointer ${
               activeTab === "TALENT_REQUESTS"
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                ? "bg-blue-600 text-white border-blue-600 shadow-2xs"
+                : "bg-slate-50 text-slate-600 border-slate-200/70 hover:bg-slate-100"
             }`}
           >
             Talent Requests ({talentRequestsCount})
@@ -484,10 +485,10 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
           <button
             type="button"
             onClick={() => setActiveTab("CANDIDATE_QUERIES")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border cursor-pointer ${
               activeTab === "CANDIDATE_QUERIES"
-                ? "bg-amber-600 text-white border-amber-600"
-                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                ? "bg-amber-600 text-white border-amber-600 shadow-2xs"
+                : "bg-slate-50 text-slate-600 border-slate-200/70 hover:bg-slate-100"
             }`}
           >
             Candidate Queries ({candidateQueriesCount})
@@ -496,10 +497,10 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
           <button
             type="button"
             onClick={() => setActiveTab("EMPLOYER_QUERIES")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border cursor-pointer ${
               activeTab === "EMPLOYER_QUERIES"
-                ? "bg-slate-800 text-white border-slate-800"
-                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                ? "bg-slate-800 text-white border-slate-800 shadow-2xs"
+                : "bg-slate-50 text-slate-600 border-slate-200/70 hover:bg-slate-100"
             }`}
           >
             Employer Queries ({employerQueriesCount})
@@ -508,10 +509,10 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
           <button
             type="button"
             onClick={() => setActiveTab("IN_PROGRESS")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border cursor-pointer ${
               activeTab === "IN_PROGRESS"
-                ? "bg-blue-800 text-white border-blue-800"
-                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                ? "bg-blue-800 text-white border-blue-800 shadow-2xs"
+                : "bg-slate-50 text-slate-600 border-slate-200/70 hover:bg-slate-100"
             }`}
           >
             In Progress ({inProgressCount})
@@ -520,10 +521,10 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
           <button
             type="button"
             onClick={() => setActiveTab("CONNECTED")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border cursor-pointer ${
               activeTab === "CONNECTED"
-                ? "bg-emerald-700 text-white border-emerald-700"
-                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                ? "bg-emerald-700 text-white border-emerald-700 shadow-2xs"
+                : "bg-slate-50 text-slate-600 border-slate-200/70 hover:bg-slate-100"
             }`}
           >
             Connected ({connectedCount})
@@ -532,10 +533,10 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
           <button
             type="button"
             onClick={() => setActiveTab("CONVERTED")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border cursor-pointer ${
               activeTab === "CONVERTED"
-                ? "bg-purple-700 text-white border-purple-700"
-                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                ? "bg-purple-700 text-white border-purple-700 shadow-2xs"
+                : "bg-slate-50 text-slate-600 border-slate-200/70 hover:bg-slate-100"
             }`}
           >
             Converted ({convertedCount})
@@ -544,10 +545,10 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
           <button
             type="button"
             onClick={() => setActiveTab("CLOSED")}
-            className={`px-3 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap transition-all rounded-full border cursor-pointer ${
               activeTab === "CLOSED"
-                ? "bg-slate-700 text-white border-slate-700"
-                : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                ? "bg-slate-700 text-white border-slate-700 shadow-2xs"
+                : "bg-slate-50 text-slate-600 border-slate-200/70 hover:bg-slate-100"
             }`}
           >
             Closed ({closedCount})
@@ -557,8 +558,8 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
 
       {/* Inquiries List View */}
       {filteredInquiries.length === 0 ? (
-        <div className="bg-white border border-slate-200 p-12 text-center rounded-none">
-          <div className="w-12 h-12 bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+        <div className="bg-white border border-slate-200/80 p-12 text-center rounded-3xl shadow-sm">
+          <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-3">
             <MessageSquare className="w-6 h-6" />
           </div>
           <h3 className="text-base font-bold text-slate-900 mb-1">
@@ -580,24 +581,24 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
             return (
               <div
                 key={inquiry.id}
-                className={`bg-white border transition-all rounded-none ${
+                className={`relative bg-white border transition-all rounded-3xl overflow-hidden ${
                   inquiry.status === "NEW"
-                    ? "border-rose-300 shadow-xs"
-                    : "border-slate-200 hover:border-slate-300 shadow-2xs"
+                    ? "border-rose-300 shadow-md shadow-rose-500/5 ring-1 ring-rose-200/50"
+                    : "border-slate-200/80 hover:border-slate-300 shadow-2xs"
                 }`}
               >
                 {/* Inquiry Card Header */}
-                <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50/50">
+                <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50/70">
                   <div className="flex flex-wrap items-center gap-2">
                     {/* Inquiry ID */}
-                    <div className="flex items-center gap-1 bg-white border border-slate-200 px-2 py-1">
+                    <div className="flex items-center gap-1.5 bg-white border border-slate-200/80 px-2.5 py-1 rounded-lg shadow-2xs">
                       <span className="text-xs font-mono font-bold text-slate-900">
                         {inquiry.inquiryNumber}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleCopy(inquiry.inquiryNumber, inquiry.id)}
-                        className="text-slate-400 hover:text-slate-700 ml-1 cursor-pointer"
+                        className="text-slate-400 hover:text-slate-700 ml-1 cursor-pointer transition-colors"
                         title="Copy Inquiry Number"
                       >
                         {copiedId === inquiry.id ? (
@@ -635,19 +636,21 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {/* Column 1: Contact details */}
                     <div className="space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                        <User className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                        <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                          <User className="w-3.5 h-3.5" />
+                        </div>
                         <span>{inquiry.fullName}</span>
                       </div>
 
                       {inquiry.companyName && (
-                        <div className="flex items-center gap-1.5 text-xs text-slate-700 font-semibold">
+                        <div className="flex items-center gap-2 text-xs text-slate-700 font-semibold pl-8">
                           <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                           <span>{inquiry.companyName}</span>
                         </div>
                       )}
 
-                      <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                      <div className="flex items-center gap-2 text-xs text-slate-600 pl-8">
                         <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                         <span>
                           {inquiry.city || "Pune"}, {inquiry.country}
@@ -657,28 +660,30 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
 
                     {/* Column 2: Direct Contact Channels */}
                     <div className="space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-xs text-slate-700">
-                        <Phone className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <div className="flex items-center gap-2 text-xs text-slate-700">
+                        <div className="w-6 h-6 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                          <Phone className="w-3.5 h-3.5" />
+                        </div>
                         <a
                           href={`tel:${inquiry.phone}`}
-                          className="hover:text-blue-600 font-semibold"
+                          className="hover:text-blue-600 font-semibold transition-colors"
                         >
                           {inquiry.phone}
                         </a>
                       </div>
 
-                      <div className="flex items-center gap-1.5 text-xs text-slate-700">
+                      <div className="flex items-center gap-2 text-xs text-slate-700 pl-8">
                         <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                         <a
                           href={`mailto:${inquiry.email}`}
-                          className="hover:text-blue-600 truncate max-w-[200px]"
+                          className="hover:text-blue-600 truncate max-w-[200px] transition-colors"
                         >
                           {inquiry.email}
                         </a>
                       </div>
 
                       {inquiry.subject && (
-                        <div className="text-[11px] text-slate-500 font-medium">
+                        <div className="text-[11px] text-slate-500 font-medium pl-8">
                           Subject: <span className="text-slate-800 font-semibold">{inquiry.subject}</span>
                         </div>
                       )}
@@ -692,7 +697,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
                           href={formatWhatsAppUrl(inquiry.phone, inquiry)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold uppercase tracking-wider transition-colors rounded-none"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold uppercase tracking-wider transition-all rounded-xl shadow-sm shadow-emerald-500/20 min-h-[40px]"
                         >
                           <WhatsAppIcon className="w-3.5 h-3.5" />
                           <span>WhatsApp</span>
@@ -701,7 +706,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
                         {/* Direct Call */}
                         <a
                           href={`tel:${inquiry.phone}`}
-                          className="inline-flex items-center justify-center px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] font-bold uppercase tracking-wider transition-colors border border-slate-200"
+                          className="inline-flex items-center justify-center px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[11px] font-bold uppercase tracking-wider transition-colors border border-slate-200/80 rounded-xl min-h-[40px] min-w-[40px]"
                           title="Call phone"
                         >
                           <Phone className="w-3.5 h-3.5 text-slate-700" />
@@ -713,7 +718,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
                         <button
                           type="button"
                           onClick={() => handleConvertToClient(inquiry)}
-                          className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-800 text-[11px] font-bold uppercase tracking-wider border border-blue-200 transition-colors"
+                          className="w-full inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 text-[11px] font-bold uppercase tracking-wider border border-blue-200/80 transition-all rounded-xl min-h-[40px] shadow-2xs cursor-pointer"
                         >
                           <UserPlus className="w-3 h-3 text-blue-600" />
                           <span>Convert to Client Account</span>
@@ -724,8 +729,8 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
 
                   {/* Requirement / Message Box */}
                   {(inquiry.roleRequirement || inquiry.message) && (
-                    <div className="bg-slate-50 border border-slate-200 p-3 text-xs">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+                    <div className="bg-slate-50/80 border border-slate-200/80 p-4 rounded-2xl text-xs space-y-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
                         {inquiry.type === "TALENT_REQUEST"
                           ? "Required Headcount & Role Details:"
                           : "Inquiry Message / Statement:"}
@@ -746,7 +751,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
                       <select
                         value={inquiry.status}
                         onChange={(e) => handleStatusChange(inquiry.id, e.target.value)}
-                        className="px-2.5 py-1.5 text-xs font-bold bg-white border border-slate-300 focus:outline-none focus:border-slate-900 text-slate-900 rounded-none cursor-pointer"
+                        className="px-3 py-2 text-xs font-bold bg-white border border-slate-200/80 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 text-slate-900 cursor-pointer transition-all shadow-2xs min-h-[40px]"
                       >
                         <option value="NEW">NEW INTAKE</option>
                         <option value="IN_PROGRESS">IN PROGRESS</option>
@@ -763,30 +768,30 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
                         onClick={() =>
                           setExpandedNotesId(isNotesExpanded ? null : inquiry.id)
                         }
-                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 rounded-xl transition-all shadow-2xs min-h-[40px] cursor-pointer"
                       >
                         <span>Admin Notes {inquiry.adminNotes ? "(1)" : "(0)"}</span>
                         {isNotesExpanded ? (
-                          <ChevronUp className="w-3 h-3" />
+                          <ChevronUp className="w-3.5 h-3.5" />
                         ) : (
-                          <ChevronDown className="w-3 h-3" />
+                          <ChevronDown className="w-3.5 h-3.5" />
                         )}
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleDelete(inquiry.id)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-colors"
+                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200/70 hover:border-rose-200 rounded-xl transition-all min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
                         title="Delete Inquiry"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
 
                   {/* Expandable Admin Internal Notes Editor */}
                   {isNotesExpanded && (
-                    <div className="p-3 bg-amber-50/60 border border-amber-200 mt-3 space-y-2">
+                    <div className="p-4 bg-amber-50/70 border border-amber-200/80 rounded-2xl mt-3 space-y-2.5 shadow-2xs">
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-amber-900">
                           Internal Recruiter & Admin Notes (Private)
@@ -800,14 +805,14 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
                           setNotesState({ ...notesState, [inquiry.id]: e.target.value })
                         }
                         placeholder="Add follow-up notes, call remarks, contract negotiation progress, or assigned recruiter..."
-                        className="w-full p-2.5 text-xs bg-white border border-amber-300 focus:outline-none focus:border-amber-600 text-slate-900 rounded-none font-sans"
+                        className="w-full p-3 text-xs bg-white border border-amber-200 focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-500/10 text-slate-900 rounded-xl font-sans transition-all"
                       />
                       <div className="flex justify-end">
                         <button
                           type="button"
                           disabled={isPending}
                           onClick={() => handleSaveNotes(inquiry.id)}
-                          className="px-4 py-1.5 bg-slate-900 hover:bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wider transition-colors disabled:opacity-50"
+                          className="px-5 py-2 bg-slate-900 hover:bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all shadow-md shadow-slate-900/10 disabled:opacity-50 min-h-[40px] cursor-pointer"
                         >
                           Save Internal Note
                         </button>

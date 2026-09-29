@@ -186,36 +186,34 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
     <div className="space-y-6">
       
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Radio className="w-4 h-4 text-blue-600" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
-              Mandate Distribution
-            </span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50/80 border border-blue-200/60 text-blue-700 font-semibold tracking-wider text-[10px] uppercase mb-1.5">
+            <Radio className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
+            <span>Mandate Distribution Hub</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-heading">
-            Vacancy Broadcast & Sourcing Hub
+            Vacancy Broadcast &amp; Sourcing Hub
           </h1>
         </div>
       </div>
 
       {/* Alert Notifications */}
       {actionSuccess && (
-        <div className="p-3 bg-emerald-50 border-l-4 border-emerald-600 text-xs text-emerald-800 font-semibold rounded-none">
+        <div className="p-3.5 bg-gradient-to-r from-emerald-50 via-teal-50/40 to-emerald-50 border border-emerald-200/80 text-xs text-emerald-900 font-semibold rounded-2xl shadow-xs">
           {actionSuccess}
         </div>
       )}
       {actionError && (
-        <div className="p-3 bg-red-50 border-l-4 border-red-600 text-xs text-red-800 font-semibold rounded-none flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+        <div className="p-3.5 bg-gradient-to-r from-rose-50 via-pink-50/40 to-rose-50 border border-rose-200/80 text-xs text-rose-900 font-semibold rounded-2xl shadow-xs flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
           <span>{actionError}</span>
         </div>
       )}
 
       {/* Filter Tabs & Search Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center p-1 bg-white border border-slate-300 rounded-none shadow-2xs">
+        <div className="flex items-center p-1.5 bg-slate-100/70 border border-slate-200/70 rounded-2xl gap-1 overflow-x-auto shadow-2xs">
           {[
             { id: "ALL", label: "All Mandates" },
             { id: "BROADCASTED", label: "HR Broadcasted" },
@@ -226,10 +224,10 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
               key={tab.id}
               type="button"
               onClick={() => setActiveFilter(tab.id as any)}
-              className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-none transition-colors cursor-pointer ${
+              className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-200 cursor-pointer whitespace-nowrap ${
                 activeFilter === tab.id
-                  ? "bg-slate-900 text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/80"
               }`}
             >
               {tab.label}
@@ -244,7 +242,7 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by role, Job ID, or client..."
-            className="w-full pl-10 pr-4 py-2 text-xs bg-white border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 text-slate-900 rounded-none outline-none"
+            className="w-full pl-10 pr-4 py-2 text-xs bg-white border border-slate-200/80 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 text-slate-900 rounded-xl outline-none shadow-2xs transition-all"
           />
         </div>
       </div>
@@ -252,7 +250,7 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
       {/* Vacancy Cards / Roster */}
       <div className="space-y-4">
         {filtered.length === 0 ? (
-          <div className="bg-white border border-slate-200 p-12 text-center text-xs text-slate-400 font-medium rounded-none">
+          <div className="bg-white/90 backdrop-blur-sm border border-slate-200/80 p-12 text-center text-xs text-slate-400 font-medium rounded-3xl shadow-sm">
             No vacancies match your filter criteria.
           </div>
         ) : (
@@ -262,22 +260,23 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
             return (
               <div
                 key={v.id}
-                className="bg-white border border-slate-200 p-5 rounded-none shadow-xs hover:border-slate-300 transition-colors"
+                className="bg-white border border-slate-200/80 p-5 sm:p-6 rounded-3xl shadow-xs hover:shadow-md hover:border-blue-300 transition-all duration-200 relative overflow-hidden group"
               >
+                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-slate-200 group-hover:via-blue-500/40 to-transparent transition-all" />
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   {/* Left Column: Role Details */}
-                  <div className="min-w-0 space-y-1.5">
+                  <div className="min-w-0 space-y-2">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 border border-blue-200 rounded-none">
+                      <span className="font-mono text-xs font-bold text-blue-600 bg-blue-50/80 px-2.5 py-0.5 border border-blue-200/70 rounded-full">
                         {v.jobId}
                       </span>
-                      <span className="text-xs font-bold uppercase px-2 py-0.5 bg-slate-100 text-slate-700 rounded-none">
+                      <span className="text-xs font-bold uppercase px-2.5 py-0.5 bg-slate-100 text-slate-700 rounded-full border border-slate-200/60">
                         {v.category}
                       </span>
-                      <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-none ${
+                      <span className={`px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full shadow-2xs ${
                         v.status === "ACTIVE"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : "bg-slate-200 text-slate-700"
+                          ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                          : "bg-slate-100 text-slate-700 border border-slate-200"
                       }`}>
                         {v.status}
                       </span>
@@ -288,11 +287,11 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                     </h2>
 
                     <div className="flex items-center gap-4 text-xs text-slate-600 flex-wrap">
-                      <span className="font-semibold text-slate-800 flex items-center gap-1">
+                      <span className="font-semibold text-slate-800 flex items-center gap-1.5">
                         <Building2 className="w-3.5 h-3.5 text-slate-500" />
                         {v.companyName}
                       </span>
-                      <span className="flex items-center gap-1 text-slate-500">
+                      <span className="flex items-center gap-1.5 text-slate-500">
                         <MapPin className="w-3.5 h-3.5 text-slate-400" />
                         {v.city}, {v.country} ({v.workMode})
                       </span>
@@ -310,9 +309,9 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                     {/* Interview Venue & Location Pill */}
                     {v.interviewVenue ? (
                       <div className="flex items-center gap-2 text-xs pt-1.5 flex-wrap">
-                        <span className="inline-flex items-center gap-1 font-medium text-slate-800 bg-slate-50 px-2.5 py-1 border border-slate-200 rounded-none">
+                        <span className="inline-flex items-center gap-1.5 font-medium text-slate-800 bg-slate-50/80 px-3 py-1 border border-slate-200/70 rounded-full shadow-2xs">
                           <MapPin className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                          <strong className="text-[11px] text-slate-600 uppercase">Venue:</strong>
+                          <strong className="text-[10px] text-slate-500 uppercase tracking-wider">Venue:</strong>
                           <span className="line-clamp-1">{v.interviewVenue}</span>
                         </span>
                         {v.interviewLocationUrl && (
@@ -320,7 +319,7 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                             href={v.interviewLocationUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 hover:text-blue-900 bg-blue-50 border border-blue-200 px-2 py-1 rounded-none"
+                            className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 hover:text-blue-900 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full shadow-2xs transition-colors"
                           >
                             <span>Google Maps ↗</span>
                           </a>
@@ -328,7 +327,7 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                         <button
                           type="button"
                           onClick={() => handleOpenVenueModal(v)}
-                          className="text-[11px] font-bold text-slate-600 hover:text-slate-900 underline"
+                          className="text-[11px] font-bold text-slate-600 hover:text-blue-600 px-2 py-0.5 rounded-lg hover:bg-slate-100 transition-colors"
                         >
                           Edit Venue
                         </button>
@@ -338,10 +337,10 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                         <button
                           type="button"
                           onClick={() => handleOpenVenueModal(v)}
-                          className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-none hover:bg-amber-100"
+                          className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-3 py-1 rounded-full hover:bg-amber-100 transition-colors shadow-2xs"
                         >
-                          <MapPin className="w-3 h-3" />
-                          <span>+ Add Interview Venue & GPS Link</span>
+                          <MapPin className="w-3.5 h-3.5 text-amber-600" />
+                          <span>+ Add Interview Venue &amp; GPS Link</span>
                         </button>
                       </div>
                     )}
@@ -352,10 +351,10 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                     
                     {/* Pipeline Pill */}
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-none">
+                      <span className="text-[11px] font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/60 shadow-2xs">
                         Leads: {v.candidatesCount}
                       </span>
-                      <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 border border-emerald-200 rounded-none">
+                      <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-3 py-1 border border-emerald-200/80 rounded-full shadow-2xs">
                         Placed: {v.selectedCount}
                       </span>
                     </div>
@@ -367,10 +366,10 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                         type="button"
                         disabled={isLoading || v.isBroadcastedToHR}
                         onClick={() => handleBroadcast(v.id)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-none transition-colors cursor-pointer ${
+                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
                           v.isBroadcastedToHR
-                            ? "bg-emerald-50 border border-emerald-300 text-emerald-800 opacity-80 cursor-default"
-                            : "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+                            ? "bg-emerald-50 border border-emerald-300 text-emerald-800 opacity-90 cursor-default shadow-2xs"
+                            : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md shadow-blue-500/20"
                         }`}
                       >
                         {v.isBroadcastedToHR ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Radio className="w-3.5 h-3.5" />}
@@ -382,10 +381,10 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                         type="button"
                         disabled={isLoading || v.isPostedOnWebsite}
                         onClick={() => handlePublishWebsite(v.id)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-none transition-colors cursor-pointer ${
+                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
                           v.isPostedOnWebsite
-                            ? "bg-emerald-50 border border-emerald-300 text-emerald-800 opacity-80 cursor-default"
-                            : "bg-slate-900 hover:bg-slate-800 text-white shadow-xs"
+                            ? "bg-emerald-50 border border-emerald-300 text-emerald-800 opacity-90 cursor-default shadow-2xs"
+                            : "bg-slate-900 hover:bg-slate-800 text-white shadow-sm"
                         }`}
                       >
                         {v.isPostedOnWebsite ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Globe className="w-3.5 h-3.5" />}
@@ -397,7 +396,7 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                         type="button"
                         disabled={isLoading}
                         onClick={() => handleToggleStatus(v.id, v.status)}
-                        className="px-2.5 py-2 text-xs font-bold uppercase tracking-wider border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-none cursor-pointer"
+                        className="px-3 py-2 text-xs font-bold uppercase tracking-wider border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl cursor-pointer shadow-2xs transition-colors"
                         title="Toggle Status"
                       >
                         {v.status === "ACTIVE" ? "Disable" : "Enable"}
@@ -414,14 +413,17 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
 
       {/* MODAL: Edit Interview Venue & GPS Link */}
       {editingVenueVacancy && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="relative w-full max-w-lg bg-white rounded-none shadow-2xl border border-slate-300 p-4 sm:p-6">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-5 h-5 text-blue-600" />
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200/80 p-5 sm:p-7 overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[3px] bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500" />
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <MapPin className="w-5 h-5" />
+                </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 font-heading">
-                    Edit Interview Venue & GPS Location
+                    Edit Interview Venue &amp; GPS Location
                   </h3>
                   <p className="text-xs text-slate-500">
                     {editingVenueVacancy.jobId}: {editingVenueVacancy.title} &bull; {editingVenueVacancy.companyName}
@@ -430,15 +432,15 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
               </div>
               <button
                 onClick={() => setEditingVenueVacancy(null)}
-                className="p-2 text-slate-400 hover:text-slate-700 rounded-none min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveVenue} className="space-y-3.5 mt-4 text-xs">
+            <form onSubmit={handleSaveVenue} className="space-y-4 mt-4 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[10px]">
                   Physical Interview Venue Address *
                 </label>
                 <textarea
@@ -447,12 +449,12 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                   value={venueForm.interviewVenue}
                   onChange={(e) => setVenueForm({ ...venueForm, interviewVenue: e.target.value })}
                   placeholder="e.g. Digitide Business Solutions, 4th Floor, Cerebrum IT Park, Kalyani Nagar, Pune - 411014"
-                  className="w-full px-3 py-2 rounded-none border border-slate-300 focus:border-blue-600 text-slate-900 outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 text-slate-900 outline-none shadow-2xs transition-all"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[10px]">
                   Google Maps Location URL (GPS Link)
                 </label>
                 <input
@@ -460,13 +462,13 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                   value={venueForm.interviewLocationUrl}
                   onChange={(e) => setVenueForm({ ...venueForm, interviewLocationUrl: e.target.value })}
                   placeholder="e.g. https://maps.app.goo.gl/abcdef123"
-                  className="w-full px-3 py-2 rounded-none border border-slate-300 font-mono text-slate-900 outline-none min-h-[44px]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-mono text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 shadow-2xs transition-all"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[10px]">
                     Reception / SPOC Person
                   </label>
                   <input
@@ -474,11 +476,11 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                     value={venueForm.interviewContactPerson}
                     onChange={(e) => setVenueForm({ ...venueForm, interviewContactPerson: e.target.value })}
                     placeholder="e.g. Ms. Pooja Sharma"
-                    className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 shadow-2xs transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                  <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[10px]">
                     Arrival Contact Phone
                   </label>
                   <input
@@ -486,13 +488,13 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                     value={venueForm.interviewContactPhone}
                     onChange={(e) => setVenueForm({ ...venueForm, interviewContactPhone: e.target.value })}
                     placeholder="e.g. +91 98765 43210"
-                    className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 shadow-2xs transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1 uppercase tracking-wider text-[11px]">
+                <label className="block font-bold text-slate-700 mb-1.5 uppercase tracking-wider text-[10px]">
                   Candidate Instructions / Gate Notes
                 </label>
                 <input
@@ -500,22 +502,22 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                   value={venueForm.interviewInstructions}
                   onChange={(e) => setVenueForm({ ...venueForm, interviewInstructions: e.target.value })}
                   placeholder="e.g. Carry 2 CV hard copies, mention RiseUp Consultancy at the security gate"
-                  className="w-full px-3 py-2 rounded-none border border-slate-300 text-slate-900 outline-none min-h-[44px]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 shadow-2xs transition-all"
                 />
               </div>
 
-              <div className="pt-3 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 border-t border-slate-100">
+              <div className="pt-3 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setEditingVenueVacancy(null)}
-                  className="px-4 py-2.5 rounded-none border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold uppercase tracking-wider min-h-[44px]"
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold uppercase tracking-wider transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSavingVenue}
-                  className="px-5 py-2.5 rounded-none bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-wider shadow-2xs transition-colors min-h-[44px]"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold uppercase tracking-wider shadow-md shadow-blue-500/20 transition-all disabled:opacity-50"
                 >
                   {isSavingVenue ? "Saving..." : "Save Venue & GPS Link"}
                 </button>

@@ -206,26 +206,27 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
 
   if (successResult) {
     return (
-      <div className="bg-white border border-slate-200 rounded-none shadow-xs p-8 sm:p-12 text-center space-y-6">
-        <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto">
+      <div className="relative overflow-hidden bg-white border border-slate-200/80 rounded-3xl shadow-xl p-8 sm:p-12 text-center space-y-6">
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+        <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
           <CheckCircle2 className="w-8 h-8" />
         </div>
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider bg-slate-100 text-slate-700 px-3 py-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider bg-slate-100 text-slate-700 px-3 py-1 rounded-full border border-slate-200">
             Job ID: {successResult.jobId}
           </span>
-          <h2 className="text-2xl font-extrabold text-slate-900 mt-4 font-heading">
+          <h2 className="text-2xl font-black text-slate-900 mt-4 font-heading">
             Vacancy Request Submitted for Review
           </h2>
-          <p className="text-slate-600 max-w-lg mx-auto text-sm mt-2">
-            Your mandate has been successfully logged and dispatched to the RiseUp Super Admin desk. Once reviewed, it will be broadcasted to all active recruiters and recruiters will begin screening candidates immediately.
+          <p className="text-slate-600 max-w-lg mx-auto text-sm mt-2 leading-relaxed">
+            Your mandate has been successfully logged and dispatched to the RiseUp Super Admin desk. Once reviewed, it will be broadcasted to all active recruiters and candidate screening begins immediately.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
           <Link
             href="/client/vacancies"
-            className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs"
+            className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-wider transition-all rounded-xl shadow-md shadow-blue-600/20"
           >
             View Posted Vacancies
           </Link>
@@ -241,7 +242,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 requirements: "",
               }));
             }}
-            className="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider transition-colors rounded-none"
+            className="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider transition-colors rounded-xl"
           >
             Submit Another Vacancy
           </button>
@@ -253,58 +254,67 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
   return (
     <div className="space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-200">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Building2 className="w-4 h-4 text-blue-600" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
-              {clientProfile.companyName} &bull; Vacancy Request Desk
-            </span>
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0B1528] via-[#102042] to-[#0B1528] rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-blue-900/40">
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+        
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs font-semibold mb-3">
+              <Building2 className="w-3.5 h-3.5 text-blue-400" />
+              <span className="uppercase tracking-wider">
+                {clientProfile.companyName} &bull; Vacancy Request Desk
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-heading">
+              Request Candidates / Post New Mandate
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              Create and launch tailored hiring requirements for immediate dispatch to recruiter networks.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-heading">
-            Request Candidates / Post New Mandate
-          </h1>
+          <Link
+            href="/client/vacancies"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-bold uppercase tracking-wider transition-all self-start sm:self-auto backdrop-blur-sm"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Vacancies</span>
+          </Link>
         </div>
-        <Link
-          href="/client/vacancies"
-          className="text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-slate-800 flex items-center gap-1 self-start sm:self-auto"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Vacancies
-        </Link>
       </div>
 
       {/* Progress Steps Indicator */}
-      <div className="grid grid-cols-3 gap-2 border-b border-slate-200 pb-4">
+      <div className="grid grid-cols-3 gap-2 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/80">
         <div
-          className={`flex items-center gap-2 pb-2 border-b-2 text-xs font-bold uppercase tracking-wider transition-colors ${
-            step >= 1 ? "border-blue-600 text-blue-600" : "border-transparent text-slate-400"
+          className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
+            step === 1 ? "bg-white text-blue-600 shadow-sm" : step > 1 ? "text-slate-700" : "text-slate-400"
           }`}
         >
-          <span className="w-5 h-5 flex items-center justify-center bg-blue-50 border border-blue-200 text-blue-700 text-[10px]">
+          <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
+            step >= 1 ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-500"
+          }`}>
             1
           </span>
           <span className="hidden sm:inline">1. Work Setup</span>
         </div>
         <div
-          className={`flex items-center gap-2 pb-2 border-b-2 text-xs font-bold uppercase tracking-wider transition-colors ${
-            step >= 2 ? "border-blue-600 text-blue-600" : "border-transparent text-slate-400"
+          className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
+            step === 2 ? "bg-white text-blue-600 shadow-sm" : step > 2 ? "text-slate-700" : "text-slate-400"
           }`}
         >
-          <span className={`w-5 h-5 flex items-center justify-center text-[10px] ${
-            step >= 2 ? "bg-blue-50 border border-blue-200 text-blue-700" : "bg-slate-100 text-slate-400"
+          <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
+            step >= 2 ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-500"
           }`}>
             2
           </span>
           <span className="hidden sm:inline">2. Role Criteria</span>
         </div>
         <div
-          className={`flex items-center gap-2 pb-2 border-b-2 text-xs font-bold uppercase tracking-wider transition-colors ${
-            step === 3 ? "border-blue-600 text-blue-600" : "border-transparent text-slate-400"
+          className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
+            step === 3 ? "bg-white text-blue-600 shadow-sm" : "text-slate-400"
           }`}
         >
-          <span className={`w-5 h-5 flex items-center justify-center text-[10px] ${
-            step === 3 ? "bg-blue-50 border border-blue-200 text-blue-700" : "bg-slate-100 text-slate-400"
+          <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
+            step === 3 ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-500"
           }`}>
             3
           </span>
@@ -314,15 +324,16 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
 
       {/* Error Alert */}
       {errorMessage && (
-        <div className="p-4 bg-rose-50 border-l-4 border-rose-600 text-rose-800 text-xs font-medium flex items-center gap-2 rounded-none">
+        <div className="p-4 bg-rose-50/90 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2.5 rounded-2xl shadow-sm transition">
           <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-          <span>{errorMessage}</span>
+          <span className="font-semibold">{errorMessage}</span>
         </div>
       )}
 
       {/* STEP 1: Corporate Profile & Work Setup */}
       {step === 1 && (
-        <div className="bg-white border border-slate-200 rounded-none shadow-xs p-6 sm:p-8 space-y-6 animate-fadeIn">
+        <div className="relative overflow-hidden bg-white border border-slate-200/80 rounded-3xl shadow-sm p-6 sm:p-8 space-y-6 animate-fadeIn">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
           <div className="border-b border-slate-100 pb-4">
             <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
               <MapPin className="w-4 h-4 text-blue-600" />
@@ -342,7 +353,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 type="text"
                 value={formData.companyName}
                 disabled
-                className="w-full bg-slate-50 border border-slate-200 px-3.5 py-2.5 text-xs text-slate-600 font-bold rounded-none cursor-not-allowed"
+                className="w-full bg-slate-50 border border-slate-200 px-3.5 py-2.5 text-xs text-slate-600 font-bold rounded-xl cursor-not-allowed"
               />
               <span className="text-[10px] text-slate-400 mt-1 block">Tied to your corporate account</span>
             </div>
@@ -363,7 +374,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                     salaryCurrency: newCountry === "Nigeria" ? "NGN" : "INR",
                   }));
                 }}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               >
                 <option value="India">India</option>
                 <option value="Nigeria">Nigeria</option>
@@ -378,7 +389,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 name="city"
                 value={formData.city}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               >
                 {cityOptions.map((c) => (
                   <option key={c} value={c}>
@@ -396,7 +407,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 name="workMode"
                 value={formData.workMode}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               >
                 <option value="On-site">On-site (At Company Office)</option>
                 <option value="Hybrid">Hybrid (Split On-site / Remote)</option>
@@ -412,7 +423,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 name="shift"
                 value={formData.shift}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               >
                 {SHIFT_OPTIONS.map((s) => (
                   <option key={s} value={s}>
@@ -423,8 +434,8 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
             </div>
 
             {/* Dedicated Interview Venue & GPS Navigation Card */}
-            <div className="sm:col-span-2 bg-slate-50 border border-slate-200 p-4 space-y-4 rounded-none">
-              <div className="flex items-center space-x-2 border-b border-slate-200 pb-2">
+            <div className="sm:col-span-2 bg-slate-50/80 border border-slate-200/80 p-5 space-y-4 rounded-2xl">
+              <div className="flex items-center space-x-2 border-b border-slate-200/60 pb-2.5">
                 <MapPin className="w-4 h-4 text-blue-600" />
                 <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading">
                   Interview Venue & GPS Navigation (Google Maps)
@@ -444,7 +455,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                   value={formData.interviewVenue}
                   onChange={handleInputChange}
                   placeholder="e.g. Digitide Business Solutions, 4th Floor, Cerebrum IT Park, Near Mariplex Mall, Kalyani Nagar, Pune - 411014"
-                  className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                  className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                 />
               </div>
 
@@ -458,7 +469,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                   value={formData.interviewLocationUrl}
                   onChange={handleInputChange}
                   placeholder="e.g. https://maps.app.goo.gl/abcdef123 or https://goo.gl/maps/xyz"
-                  className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-mono rounded-none focus:border-blue-600 focus:outline-none"
+                  className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-mono rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                 />
                 <span className="text-[10px] text-slate-500 mt-1 block">
                   Candidates will tap this Google Maps link on WhatsApp to navigate directly to your office gate.
@@ -476,7 +487,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                     value={formData.interviewContactPerson}
                     onChange={handleInputChange}
                     placeholder="e.g. Ms. Pooja Sharma (HR Reception)"
-                    className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                    className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                   />
                 </div>
                 <div>
@@ -489,7 +500,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                     value={formData.interviewContactPhone}
                     onChange={handleInputChange}
                     placeholder="e.g. +91 98765 43210"
-                    className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                    className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -504,7 +515,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                   value={formData.interviewInstructions}
                   onChange={handleInputChange}
                   placeholder="e.g. Carry 2 physical CV copies, formal attire, mention RiseUp Consultancy at the security gate"
-                  className="w-full bg-white border border-slate-300 px-3.5 py-2 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                  className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                 />
               </div>
             </div>
@@ -514,7 +525,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-wider transition-all rounded-xl shadow-md shadow-blue-600/20"
             >
               <span>Continue to Role Criteria</span>
               <ArrowRight className="w-4 h-4" />
@@ -525,7 +536,8 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
 
       {/* STEP 2: Role Specifications & Job Criteria */}
       {step === 2 && (
-        <div className="bg-white border border-slate-200 rounded-none shadow-xs p-6 sm:p-8 space-y-6 animate-fadeIn">
+        <div className="relative overflow-hidden bg-white border border-slate-200/80 rounded-3xl shadow-sm p-6 sm:p-8 space-y-6 animate-fadeIn">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
           <div className="border-b border-slate-100 pb-4">
             <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
               <Briefcase className="w-4 h-4 text-blue-600" />
@@ -547,7 +559,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 value={formData.title}
                 onChange={handleInputChange}
                 placeholder="e.g. Customer Support Specialist - UK Voice Process"
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               />
             </div>
 
@@ -559,7 +571,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c}>
@@ -580,7 +592,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 max="500"
                 value={formData.headcount}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               />
             </div>
 
@@ -595,7 +607,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 max="30"
                 value={formData.expMin}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               />
               <span className="text-[10px] text-slate-400 mt-1 block">0 = Fresher eligible</span>
             </div>
@@ -611,7 +623,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 max="30"
                 value={formData.expMax}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               />
             </div>
 
@@ -620,7 +632,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 Salary Min (Annual CTC / Monthly)
               </label>
               <div className="flex">
-                <span className="inline-flex items-center px-3 bg-slate-100 border border-r-0 border-slate-300 text-xs font-bold text-slate-600">
+                <span className="inline-flex items-center px-3 bg-slate-100 border border-r-0 border-slate-200 text-xs font-bold text-slate-600 rounded-l-xl">
                   {formData.salaryCurrency}
                 </span>
                 <input
@@ -629,7 +641,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                   value={formData.salaryMin}
                   onChange={handleInputChange}
                   placeholder="e.g. 250000"
-                  className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                  className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-r-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                 />
               </div>
             </div>
@@ -639,7 +651,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 Salary Max (Annual CTC / Monthly)
               </label>
               <div className="flex">
-                <span className="inline-flex items-center px-3 bg-slate-100 border border-r-0 border-slate-300 text-xs font-bold text-slate-600">
+                <span className="inline-flex items-center px-3 bg-slate-100 border border-r-0 border-slate-200 text-xs font-bold text-slate-600 rounded-l-xl">
                   {formData.salaryCurrency}
                 </span>
                 <input
@@ -648,7 +660,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                   value={formData.salaryMax}
                   onChange={handleInputChange}
                   placeholder="e.g. 450000"
-                  className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                  className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-r-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                 />
               </div>
             </div>
@@ -661,7 +673,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 name="availabilityRequired"
                 value={formData.availabilityRequired}
                 onChange={handleInputChange}
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               >
                 <option value="Immediate Joiner">Immediate Joiner (0 to 7 Days)</option>
                 <option value="15 Days">Within 15 Days</option>
@@ -669,27 +681,27 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
               </select>
             </div>
 
-              <div className="sm:col-span-2">
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                    Detailed Job Description <span className="text-rose-500">*</span>
-                  </label>
-                  <span className="text-[10px] font-medium text-slate-400">
-                    Min 2 sentences required for portal indexing
-                  </span>
-                </div>
-                <textarea
-                  name="description"
-                  rows={4}
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder="Explain the day-to-day responsibilities, process flow, and targets for this role. Minimum two complete sentences required so search engines (Google for Jobs, Indeed, LinkedIn, Naukri) can index this opening..."
-                  className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
-                />
-                <p className="mt-1 text-[10px] text-slate-500">
-                  Must contain at least 2 complete sentences (min. 50 characters). This description is automatically formatted with Schema.org JobPosting tags for search engine bots.
-                </p>
+            <div className="sm:col-span-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                  Detailed Job Description <span className="text-rose-500">*</span>
+                </label>
+                <span className="text-[10px] font-medium text-slate-400">
+                  Min 2 sentences required for portal indexing
+                </span>
               </div>
+              <textarea
+                name="description"
+                rows={4}
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Explain the day-to-day responsibilities, process flow, and targets for this role. Minimum two complete sentences required so search engines (Google for Jobs, Indeed, LinkedIn, Naukri) can index this opening..."
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+              />
+              <p className="mt-1 text-[10px] text-slate-500">
+                Must contain at least 2 complete sentences (min. 50 characters). This description is automatically formatted with Schema.org JobPosting tags for search engine bots.
+              </p>
+            </div>
 
             <div className="sm:col-span-2">
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
@@ -701,7 +713,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                 value={formData.requirements}
                 onChange={handleInputChange}
                 placeholder="e.g. Any Graduate, Excellent Verbal English, Typing speed 30+ WPM, Flexible with rotational shifts..."
-                className="w-full bg-white border border-slate-300 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-none focus:border-blue-600 focus:outline-none"
+                className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
               />
             </div>
           </div>
@@ -710,7 +722,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
             <button
               type="button"
               onClick={handleBack}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider transition-colors rounded-none"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider transition-colors rounded-xl"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
@@ -718,7 +730,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-wider transition-all rounded-xl shadow-md shadow-blue-600/20"
             >
               <span>Review Mandate</span>
               <ArrowRight className="w-4 h-4" />
@@ -729,7 +741,8 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
 
       {/* STEP 3: Review & Terms Confirmation */}
       {step === 3 && (
-        <div className="bg-white border border-slate-200 rounded-none shadow-xs p-6 sm:p-8 space-y-6 animate-fadeIn">
+        <div className="relative overflow-hidden bg-white border border-slate-200/80 rounded-3xl shadow-sm p-6 sm:p-8 space-y-6 animate-fadeIn">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
           <div className="border-b border-slate-100 pb-4">
             <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
               <FileCheck className="w-4 h-4 text-blue-600" />
@@ -741,37 +754,37 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
           </div>
 
           {/* Summary Card */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-5 border border-slate-200 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200/80 text-xs">
             <div>
-              <span className="font-bold text-slate-500 uppercase text-[10px] block">Role Title</span>
-              <span className="font-extrabold text-slate-900 text-sm">{formData.title}</span>
+              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Role Title</span>
+              <span className="font-black text-slate-900 text-sm">{formData.title}</span>
             </div>
             <div>
-              <span className="font-bold text-slate-500 uppercase text-[10px] block">Category</span>
+              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Category</span>
               <span className="font-semibold text-slate-800">{formData.category}</span>
             </div>
             <div>
-              <span className="font-bold text-slate-500 uppercase text-[10px] block">Location & Mode</span>
+              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Location & Mode</span>
               <span className="font-semibold text-slate-800">
                 {formData.city}, {formData.country} &bull; {formData.workMode}
               </span>
             </div>
             <div>
-              <span className="font-bold text-slate-500 uppercase text-[10px] block">Shift</span>
+              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Shift</span>
               <span className="font-semibold text-slate-800">{formData.shift}</span>
             </div>
             <div>
-              <span className="font-bold text-slate-500 uppercase text-[10px] block">Target Headcount</span>
+              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Target Headcount</span>
               <span className="font-extrabold text-blue-600">{formData.headcount} Candidates</span>
             </div>
             <div>
-              <span className="font-bold text-slate-500 uppercase text-[10px] block">Experience Bracket</span>
+              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Experience Bracket</span>
               <span className="font-semibold text-slate-800">
                 {formData.expMin} - {formData.expMax} Years ({formData.availabilityRequired})
               </span>
             </div>
             <div className="sm:col-span-2">
-              <span className="font-bold text-slate-500 uppercase text-[10px] block">Compensation Bracket</span>
+              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Compensation Bracket</span>
               <span className="font-semibold text-slate-800">
                 {formData.salaryMin && formData.salaryMax
                   ? `${formData.salaryCurrency} ${Number(formData.salaryMin).toLocaleString()} - ${Number(formData.salaryMax).toLocaleString()}`
@@ -779,8 +792,8 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
               </span>
             </div>
             {formData.interviewVenue && (
-              <div className="sm:col-span-2 border-t border-slate-200 pt-3">
-                <span className="font-bold text-slate-500 uppercase text-[10px] block">
+              <div className="sm:col-span-2 border-t border-slate-200/80 pt-3">
+                <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">
                   Interview Venue & GPS Navigation
                 </span>
                 <span className="font-semibold text-slate-900 block mt-0.5">
@@ -801,8 +814,8 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
           </div>
 
           {/* Commercial & Operational Notice */}
-          <div className="p-4 bg-blue-50 border-l-4 border-blue-600 text-blue-900 text-xs space-y-1.5 rounded-none">
-            <div className="flex items-center gap-2 font-bold uppercase tracking-wider">
+          <div className="p-4 sm:p-5 bg-blue-50/80 border border-blue-200 text-blue-900 text-xs space-y-2 rounded-2xl">
+            <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-blue-950">
               <ShieldCheck className="w-4 h-4 text-blue-700" />
               RiseUp Professional Placement Terms
             </div>
@@ -816,7 +829,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
               type="button"
               onClick={handleBack}
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider transition-colors rounded-none disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider transition-colors rounded-xl disabled:opacity-50"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
@@ -825,7 +838,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
               type="button"
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-wider transition-all rounded-xl shadow-md shadow-blue-600/20 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>
