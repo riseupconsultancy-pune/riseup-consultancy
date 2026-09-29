@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/db-auto-sync.js",
-    "build": "next build",
+    "build": "next build --webpack",
     "mode:local": "node scripts/db-mode.js local",
     "mode:prod": "node scripts/db-mode.js prod",
     "db:push": "prisma db push",
