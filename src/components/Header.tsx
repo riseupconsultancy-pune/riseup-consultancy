@@ -131,8 +131,8 @@ export default function Header() {
       >
         
         {/* Left: Official Brand Logo & Name (Big Bold Brand Name) */}
-        <Link href="/" className="group flex items-center gap-2 sm:gap-3 focus:outline-none min-w-0">
-          <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0 group-hover:scale-105 transition-transform duration-200">
+        <Link href="/" className="group flex items-center gap-1.5 sm:gap-3 focus:outline-none min-w-0">
+          <div className="relative w-7 h-7 sm:w-10 sm:h-10 shrink-0 group-hover:scale-105 transition-transform duration-200">
             <Image
               src="/images/rise_up_consultancy_pune_logo.png"
               alt="Rise Up Consultancy Logo"
@@ -142,7 +142,7 @@ export default function Header() {
             />
           </div>
 
-          <span className="text-sm sm:text-base md:text-lg lg:text-xl font-black text-slate-900 tracking-tight uppercase font-heading whitespace-nowrap group-hover:text-blue-600 transition-colors">
+          <span className="text-[11.5px] min-[390px]:text-xs sm:text-base md:text-lg lg:text-xl font-black text-slate-900 tracking-tight uppercase font-heading whitespace-nowrap group-hover:text-blue-600 transition-colors">
             RISE UP CONSULTANCY
           </span>
         </Link>

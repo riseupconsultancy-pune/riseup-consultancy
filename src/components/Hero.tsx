@@ -204,8 +204,8 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
         </div>
       </div>
 
-      {/* Seamless Borderless Flowing Marquee Ticker: Positioned EXACTLY above the fixed bottom navigation dock */}
-      <div className="w-full relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-auto pt-2.5 sm:pt-3.5 pb-20 sm:pb-24 lg:pb-24 border-t border-slate-200/80 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] animate-hero-fade-up-4">
+      {/* Seamless Borderless Flowing Marquee Ticker: Positioned safely above the fixed bottom navigation dock without top line */}
+      <div className="w-full relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-auto pt-1 pb-28 sm:pb-32 lg:pb-32 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] animate-hero-fade-up-4">
         <div className="animate-marquee-left-fast flex items-center gap-6 sm:gap-10 py-1">
           {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
             <div key={idx} className="flex items-center gap-2 sm:gap-2.5 shrink-0">
