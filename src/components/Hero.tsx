@@ -34,6 +34,50 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Video ref and smooth continuous loop without end glitch / black screen
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let animId: number;
+
+    const handleLoop = () => {
+      if (video && video.duration && !video.paused) {
+        // Frame 173 at (duration - 1.0s) is the optimal match to Frame 0, skipping the end black screen glitch
+        const loopThreshold = Math.max(0, video.duration - 1.0);
+        if (video.currentTime >= loopThreshold) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        }
+      }
+      animId = requestAnimationFrame(handleLoop);
+    };
+
+    animId = requestAnimationFrame(handleLoop);
+
+    return () => {
+      cancelAnimationFrame(animId);
+    };
+  }, []);
+
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (!video || !video.duration) return;
+    if (video.currentTime >= Math.max(0, video.duration - 1.0)) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    }
+  };
+
+  const handleEnded = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  };
+
   useEffect(() => {
     const currentPhrase = TYPEWRITER_PHRASES[phraseIndex];
     let timer: NodeJS.Timeout;
@@ -188,16 +232,23 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
               {/* Subtle Ambient Halo behind Video Logo */}
               <div className="absolute inset-2 sm:inset-4 lg:inset-8 bg-radial from-blue-500/15 via-indigo-400/5 to-transparent rounded-full blur-xl sm:blur-2xl pointer-events-none animate-ambient-float" />
 
-              <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-3xl">
-                {/* Seamless Continuous Looped Animated Video Logo */}
+              {/* Seamless Looped Animated Video Logo Container */}
+              <div className="relative w-full h-full flex items-center justify-center">
+                {/* Seamless Programmatically Looped Animated Video Logo (1s glitch trimmed) */}
                 <video
+                  ref={videoRef}
                   autoPlay
-                  loop
                   muted
                   playsInline
                   preload="auto"
                   poster="/images/rise_up_consultancy_pune_logo.png"
-                  className="w-full h-full object-contain mix-blend-multiply select-none pointer-events-none"
+                  onTimeUpdate={handleTimeUpdate}
+                  onEnded={handleEnded}
+                  className="w-full h-full object-contain mix-blend-multiply contrast-[1.08] brightness-[1.05] select-none pointer-events-none"
+                  style={{
+                    WebkitMaskImage: "radial-gradient(circle at center, black 55%, transparent 82%)",
+                    maskImage: "radial-gradient(circle at center, black 55%, transparent 82%)",
+                  }}
                 >
                   <source src="/images/hero_video.mov" type="video/quicktime" />
                   <source src="/images/hero video.MOV" type="video/quicktime" />
@@ -214,9 +265,21 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
                   />
                 </video>
 
-                {/* Subtle Gradient Blend Layer to ensure perfect background harmony */}
+                {/* Gradient Color Layer Above Video: Seamlessly harmonizes video background with hero section */}
                 <div
-                  className="absolute inset-0 pointer-events-none bg-gradient-to-b from-slate-50/10 via-transparent to-blue-50/15 mix-blend-multiply"
+                  className="absolute inset-0 pointer-events-none bg-gradient-to-b from-slate-50/80 via-blue-50/40 to-white/70 mix-blend-multiply"
+                  aria-hidden="true"
+                />
+
+                {/* Peripheral Feathered Edge Softener: Eliminates any rectangular box border */}
+                <div
+                  className="absolute -inset-3 pointer-events-none bg-radial from-transparent via-transparent to-slate-50/90"
+                  aria-hidden="true"
+                />
+
+                {/* Ambient Sheen Overlay */}
+                <div
+                  className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-blue-500/5 via-transparent to-indigo-500/5"
                   aria-hidden="true"
                 />
               </div>
