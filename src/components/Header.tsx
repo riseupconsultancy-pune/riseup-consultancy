@@ -44,6 +44,65 @@ const DEFAULT_LOCATIONS: LocationOption[] = [
   },
 ];
 
+interface CountryCardProps {
+  loc: LocationOption;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+function CountryCard({ loc, isActive, onClick }: CountryCardProps) {
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <button
+      ref={cardRef}
+      type="button"
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`relative overflow-hidden flex items-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 text-xs font-semibold border transition-all duration-200 rounded-xl cursor-pointer ${
+        isActive
+          ? "bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-600 text-white border-blue-600 shadow-md shadow-blue-500/25 ring-1 ring-blue-400/40"
+          : "bg-gradient-to-b from-white via-slate-50/90 to-blue-50/50 border-slate-200/90 text-slate-800 hover:border-blue-400/80 hover:shadow-xs"
+      }`}
+    >
+      {/* Glossy Top Sheen Reflection */}
+      <div
+        className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/70 via-white/10 to-transparent pointer-events-none rounded-t-xl"
+        aria-hidden="true"
+      />
+
+      {/* Interactive Cursor Spotlight Glow */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-xl overflow-hidden transition-opacity duration-200"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          background: isActive
+            ? `radial-gradient(70px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 255, 255, 0.25), transparent 75%)`
+            : `radial-gradient(70px circle at ${mousePos.x}px ${mousePos.y}px, rgba(37, 99, 235, 0.18), transparent 75%)`,
+        }}
+        aria-hidden="true"
+      />
+
+      <span className="relative z-10 shrink-0">{loc.flagComponent}</span>
+      <span className="relative z-10 text-[11px] sm:text-xs font-bold tracking-tight">{loc.country}</span>
+      {isActive && <Check className="relative z-10 w-3.5 h-3.5 text-white ml-auto stroke-[2.5]" />}
+    </button>
+  );
+}
+
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -248,7 +307,7 @@ export default function Header() {
 
           {/* Location Dropdown Modal (Constrained strictly to mobile viewport boundaries) */}
           {isOpen && (
-            <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] max-w-[320px] bg-white border border-slate-300 shadow-2xl p-3.5 sm:p-4 z-50 animate-fadeIn rounded-2xl">
+            <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] max-w-[320px] bg-gradient-to-b from-white/98 via-slate-50/95 to-blue-50/30 backdrop-blur-xl border border-white/90 ring-1 ring-slate-200/90 shadow-2xl p-3.5 sm:p-4 z-50 animate-fadeIn rounded-2xl">
               
               {/* Step 1: Select Country */}
               <div className="mb-3.5">
@@ -259,20 +318,12 @@ export default function Header() {
                   {locations.map((loc) => {
                     const isCountryActive = selectedCountry.country === loc.country;
                     return (
-                      <button
+                      <CountryCard
                         key={loc.country}
-                        type="button"
+                        loc={loc}
+                        isActive={isCountryActive}
                         onClick={() => handleCountryChange(loc)}
-                        className={`flex items-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 text-xs font-semibold border transition-all rounded-xl ${
-                          isCountryActive
-                            ? "bg-blue-600 text-white border-blue-600 shadow-xs"
-                            : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
-                        }`}
-                      >
-                        {loc.flagComponent}
-                        <span className="text-[11px] sm:text-xs">{loc.country}</span>
-                        {isCountryActive && <Check className="w-3 h-3 text-white ml-auto" />}
-                      </button>
+                      />
                     );
                   })}
                 </div>
