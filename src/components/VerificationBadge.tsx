@@ -29,7 +29,7 @@ export default function VerificationBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-bold uppercase tracking-wider border rounded-none shrink-0 select-none ${variantStyles} ${sizeStyles} ${className}`}
+      className={`inline-flex items-center gap-1.5 font-bold uppercase tracking-wider border rounded-full shrink-0 select-none ${variantStyles} ${sizeStyles} ${className}`}
       title="Verified Direct Sourcing Standard • Zero Sub-Brokering • 100% Free for Candidates"
     >
       {/* Authentic Institutional Direct Sourcing Seal Emblem (Shield with Direct Diamond Check) */}

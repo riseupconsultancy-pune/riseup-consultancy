@@ -112,14 +112,14 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
             return (
               <div
                 key={idx}
-                className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-white border border-slate-200 hover:border-slate-900 hover:shadow-md transition-all duration-200 flex flex-col justify-between rounded-none group"
+                className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-white border border-slate-200 hover:border-slate-900 hover:shadow-md transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <div className="w-9 h-9 bg-slate-50 border border-slate-200 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <div className="w-9 h-9 bg-slate-50 border border-slate-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                       <Icon className="w-4 h-4" />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50 border border-slate-200 rounded-full px-2.5 py-0.5">
                       {spec.category}
                     </span>
                   </div>
@@ -132,7 +132,7 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
                   <ul className="space-y-1 mb-3">
                     {spec.roles.slice(0, 3).map((role, rIdx) => (
                       <li key={rIdx} className="text-xs text-slate-600 flex items-center gap-1.5">
-                        <span className="w-1 h-1 bg-blue-600 shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
                         <span className="truncate">{role}</span>
                       </li>
                     ))}
@@ -143,7 +143,7 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
                     {spec.tags.slice(0, 2).map((tag, tIdx) => (
                       <span
                         key={tIdx}
-                        className="text-[9px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 px-1.5 py-0.5"
+                        className="text-[9px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 rounded-md px-2 py-0.5"
                       >
                         {tag}
                       </span>
@@ -169,8 +169,8 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
         </div>
 
         {/* Official Note regarding IT / Future expansion */}
-        <div className="mt-10 p-4 sm:p-5 bg-white border border-blue-200 flex items-start sm:items-center gap-3.5 rounded-none">
-          <div className="w-8 h-8 bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+        <div className="mt-10 p-4 sm:p-5 bg-white border border-blue-200 flex items-start sm:items-center gap-3.5 rounded-2xl shadow-2xs">
+          <div className="w-8 h-8 bg-blue-50 border border-blue-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
             <Info className="w-4 h-4" />
           </div>
           <div className="text-xs sm:text-sm text-slate-700 leading-relaxed">

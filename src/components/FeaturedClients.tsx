@@ -120,7 +120,7 @@ export default function FeaturedClients({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-7 sm:mb-9">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 text-slate-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2.5 shadow-2xs">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 text-slate-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2.5 shadow-2xs rounded-full">
             <Building2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
             <span>Corporate Hiring Network</span>
           </div>
@@ -159,7 +159,7 @@ export default function FeaturedClients({
           {marqueeItems.map((client, index) => (
             <div
               key={`${client.name}-${index}`}
-              className="w-[200px] sm:w-[235px] h-[88px] sm:h-[98px] bg-white border border-slate-200/90 hover:border-blue-600 transition-all duration-200 shadow-2xs hover:shadow-md flex items-center justify-center p-3.5 sm:p-4 rounded-none shrink-0 group/card relative"
+              className="w-[200px] sm:w-[235px] h-[88px] sm:h-[98px] bg-white border border-slate-200/90 hover:border-blue-600 transition-all duration-200 shadow-2xs hover:shadow-md flex items-center justify-center p-3.5 sm:p-4 rounded-2xl shrink-0 group/card relative overflow-hidden"
             >
               <div className="relative w-full h-full flex items-center justify-center">
                 <Image

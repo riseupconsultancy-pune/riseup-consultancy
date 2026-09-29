@@ -86,10 +86,10 @@ export default function HomePage() {
           <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 sm:pb-0 gap-3.5 sm:grid sm:grid-cols-3 -mx-4 px-4 sm:mx-0 sm:px-0">
             
             {/* Card 1: Voice */}
-            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex flex-col justify-between rounded-none group">
+            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 rounded-full px-2.5 py-0.5">
                     Voice Process
                   </span>
                   <VerificationBadge label="IMMEDIATE" variant="outline" size="sm" />
@@ -99,9 +99,9 @@ export default function HomePage() {
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">Pune, India • Fresher / 1-3 Yrs • Day Shift</p>
                 <div className="flex flex-wrap gap-1 mt-3">
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">English Fluency</span>
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">Inbound Voice</span>
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">Customer Care</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">English Fluency</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">Inbound Voice</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">Customer Care</span>
                 </div>
               </div>
               <div className="mt-5 pt-3 border-t border-slate-200 flex items-center justify-between">
@@ -120,10 +120,10 @@ export default function HomePage() {
             </div>
 
             {/* Card 2: Non-Voice */}
-            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex flex-col justify-between rounded-none group">
+            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 rounded-full px-2.5 py-0.5">
                     Non-Voice / Back Office
                   </span>
                   <VerificationBadge label="IMMEDIATE" variant="outline" size="sm" />
@@ -133,9 +133,9 @@ export default function HomePage() {
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">Pune, India • 0-2 Yrs • Day Shift</p>
                 <div className="flex flex-wrap gap-1 mt-3">
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">35+ WPM Typing</span>
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">MS Excel</span>
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">KYC Processing</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">35+ WPM Typing</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">MS Excel</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">KYC Processing</span>
                 </div>
               </div>
               <div className="mt-5 pt-3 border-t border-slate-200 flex items-center justify-between">
@@ -154,10 +154,10 @@ export default function HomePage() {
             </div>
 
             {/* Card 3: Chat & Email */}
-            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex flex-col justify-between rounded-none group">
+            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 px-2 py-0.5">
+                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 rounded-full px-2.5 py-0.5">
                     Chat & Email Support
                   </span>
                   <VerificationBadge label="IMMEDIATE" variant="outline" size="sm" />
@@ -167,9 +167,9 @@ export default function HomePage() {
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">Pune / Mumbai • 1-3 Yrs • Rotational Shift</p>
                 <div className="flex flex-wrap gap-1 mt-3">
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">Live Chat</span>
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">Email Support</span>
-                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5">Ticket Handling</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">Live Chat</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">Email Support</span>
+                  <span className="text-[9px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-md px-2 py-0.5">Ticket Handling</span>
                 </div>
               </div>
               <div className="mt-5 pt-3 border-t border-slate-200 flex items-center justify-between">
@@ -200,7 +200,7 @@ export default function HomePage() {
       {/* 7. Dedicated Page Spotlight: About Us & Leadership Profile */}
       <section className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white border border-slate-200 p-5 sm:p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 rounded-none">
+          <div className="bg-white border border-slate-200 p-5 sm:p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 rounded-3xl shadow-xs">
             
             <div className="max-w-2xl">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700 block mb-1">
@@ -233,14 +233,14 @@ export default function HomePage() {
             <div className="flex flex-col gap-3 shrink-0 lg:w-72">
               <Link
                 href="/about"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-none shadow-xs"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-xl shadow-xs"
               >
                 <span>Read Story & Leadership</span>
                 <ChevronRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/services"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-white border border-slate-300 hover:border-slate-900 text-slate-900 font-bold text-xs uppercase tracking-wider transition-colors rounded-none"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-white border border-slate-300 hover:border-slate-900 text-slate-900 font-bold text-xs uppercase tracking-wider transition-colors rounded-xl"
               >
                 <span>All 13 Practice Areas</span>
                 <ArrowUpRight className="w-4 h-4" />
@@ -274,9 +274,9 @@ export default function HomePage() {
                 {/* Meenakshi Patel */}
                 <a
                   href="tel:+919359892819"
-                  className="p-3.5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex items-center gap-3 rounded-none group"
+                  className="p-3.5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex items-center gap-3 rounded-2xl shadow-2xs group"
                 >
-                  <div className="w-8 h-8 bg-white border border-slate-200 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 bg-white border border-slate-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <PhoneCall className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -288,9 +288,9 @@ export default function HomePage() {
                 {/* Shaziya Khan */}
                 <a
                   href="tel:+917030122065"
-                  className="p-3.5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex items-center gap-3 rounded-none group"
+                  className="p-3.5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex items-center gap-3 rounded-2xl shadow-2xs group"
                 >
-                  <div className="w-8 h-8 bg-white border border-slate-200 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 bg-white border border-slate-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <PhoneCall className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -302,7 +302,7 @@ export default function HomePage() {
               </div>
 
               {/* Physical Address Pill */}
-              <div className="mt-3.5 p-3.5 bg-slate-50 border border-slate-200 flex items-start gap-3 rounded-none">
+              <div className="mt-3.5 p-3.5 bg-slate-50 border border-slate-200 flex items-start gap-3 rounded-2xl">
                 <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <div className="text-xs text-slate-700">
                   <strong className="font-bold text-slate-900">Pune HQ:</strong> Near Kumar Megaplex, Chandan Nagar, Pune, Maharashtra 411014.
@@ -311,7 +311,7 @@ export default function HomePage() {
             </div>
 
             {/* Right: Quick Action Banner */}
-            <div className="lg:col-span-5 bg-slate-900 text-white p-6 sm:p-8 rounded-none flex flex-col justify-between">
+            <div className="lg:col-span-5 bg-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-md flex flex-col justify-between">
               <div>
                 <VerificationBadge label="OFFICIAL RECRUITMENT DESK" variant="solid" size="sm" className="mb-4" />
                 <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
@@ -326,14 +326,14 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={handleHireClick}
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-none"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-xl"
                 >
                   <span>Submit Corporate Hiring Requirement</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </button>
                 <Link
                   href="/contact"
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider transition-colors rounded-none"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider transition-colors rounded-xl"
                 >
                   <span>View Google Map & Virtual Nigeria Hub</span>
                   <ChevronRight className="w-4 h-4" />

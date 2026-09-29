@@ -168,23 +168,23 @@ export default function ApplyModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-2xl bg-white border border-slate-300 shadow-2xl p-5 sm:p-7 rounded-none max-h-[92vh] overflow-y-auto">
+      <div className="relative w-full max-w-2xl bg-white border border-slate-300 shadow-2xl p-5 sm:p-7 rounded-3xl max-h-[92vh] overflow-y-auto">
         {/* Close Button */}
         <button
           type="button"
           onClick={handleResetAndClose}
-          className="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-700 hover:text-white hover:bg-slate-900 flex items-center justify-center transition-colors rounded-none cursor-pointer"
+          className="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-700 hover:text-white hover:bg-slate-900 flex items-center justify-center transition-colors rounded-full cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
         {successCandidateId ? (
           <div className="py-8 text-center flex flex-col items-center space-y-4">
-            <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center">
+            <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center rounded-2xl">
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <div>
-              <span className="text-xs font-mono font-bold bg-slate-100 text-slate-800 px-3 py-1 border border-slate-200">
+              <span className="text-xs font-mono font-bold bg-slate-100 text-slate-800 px-3 py-1 border border-slate-200 rounded-full">
                 Candidate ID: {successCandidateId}
               </span>
               <h3 className="text-2xl font-extrabold text-slate-900 mt-3 font-heading">
@@ -198,7 +198,7 @@ export default function ApplyModal({
               <button
                 type="button"
                 onClick={handleResetAndClose}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
+                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer"
               >
                 Done
               </button>
@@ -207,7 +207,7 @@ export default function ApplyModal({
         ) : (
           <div>
             <div className="mb-5 pr-8">
-              <span className="inline-block px-2.5 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest mb-2 rounded-none">
+              <span className="inline-block px-3 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest mb-2 rounded-full">
                 100% Free Candidate Placement
               </span>
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight font-heading">
@@ -217,7 +217,7 @@ export default function ApplyModal({
             </div>
 
             {errorMessage && (
-              <div className="mb-4 p-3 bg-rose-50 border-l-4 border-rose-600 text-rose-800 text-xs flex items-center gap-2 rounded-none">
+              <div className="mb-4 p-3 bg-rose-50 border-l-4 border-rose-600 text-rose-800 text-xs flex items-center gap-2 rounded-xl">
                 <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                 <span>{errorMessage}</span>
               </div>
@@ -237,7 +237,7 @@ export default function ApplyModal({
                     placeholder="e.g. Rahul Sharma"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
                   />
                 </div>
 
@@ -252,7 +252,7 @@ export default function ApplyModal({
                     placeholder="e.g. +91 98220 11223"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
                   />
                 </div>
               </div>
@@ -270,7 +270,7 @@ export default function ApplyModal({
                     placeholder="name@domain.com"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
                   />
                 </div>
 
@@ -282,7 +282,7 @@ export default function ApplyModal({
                     name="country"
                     value={formData.country}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
                   >
                     <option value="India">India</option>
                     <option value="Nigeria">Nigeria</option>
@@ -303,7 +303,7 @@ export default function ApplyModal({
                     placeholder="e.g. Pune, Mumbai, Lagos..."
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
                   />
                 </div>
 
@@ -315,7 +315,7 @@ export default function ApplyModal({
                     name="qualification"
                     value={formData.qualification}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
                   >
                     {QUALIFICATIONS.map((q) => (
                       <option key={q} value={q}>{q}</option>
@@ -334,7 +334,7 @@ export default function ApplyModal({
                     name="totalExperience"
                     value={formData.totalExperience}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
                   >
                     {EXPERIENCES.map((exp) => (
                       <option key={exp} value={exp}>{exp}</option>
@@ -350,7 +350,7 @@ export default function ApplyModal({
                     name="availability"
                     value={formData.availability}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none font-medium"
+                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
                   >
                     <option value="Immediate Joiner">Immediate Joiner (0 to 7 Days)</option>
                     <option value="15 Days">Within 15 Days</option>
@@ -373,7 +373,7 @@ export default function ApplyModal({
                         key={role}
                         type="button"
                         onClick={() => handleRoleToggle(role)}
-                        className={`text-left p-2 border text-[11px] font-medium transition-all rounded-none flex items-center justify-between cursor-pointer ${
+                        className={`text-left p-2.5 border text-[11px] font-medium transition-all rounded-xl flex items-center justify-between cursor-pointer ${
                           isSelected
                             ? "bg-blue-50 border-blue-600 text-blue-900 font-semibold"
                             : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
@@ -394,7 +394,7 @@ export default function ApplyModal({
                 </label>
 
                 {resumeFile ? (
-                  <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200">
+                  <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-xl">
                     <div className="flex items-center gap-2 truncate">
                       <FileText className="w-4 h-4 text-blue-600 shrink-0" />
                       <div className="truncate">
@@ -413,7 +413,7 @@ export default function ApplyModal({
                     </button>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center p-3.5 border-2 border-dashed border-slate-300 hover:border-blue-600 bg-slate-50 hover:bg-blue-50/20 cursor-pointer transition-colors rounded-none">
+                  <label className="flex flex-col items-center justify-center p-3.5 border-2 border-dashed border-slate-300 hover:border-blue-600 bg-slate-50 hover:bg-blue-50/20 cursor-pointer transition-colors rounded-xl">
                     <Upload className="w-5 h-5 text-slate-400 mb-1" />
                     <span className="text-xs font-bold text-slate-700">Choose PDF Document</span>
                     <span className="text-[10px] text-slate-400 mt-0.5">Strictly up to 2.0 MB</span>
@@ -433,7 +433,7 @@ export default function ApplyModal({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-xl shadow-xs flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <>

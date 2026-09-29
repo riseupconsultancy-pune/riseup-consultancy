@@ -31,13 +31,13 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
               </p>
             </div>
 
-            {/* Two Square Action Buttons */}
+            {/* Two Action Buttons with Natural Rounded Corners */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto mt-6 sm:mt-7">
               {/* Button 1: Request Talent (Employers) */}
               <button
                 onClick={onHireClick}
                 type="button"
-                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:px-9 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm tracking-wide transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 rounded-none cursor-pointer w-full sm:w-auto shadow-xs"
+                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:px-9 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 rounded-xl cursor-pointer w-full sm:w-auto shadow-sm hover:shadow-md"
               >
                 <Briefcase className="w-4 h-4 text-white shrink-0" />
                 <span>Request Talent</span>
@@ -48,7 +48,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
               <button
                 onClick={onJobsClick}
                 type="button"
-                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:px-9 sm:py-4 bg-transparent border-2 border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-semibold text-xs sm:text-sm tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 rounded-none cursor-pointer w-full sm:w-auto"
+                className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:px-9 sm:py-4 bg-white border border-slate-300 hover:border-slate-900 hover:bg-slate-900 hover:text-white text-slate-900 font-semibold text-xs sm:text-sm tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 rounded-xl cursor-pointer w-full sm:w-auto shadow-2xs hover:shadow-sm"
               >
                 <Search className="w-4 h-4 shrink-0" />
                 <span>Browse Vacancies</span>
@@ -56,23 +56,23 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
               </button>
             </div>
 
-            {/* Architectural Proof Metrics with Square Hairlines */}
-            <div className="mt-8 sm:mt-10 lg:mt-12 pt-6 sm:pt-7 border-t border-slate-200 grid grid-cols-3 gap-3 sm:gap-6 max-w-lg w-full">
-              <div className="border-l-2 border-blue-600 pl-2.5 sm:pl-4 text-left">
-                <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight font-heading">Jan 2025</div>
-                <div className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 font-semibold mt-0.5 sm:mt-1">
+            {/* Proof Metrics with Natural Rounded Cards */}
+            <div className="mt-8 sm:mt-10 lg:mt-12 pt-6 sm:pt-7 border-t border-slate-200/80 grid grid-cols-3 gap-2.5 sm:gap-4 max-w-lg w-full">
+              <div className="bg-slate-50/80 border border-slate-200/90 rounded-2xl p-2.5 sm:p-3.5 text-left shadow-2xs">
+                <div className="text-base sm:text-xl lg:text-2xl font-bold text-slate-900 tracking-tight font-heading">Jan 2025</div>
+                <div className="text-[9px] sm:text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-0.5 sm:mt-1">
                   Est. in Pune
                 </div>
               </div>
-              <div className="border-l-2 border-slate-300 pl-2.5 sm:pl-4 text-left">
-                <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight font-heading">Pan-India</div>
-                <div className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 font-semibold mt-0.5 sm:mt-1">
+              <div className="bg-slate-50/80 border border-slate-200/90 rounded-2xl p-2.5 sm:p-3.5 text-left shadow-2xs">
+                <div className="text-base sm:text-xl lg:text-2xl font-bold text-slate-900 tracking-tight font-heading">Pan-India</div>
+                <div className="text-[9px] sm:text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-0.5 sm:mt-1">
                   &amp; Global Sourcing
                 </div>
               </div>
-              <div className="border-l-2 border-slate-300 pl-2.5 sm:pl-4 text-left">
-                <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight font-heading">100%</div>
-                <div className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 font-semibold mt-0.5 sm:mt-1">
+              <div className="bg-slate-50/80 border border-slate-200/90 rounded-2xl p-2.5 sm:p-3.5 text-left shadow-2xs">
+                <div className="text-base sm:text-xl lg:text-2xl font-bold text-blue-600 tracking-tight font-heading">100%</div>
+                <div className="text-[9px] sm:text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-0.5 sm:mt-1">
                   Direct Sourcing
                 </div>
               </div>

@@ -63,7 +63,7 @@ export default function CandidateJourney() {
           </div>
           <Link
             href="/jobs"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-colors shrink-0 self-start sm:self-auto rounded-none shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-all shrink-0 self-start sm:self-auto rounded-xl shadow-sm hover:shadow-md"
           >
             <span>Browse Active Openings</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -75,7 +75,7 @@ export default function CandidateJourney() {
           {STEPS.map((step, idx) => (
             <div
               key={idx}
-              className="relative p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-none group"
+              className="relative p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-2xl group shadow-2xs hover:shadow-md"
             >
               {/* Step Number Tag & Timeline Pill */}
               <div>
@@ -83,7 +83,7 @@ export default function CandidateJourney() {
                   <span className="font-mono text-2xl font-black text-blue-600">
                     {step.number}
                   </span>
-                  <span className="text-[10px] font-bold text-slate-600 bg-white border border-slate-200 px-2 py-0.5 uppercase tracking-wide">
+                  <span className="text-[10px] font-bold text-slate-600 bg-white border border-slate-200 px-2.5 py-1 rounded-full uppercase tracking-wide">
                     {step.timeline}
                   </span>
                 </div>
@@ -111,7 +111,7 @@ export default function CandidateJourney() {
         </div>
 
         {/* Practical Candidate Reassurance Strip */}
-        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-blue-950">
+        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-blue-950 rounded-2xl shadow-2xs">
           <div className="flex items-center gap-2 font-bold">
             <span className="w-2 h-2 bg-blue-600 rounded-full" />
             <span>Candidate Guarantee: Rise Up Consultancy never charges registration fees, security deposits, or commission from job seekers.</span>

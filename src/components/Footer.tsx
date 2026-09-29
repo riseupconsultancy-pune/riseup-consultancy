@@ -44,7 +44,7 @@ export default function Footer() {
                 href="https://wa.me/919359892819?text=Hello%20Rise%20Up%20Consultancy,%20I%20would%20like%20to%20inquire%20about%20your%20services"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/25 transition-colors rounded-none"
+                className="inline-flex items-center gap-2 px-3.5 py-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/25 transition-colors rounded-xl"
               >
                 <WhatsAppIcon className="w-3.5 h-3.5 text-emerald-400" />
                 <span>WhatsApp HR</span>
@@ -52,7 +52,7 @@ export default function Footer() {
 
               <a
                 href="mailto:contact@riseupconsultancyy.com"
-                className="inline-flex items-center gap-2 px-3.5 py-2 bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold hover:bg-slate-700 transition-colors rounded-none"
+                className="inline-flex items-center gap-2 px-3.5 py-2 bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold hover:bg-slate-700 transition-colors rounded-xl"
               >
                 <Mail className="w-3.5 h-3.5 text-blue-400" />
                 <span>contact@riseupconsultancyy.com</span>
@@ -62,7 +62,7 @@ export default function Footer() {
                 href="https://www.linkedin.com/company/rise-up-consultancy-pune"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-8 h-8 bg-slate-800 border border-slate-700 text-slate-300 hover:text-blue-400 hover:border-blue-500 transition-colors rounded-none font-bold text-xs"
+                className="inline-flex items-center justify-center w-8 h-8 bg-slate-800 border border-slate-700 text-slate-300 hover:text-blue-400 hover:border-blue-500 transition-colors rounded-xl font-bold text-xs"
                 title="LinkedIn Page"
               >
                 in

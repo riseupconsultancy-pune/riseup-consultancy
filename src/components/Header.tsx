@@ -147,7 +147,7 @@ export default function Header() {
             href="https://www.linkedin.com/company/rise-up-consultancy-pune"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 border border-slate-300 hover:border-blue-600 hover:text-blue-600 text-slate-700 transition-all rounded-none"
+            className="hidden sm:inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 border border-slate-300 hover:border-blue-600 hover:text-blue-600 text-slate-700 transition-all rounded-xl"
             title="Rise Up Consultancy on LinkedIn"
           >
             <span className="font-extrabold text-xs">in</span>
@@ -156,10 +156,10 @@ export default function Header() {
           {/* Direct HR Call Button (Desktop & Tablet) */}
           <a
             href="tel:+919359892819"
-            className="hidden md:inline-flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white text-xs font-semibold text-slate-800 transition-all rounded-none"
+            className="hidden md:inline-flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white text-xs font-semibold text-slate-800 transition-all rounded-xl"
             title="Call Meenakshi Patel (HR Manager)"
           >
-            <span className="w-1.5 h-1.5 bg-blue-600 rounded-none shrink-0" />
+            <span className="w-1.5 h-1.5 bg-blue-600 rounded-full shrink-0" />
             <span className="text-slate-500 font-normal">HR Desk:</span>
             <span className="font-bold text-slate-900">+91 93598 92819</span>
           </a>
@@ -169,7 +169,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="group flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white transition-all text-left focus:outline-none rounded-none"
+              className="group flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white transition-all text-left focus:outline-none rounded-xl"
             >
               {selectedCountry.flagComponent}
               <div className="flex items-center gap-1 text-xs font-semibold text-slate-800">
@@ -186,7 +186,7 @@ export default function Header() {
 
           {/* Location Dropdown Modal (Constrained strictly to mobile viewport boundaries) */}
           {isOpen && (
-            <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] max-w-[320px] bg-white border border-slate-300 shadow-2xl p-3.5 sm:p-4 z-50 animate-fadeIn rounded-none">
+            <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] max-w-[320px] bg-white border border-slate-300 shadow-2xl p-3.5 sm:p-4 z-50 animate-fadeIn rounded-2xl">
               
               {/* Step 1: Select Country */}
               <div className="mb-3.5">
@@ -201,7 +201,7 @@ export default function Header() {
                         key={loc.country}
                         type="button"
                         onClick={() => handleCountryChange(loc)}
-                        className={`flex items-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 text-xs font-semibold border transition-all rounded-none ${
+                        className={`flex items-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 text-xs font-semibold border transition-all rounded-xl ${
                           isCountryActive
                             ? "bg-blue-600 text-white border-blue-600 shadow-xs"
                             : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
@@ -229,7 +229,7 @@ export default function Header() {
                         key={city}
                         type="button"
                         onClick={() => handleCitySelect(city)}
-                        className={`w-full flex items-center justify-between px-2.5 py-1.5 sm:py-2 text-xs transition-colors rounded-none ${
+                        className={`w-full flex items-center justify-between px-2.5 py-1.5 sm:py-2 text-xs transition-colors rounded-lg ${
                           isCityActive
                             ? "bg-slate-900 text-white font-semibold"
                             : "text-slate-700 hover:bg-slate-100 font-medium"

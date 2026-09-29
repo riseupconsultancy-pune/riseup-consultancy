@@ -55,7 +55,7 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
       className="fixed bottom-4 sm:bottom-6 inset-x-0 mx-auto z-50 flex justify-center px-3 sm:px-4 pointer-events-none"
     >
       {/* Symmetrical 5-Column Liquid Glass Floating Dock with Equal Slot Widths */}
-      <div className="pointer-events-auto grid grid-cols-5 gap-1 sm:gap-1.5 w-full max-w-[460px] sm:max-w-[540px] p-1.5 liquid-glass rounded-none">
+      <div className="pointer-events-auto grid grid-cols-5 gap-1 sm:gap-1.5 w-full max-w-[460px] sm:max-w-[540px] p-1.5 liquid-glass rounded-full shadow-lg">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -66,7 +66,7 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
               type="button"
               onClick={() => handleNav(item)}
               aria-label={item.label}
-              className={`flex flex-col items-center justify-center py-2 sm:py-2.5 px-0.5 sm:px-1 rounded-none transition-all duration-200 focus:outline-none w-full min-w-0 ${
+              className={`flex flex-col items-center justify-center py-2 sm:py-2.5 px-0.5 sm:px-1 rounded-full transition-all duration-200 focus:outline-none w-full min-w-0 ${
                 isActive
                   ? "bg-blue-600 text-white shadow-xs"
                   : "text-slate-700 hover:text-blue-600 hover:bg-white/60 active:bg-blue-50/70"

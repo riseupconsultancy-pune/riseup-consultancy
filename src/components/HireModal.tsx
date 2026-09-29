@@ -60,19 +60,19 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-lg max-h-[92dvh] overflow-y-auto bg-white border border-slate-300 shadow-2xl p-5 sm:p-8 rounded-none">
+      <div className="relative w-full max-w-lg max-h-[92dvh] overflow-y-auto bg-white border border-slate-300 shadow-2xl p-5 sm:p-8 rounded-3xl">
         {/* Close Button */}
         <button
           type="button"
           onClick={handleResetAndClose}
-          className="absolute top-5 right-5 w-8 h-8 bg-slate-100 text-slate-700 hover:text-white hover:bg-slate-900 flex items-center justify-center transition-colors rounded-none"
+          className="absolute top-5 right-5 w-8 h-8 bg-slate-100 text-slate-700 hover:text-white hover:bg-slate-900 flex items-center justify-center transition-colors rounded-full"
         >
           <X className="w-4 h-4" />
         </button>
 
         {submitted ? (
           <div className="py-8 text-center flex flex-col items-center space-y-4">
-            <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center">
+            <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center rounded-2xl">
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <div>
@@ -87,7 +87,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
               <button
                 type="button"
                 onClick={handleResetAndClose}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-none"
+                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl"
               >
                 Close Window
               </button>
@@ -96,7 +96,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
         ) : (
           <div>
             <div className="mb-5">
-              <span className="inline-block px-2.5 py-1 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest mb-2 rounded-none">
+              <span className="inline-block px-3 py-1 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest mb-2 rounded-full">
                 Client Recruitment Intake
               </span>
               <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight font-heading">
@@ -108,7 +108,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
             </div>
 
             {errorMessage && (
-              <div className="mb-4 p-3 bg-rose-50 border-l-4 border-rose-600 text-rose-800 text-xs flex items-center gap-2 rounded-none">
+              <div className="mb-4 p-3 bg-rose-50 border-l-4 border-rose-600 text-rose-800 text-xs flex items-center gap-2 rounded-xl">
                 <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                 <span>{errorMessage}</span>
               </div>
@@ -126,7 +126,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
                     placeholder="e.g. Apex Global Solutions"
                     value={formData.companyName}
                     onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl"
                   />
                 </div>
 
@@ -140,7 +140,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
                     placeholder="e.g. Rajesh Kulkarni (HR)"
                     value={formData.contactPerson}
                     onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl"
                   />
                 </div>
               </div>
@@ -156,7 +156,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
                     placeholder="name@company.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl"
                   />
                 </div>
 
@@ -170,7 +170,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
                     placeholder="e.g. +91 98220 11223"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                    className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl"
                   />
                 </div>
               </div>
@@ -185,7 +185,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
                   placeholder="e.g. Pune / Mumbai / Lagos"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                  className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl"
                 />
               </div>
 
@@ -199,7 +199,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
                   placeholder="e.g. Need 15 Voice BPO agents in Pune, immediate joining, UK shift..."
                   value={formData.roleRequirement}
                   onChange={(e) => setFormData({ ...formData, roleRequirement: e.target.value })}
-                  className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-none"
+                  className="w-full px-3.5 py-2.5 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl"
                 />
               </div>
 
@@ -207,7 +207,7 @@ export default function HireModal({ isOpen, onClose }: HireModalProps) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-none shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors rounded-xl shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
