@@ -130,7 +130,7 @@ export default function Header() {
         }`}
       >
         
-        {/* Left: Official Brand Logo & Name (Borderless Logo as-is) */}
+        {/* Left: Official Brand Logo & Name (Big Bold Brand Name) */}
         <Link href="/" className="group flex items-center gap-2 sm:gap-3 focus:outline-none min-w-0">
           <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0 group-hover:scale-105 transition-transform duration-200">
             <Image
@@ -142,14 +142,9 @@ export default function Header() {
             />
           </div>
 
-          <div className="flex flex-col min-w-0">
-            <span className="text-[13px] sm:text-base lg:text-lg font-black text-slate-900 tracking-tight uppercase font-heading whitespace-nowrap">
-              RISE UP CONSULTANCY
-            </span>
-            <span className="text-[8px] sm:text-[9px] font-bold text-blue-600 tracking-wider uppercase whitespace-nowrap">
-              Staffing &amp; Recruiting Services
-            </span>
-          </div>
+          <span className="text-sm sm:text-base md:text-lg lg:text-xl font-black text-slate-900 tracking-tight uppercase font-heading whitespace-nowrap group-hover:text-blue-600 transition-colors">
+            RISE UP CONSULTANCY
+          </span>
         </Link>
 
         {/* Center Desktop Navigation */}

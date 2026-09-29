@@ -107,10 +107,14 @@ a {
   .animate-hero-fade-up-2,
   .animate-hero-fade-up-3,
   .animate-hero-fade-up-4,
-  .animate-hero-scale-fade {
+  .animate-hero-scale-fade,
+  .animate-reveal-left-1,
+  .animate-reveal-left-2,
+  .animate-reveal-left-3 {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
   }
 }
 
@@ -188,4 +192,30 @@ a {
 
 .animate-hero-scale-fade {
   animation: hero-scale-fade 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+/* Left-to-Right Reveal Animation */
+@keyframes reveal-from-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-24px);
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.animate-reveal-left-1 {
+  animation: reveal-from-left 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+.animate-reveal-left-2 {
+  animation: reveal-from-left 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+.animate-reveal-left-3 {
+  animation: reveal-from-left 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
 }
