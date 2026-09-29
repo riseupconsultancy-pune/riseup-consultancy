@@ -166,7 +166,7 @@ export default function TermsPage() {
                 <p><strong>Rise Up Consultancy Pune</strong></p>
                 <p>Near Kumar Megaplex, Nagar Road, Chandan Nagar, Pune, Maharashtra 411014</p>
                 <p>Phone: +91 93598 92819 / +91 70301 22065</p>
-                <p>Email: contact@riseupconsultancyy.com</p>
+                <p>Email: info@riseupconsultancyy.com</p>
               </div>
             </div>
 

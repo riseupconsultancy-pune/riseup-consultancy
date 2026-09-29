@@ -367,17 +367,6 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                 })}
               </div>
             </div>
-
-            {/* Free Placement Guarantee Callout */}
-            <div className="p-4 bg-gradient-to-br from-blue-50 via-indigo-50/40 to-blue-50 border border-blue-200/70 text-xs text-blue-950 space-y-1.5 rounded-2xl shadow-2xs">
-              <span className="font-extrabold uppercase text-[10px] tracking-wider text-blue-800 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                100% Free for Candidates
-              </span>
-              <p className="text-[11px] text-blue-900/80 leading-relaxed font-normal">
-                RiseUp Consultancy never charges registration, processing, or placement fees.
-              </p>
-            </div>
           </aside>
 
           {/* Right Column: Minimalist Job Cards Grid */}

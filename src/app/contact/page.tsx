@@ -127,13 +127,13 @@ export default function ContactPage() {
                     Official Domain Email
                   </span>
                   <a
-                    href="mailto:contact@riseupconsultancyy.com"
+                    href="mailto:info@riseupconsultancyy.com"
                     className="text-xs font-bold text-slate-900 hover:text-blue-600 flex items-center gap-2 transition-colors"
                   >
                     <div className="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
                       <Mail className="w-3.5 h-3.5" />
                     </div>
-                    <span className="truncate">contact@riseupconsultancyy.com</span>
+                    <span className="truncate">info@riseupconsultancyy.com</span>
                   </a>
                 </div>
               </div>

@@ -130,7 +130,7 @@ const ORGANIZATION_SCHEMA = {
         "Leading direct corporate staffing and authorized recruitment agency in Pune, India. Specializing in BPO, Voice, Non-Voice, Back Office, and KYC placements. 100% free placement for candidates.",
       foundingDate: "2025-01-01",
       telephone: "+919359892819",
-      email: "contact@riseupconsultancyy.com",
+      email: "info@riseupconsultancyy.com",
       priceRange: "Free for Job Seekers / Enterprise SLA",
       address: {
         "@type": "PostalAddress",

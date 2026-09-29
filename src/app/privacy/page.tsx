@@ -121,7 +121,7 @@ export default function PrivacyPage() {
                 <span className="text-blue-600 font-mono text-sm">04.</span> Data Retention &amp; Candidate Rights
               </h2>
               <p>
-                Candidates may request updates to their contact details, withdrawal of active applications, or deletion of their stored resume from our talent pool at any time by contacting our recruitment desk at <a href="mailto:contact@riseupconsultancyy.com" className="text-blue-600 underline">contact@riseupconsultancyy.com</a>.
+                Candidates may request updates to their contact details, withdrawal of active applications, or deletion of their stored resume from our talent pool at any time by contacting our recruitment desk at <a href="mailto:info@riseupconsultancyy.com" className="text-blue-600 underline">info@riseupconsultancyy.com</a>.
               </p>
             </div>
 
@@ -137,7 +137,7 @@ export default function PrivacyPage() {
                 <p><strong>Grievance Officer: Meenakshi Patel (HR Manager)</strong></p>
                 <p>Rise Up Consultancy Pune</p>
                 <p>Near Kumar Megaplex, Nagar Road, Chandan Nagar, Pune, Maharashtra 411014</p>
-                <p>Phone: +91 93598 92819 | Email: contact@riseupconsultancyy.com</p>
+                <p>Phone: +91 93598 92819 | Email: info@riseupconsultancyy.com</p>
               </div>
             </div>
 

@@ -58,11 +58,11 @@ export default function Footer() {
               </a>
 
               <a
-                href="mailto:contact@riseupconsultancyy.com"
+                href="mailto:info@riseupconsultancyy.com"
                 className="inline-flex items-center gap-2 px-3.5 py-2 bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold hover:bg-slate-700 transition-colors rounded-xl"
               >
                 <Mail className="w-3.5 h-3.5 text-blue-400" />
-                <span>contact@riseupconsultancyy.com</span>
+                <span>info@riseupconsultancyy.com</span>
               </a>
 
               <a
