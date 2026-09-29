@@ -172,7 +172,7 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
     searchQuery !== "";
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 selection:bg-blue-600 selection:text-white">
+    <main suppressHydrationWarning className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 selection:bg-blue-600 selection:text-white">
       <Header />
 
       {/* Main Content Area */}
@@ -395,7 +395,7 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                 )}
               </div>
               <div className="text-[11px] text-slate-400 font-mono bg-white/80 px-2.5 py-1 rounded-full border border-slate-200/60 shadow-2xs">
-                Updated Daily &bull; Direct Sourcing
+                Updated Daily • Direct Sourcing
               </div>
             </div>
 
@@ -469,7 +469,7 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                             <span>{job.city}, {job.country}</span>
                           </span>
 
-                          <span className="text-slate-300">&bull;</span>
+                          <span className="text-slate-300">•</span>
 
                           <span className="inline-flex items-center gap-1 text-slate-700 font-medium">
                             <Briefcase className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
@@ -478,7 +478,7 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
 
                           {salaryText && (
                             <>
-                              <span className="text-slate-300">&bull;</span>
+                              <span className="text-slate-300">•</span>
                               <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
                                 <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 shrink-0" />
                                 <span>{salaryText} <span className="font-normal text-slate-400 text-[10px] sm:text-[11px]">/ yr</span></span>

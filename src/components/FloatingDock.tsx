@@ -70,6 +70,7 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
       {/* Symmetrical 5-Column Liquid Glass Floating Dock with Light Gradient & Interactive Cursor Glow */}
       <div
         ref={dockRef}
+        suppressHydrationWarning
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -83,10 +84,13 @@ export default function FloatingDock({ onHireClick }: FloatingDockProps) {
 
         {/* Interactive Cursor Spotlight Glow */}
         <div
+          suppressHydrationWarning
           className="pointer-events-none absolute inset-0 rounded-full overflow-hidden transition-opacity duration-300"
           style={{
             opacity: isHovered ? 1 : 0,
-            background: `radial-gradient(130px circle at ${mousePos.x}px ${mousePos.y}px, rgba(37, 99, 235, 0.16), transparent 75%)`,
+            background: isHovered
+              ? `radial-gradient(130px circle at ${mousePos.x}px ${mousePos.y}px, rgba(37, 99, 235, 0.16), transparent 75%)`
+              : "none",
           }}
           aria-hidden="true"
         />

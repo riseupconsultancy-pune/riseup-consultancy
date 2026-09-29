@@ -257,7 +257,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} ${manrope.variable} scroll-smooth`}>
+    <html lang="en" suppressHydrationWarning className={`${outfit.variable} ${manrope.variable} scroll-smooth`}>
       <head>
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="shortcut icon" href="/favicon.png" type="image/png" />
@@ -268,7 +268,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_SCHEMA) }}
         />
       </head>
-      <body className="antialiased min-h-screen flex flex-col font-sans">
+      <body suppressHydrationWarning className="antialiased min-h-screen flex flex-col font-sans">
         {/* Google tag (gtag.js) */}
         <Script
           strategy="afterInteractive"

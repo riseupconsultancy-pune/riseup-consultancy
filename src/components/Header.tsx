@@ -154,6 +154,7 @@ export default function Header() {
 
   return (
     <header
+      suppressHydrationWarning
       className={`sticky top-0 z-40 w-full transition-all duration-300 pointer-events-none ${
         isHomePage ? "-mb-14 sm:-mb-16 md:-mb-[72px]" : ""
       } ${
@@ -164,6 +165,7 @@ export default function Header() {
     >
       <div
         ref={headerCapsuleRef}
+        suppressHydrationWarning
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -177,10 +179,13 @@ export default function Header() {
       >
         {/* Interactive Cursor Spotlight Glow */}
         <div
+          suppressHydrationWarning
           className="pointer-events-none absolute inset-0 rounded-full overflow-hidden transition-opacity duration-300"
           style={{
             opacity: isHovered && (isScrolled || !isHomePage) ? 1 : isHovered ? 0.75 : 0,
-            background: `radial-gradient(180px circle at ${mousePos.x}px ${mousePos.y}px, rgba(37, 99, 235, 0.12), transparent 75%)`,
+            background: isHovered
+              ? `radial-gradient(180px circle at ${mousePos.x}px ${mousePos.y}px, rgba(37, 99, 235, 0.12), transparent 75%)`
+              : "none",
           }}
           aria-hidden="true"
         />
