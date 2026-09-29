@@ -181,21 +181,43 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
 
           </div>
 
-          {/* Column 2: Desktop Right (Enlarged Responsive Logo with Halo) | Mobile Order 1 */}
+          {/* Column 2: Desktop Right (Animated Video Logo with Halo & Gradient Blend) | Mobile Order 1 */}
           <div className="lg:col-span-5 order-1 lg:order-2 flex items-center justify-center lg:justify-end animate-hero-scale-fade my-1 sm:my-2 lg:my-0">
             <div className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-56 md:h-56 lg:w-[420px] lg:h-[420px] xl:w-[460px] xl:h-[460px] 2xl:w-[500px] 2xl:h-[500px] aspect-square flex items-center justify-center shrink-0">
               
-              {/* Subtle Ambient Halo behind Logo */}
+              {/* Subtle Ambient Halo behind Video Logo */}
               <div className="absolute inset-2 sm:inset-4 lg:inset-8 bg-radial from-blue-500/15 via-indigo-400/5 to-transparent rounded-full blur-xl sm:blur-2xl pointer-events-none animate-ambient-float" />
 
-              <div className="relative w-full h-full flex items-center justify-center">
-                <Image
-                  src="/images/rise_up_consultancy_pune_logo.png"
-                  alt="Rise Up Consultancy Official Logo"
-                  fill
-                  priority
-                  className="object-contain select-none"
-                  sizes="(max-width: 640px) 176px, (max-width: 768px) 224px, (max-width: 1024px) 280px, (max-width: 1280px) 460px, 500px"
+              <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-3xl">
+                {/* Seamless Continuous Looped Animated Video Logo */}
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  poster="/images/rise_up_consultancy_pune_logo.png"
+                  className="w-full h-full object-contain mix-blend-multiply select-none pointer-events-none"
+                >
+                  <source src="/images/hero_video.mov" type="video/quicktime" />
+                  <source src="/images/hero video.MOV" type="video/quicktime" />
+                  <source src="/images/hero_video.mov" type="video/mp4" />
+                  <source src="/images/hero video.MOV" type="video/mp4" />
+                  {/* Fallback Image */}
+                  <Image
+                    src="/images/rise_up_consultancy_pune_logo.png"
+                    alt="Rise Up Consultancy Official Logo"
+                    fill
+                    priority
+                    className="object-contain select-none mix-blend-multiply"
+                    sizes="(max-width: 640px) 176px, (max-width: 768px) 224px, (max-width: 1024px) 280px, (max-width: 1280px) 460px, 500px"
+                  />
+                </video>
+
+                {/* Subtle Gradient Blend Layer to ensure perfect background harmony */}
+                <div
+                  className="absolute inset-0 pointer-events-none bg-gradient-to-b from-slate-50/10 via-transparent to-blue-50/15 mix-blend-multiply"
+                  aria-hidden="true"
                 />
               </div>
             </div>
