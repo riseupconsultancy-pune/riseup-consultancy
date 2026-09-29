@@ -562,7 +562,10 @@ export default async function CityLocationJobsPage({ params }: Props) {
                           {job.jobId}
                         </span>
                       </div>
-                      <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                      <h3
+                        title={job.title}
+                        className="text-sm font-bold text-slate-900 leading-snug truncate whitespace-nowrap overflow-hidden text-ellipsis block w-full min-w-0"
+                      >
                         {job.title}
                       </h3>
                       <p className="text-xs text-slate-500 mt-1">

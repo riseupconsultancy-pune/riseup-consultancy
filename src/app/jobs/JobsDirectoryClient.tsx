@@ -444,29 +444,32 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                     /* SLIM, HIGH-DENSITY ULTRA-PREMIUM JOB CARD */
                     <div
                       key={job.id}
-                      className="group relative bg-white sm:bg-gradient-to-b sm:from-white sm:via-slate-50/70 sm:to-blue-50/20 border border-slate-200/90 hover:border-blue-400/70 hover:shadow-md p-3 sm:p-5 rounded-xl sm:rounded-2xl shadow-2xs transition-all duration-200 flex flex-col justify-between overflow-hidden"
+                      className="group relative bg-white sm:bg-gradient-to-b sm:from-white sm:via-slate-50/70 sm:to-blue-50/20 border border-slate-200/90 hover:border-blue-400/70 hover:shadow-md p-3 sm:p-5 rounded-xl sm:rounded-2xl shadow-2xs transition-all duration-200 flex flex-col justify-between overflow-hidden min-w-0 w-full h-full"
                     >
                       {/* Top Sheen */}
                       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/25 to-transparent" />
 
-                      <div className="space-y-2 sm:space-y-3">
+                      <div className="space-y-2 sm:space-y-3 min-w-0 w-full">
                         {/* Top Line: Category, Work Mode Badges & Job ID */}
-                        <div className="flex items-center justify-between gap-1.5">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider bg-slate-100 sm:bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded-md sm:rounded-full">
+                        <div className="flex items-center justify-between gap-1.5 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                            <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider bg-slate-100 sm:bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded-md sm:rounded-full shrink-0">
                               {job.category}
                             </span>
-                            <span className="text-[9.5px] sm:text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/70 px-2 py-0.5 rounded-md sm:rounded-full">
+                            <span className="text-[9.5px] sm:text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/70 px-2 py-0.5 rounded-md sm:rounded-full shrink-0">
                               {job.workMode}
                             </span>
                           </div>
-                          <span className="text-[10px] sm:text-[11px] font-mono font-bold text-slate-400">
+                          <span className="text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 shrink-0">
                             {job.jobId}
                           </span>
                         </div>
 
-                        {/* Job Role Title */}
-                        <h3 className="text-sm sm:text-base md:text-lg font-bold sm:font-black text-slate-900 font-heading leading-tight group-hover:text-blue-600 transition-colors line-clamp-1 sm:line-clamp-none">
+                        {/* Job Role Title - Strictly 1 line with ellipsis across all views to maintain card sizing consistency */}
+                        <h3
+                          title={job.title}
+                          className="text-sm sm:text-base md:text-lg font-bold sm:font-black text-slate-900 font-heading leading-tight group-hover:text-blue-600 transition-colors truncate whitespace-nowrap overflow-hidden text-ellipsis block w-full min-w-0"
+                        >
                           {job.title}
                         </h3>
 

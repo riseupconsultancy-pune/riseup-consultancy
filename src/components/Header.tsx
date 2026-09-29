@@ -128,13 +128,17 @@ export default function Header() {
   }, [locations, selectedCountry.country]);
 
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
+    function handleClickOutside(e: MouseEvent | TouchEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
   const handleCountryChange = (loc: LocationOption) => {
@@ -270,68 +274,77 @@ export default function Header() {
               />
             </button>
 
-          {/* Location Dropdown Modal (Constrained strictly to mobile viewport boundaries with clean gap from header) */}
+          {/* Location Dropdown Modal (Centered horizontally on mobile viewport, anchored right on desktop) */}
           {isOpen && (
-            <div className="absolute right-0 top-full mt-6 sm:mt-3 w-[calc(100vw-24px)] max-w-[320px] bg-white border border-slate-200 ring-1 ring-slate-900/10 shadow-2xl p-3.5 sm:p-4 z-50 animate-fadeIn rounded-2xl">
-              
-              {/* Step 1: Select Country */}
-              <div className="mb-3.5">
-                <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                  Select Country
-                </span>
-                <div className="grid grid-cols-2 gap-2">
-                  {locations.map((loc) => {
-                    const isCountryActive = selectedCountry.country === loc.country;
-                    return (
-                      <CountryCard
-                        key={loc.country}
-                        loc={loc}
-                        isActive={isCountryActive}
-                        onClick={() => handleCountryChange(loc)}
-                      />
-                    );
-                  })}
+            <>
+              {/* Mobile Backdrop Overlay for effortless touch-dismiss */}
+              <div
+                className="fixed inset-0 bg-slate-950/25 sm:hidden z-40 backdrop-blur-[1px] animate-fadeIn"
+                onClick={() => setIsOpen(false)}
+                aria-hidden="true"
+              />
+
+              <div className="fixed left-1/2 -translate-x-1/2 top-[74px] sm:absolute sm:left-auto sm:right-0 sm:translate-x-0 sm:top-full sm:mt-3 w-[calc(100vw-32px)] max-w-[340px] sm:w-[320px] bg-white border border-slate-200 ring-1 ring-slate-900/10 shadow-2xl p-3.5 sm:p-4 z-50 animate-fadeIn rounded-2xl">
+                
+                {/* Step 1: Select Country */}
+                <div className="mb-3.5">
+                  <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                    Select Country
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {locations.map((loc) => {
+                      const isCountryActive = selectedCountry.country === loc.country;
+                      return (
+                        <CountryCard
+                          key={loc.country}
+                          loc={loc}
+                          isActive={isCountryActive}
+                          onClick={() => handleCountryChange(loc)}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
 
-              {/* Step 2: Select City */}
-              <div>
-                <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                  Select City in {selectedCountry.country}
-                </span>
-                <div className="space-y-1 max-h-40 sm:max-h-44 overflow-y-auto pr-1">
-                  {selectedCountry.cities.map((city) => {
-                    const isCityActive = selectedCity === city;
-                    return (
-                      <button
-                        key={city}
-                        type="button"
-                        onClick={() => handleCitySelect(city)}
-                        className={`w-full flex items-center justify-between px-2.5 py-1.5 sm:py-2 text-xs transition-colors rounded-lg ${
-                          isCityActive
-                            ? "bg-slate-900 text-white font-semibold"
-                            : "text-slate-700 hover:bg-slate-100 font-medium"
-                        }`}
-                      >
-                        <span className="flex items-center gap-2 text-[11px] sm:text-xs">
-                          <MapPin className={`w-3.5 h-3.5 ${isCityActive ? "text-white" : "text-slate-400"}`} />
-                          {city}
-                        </span>
-                        {isCityActive && <Check className="w-3.5 h-3.5 text-white" />}
-                      </button>
-                    );
-                  })}
+                {/* Step 2: Select City */}
+                <div>
+                  <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                    Select City in {selectedCountry.country}
+                  </span>
+                  <div className="space-y-1 max-h-40 sm:max-h-44 overflow-y-auto pr-1">
+                    {selectedCountry.cities.map((city) => {
+                      const isCityActive = selectedCity === city;
+                      return (
+                        <button
+                          key={city}
+                          type="button"
+                          onClick={() => handleCitySelect(city)}
+                          className={`w-full flex items-center justify-between px-2.5 py-1.5 sm:py-2 text-xs transition-colors rounded-lg ${
+                            isCityActive
+                              ? "bg-slate-900 text-white font-semibold"
+                              : "text-slate-700 hover:bg-slate-100 font-medium"
+                          }`}
+                        >
+                          <span className="flex items-center gap-2 text-[11px] sm:text-xs">
+                            <MapPin className={`w-3.5 h-3.5 ${isCityActive ? "text-white" : "text-slate-400"}`} />
+                            {city}
+                          </span>
+                          {isCityActive && <Check className="w-3.5 h-3.5 text-white" />}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
 
-              <div className="mt-3 pt-2.5 border-t border-slate-200 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400">
-                <span className="flex items-center gap-1">
-                  <Globe className="w-3 h-3 text-blue-600" /> Active Placement Network
-                </span>
-                <span className="font-bold text-slate-900">Direct Sourcing</span>
-              </div>
+                <div className="mt-3 pt-2.5 border-t border-slate-200 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-400">
+                  <span className="flex items-center gap-1">
+                    <Globe className="w-3 h-3 text-blue-600" /> Active Placement Network
+                  </span>
+                  <span className="font-bold text-slate-900">Direct Sourcing</span>
+                </div>
 
-            </div>
+              </div>
+            </>
           )}
         </div>
 
