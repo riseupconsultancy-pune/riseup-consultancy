@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, ChevronDown, Check, Globe } from "lucide-react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { getActiveLocationsAction } from "@/app/actions/location-actions";
 
 interface LocationOption {
@@ -46,11 +46,23 @@ const DEFAULT_LOCATIONS: LocationOption[] = [
 
 export default function Header() {
   const router = useRouter();
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [locations, setLocations] = useState<LocationOption[]>(DEFAULT_LOCATIONS);
   const [selectedCountry, setSelectedCountry] = useState<LocationOption>(DEFAULT_LOCATIONS[0]);
   const [selectedCity, setSelectedCity] = useState("Pune");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     // Load dynamically registered serving cities from Client Profiles & Vacancies
@@ -99,26 +111,42 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full sticky top-0 z-40 bg-white/90 backdrop-blur-lg border-b border-slate-200/80 transition-all duration-300 shadow-2xs">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
+    <header
+      className={`sticky top-0 z-40 w-full transition-all duration-300 pointer-events-none ${
+        isHomePage ? "md:-mb-[72px]" : ""
+      } ${
+        isScrolled
+          ? "md:pt-3 md:px-4 lg:px-8"
+          : "md:pt-4 md:px-4 lg:px-8"
+      }`}
+    >
+      <div
+        className={`w-full transition-all duration-300 pointer-events-auto ${
+          isScrolled
+            ? "bg-white/95 backdrop-blur-md border-b border-slate-200/80 md:border md:border-slate-200/80 md:liquid-glass md:max-w-7xl md:mx-auto md:rounded-full md:shadow-lg md:shadow-slate-900/5 md:h-16 md:px-6"
+            : isHomePage
+            ? "bg-white/95 backdrop-blur-md border-b border-slate-200/80 md:bg-transparent md:border-transparent md:shadow-none md:max-w-7xl md:mx-auto md:rounded-full md:h-16 md:px-6"
+            : "bg-white/95 backdrop-blur-md border-b border-slate-200/80 md:border md:border-slate-200/80 md:bg-white/90 md:max-w-7xl md:mx-auto md:rounded-full md:shadow-xs md:h-16 md:px-6"
+        } h-16 sm:h-20 md:h-16 flex items-center justify-between gap-2 px-3 sm:px-6`}
+      >
         
-        {/* Left: Official Brand Logo & Name */}
+        {/* Left: Official Brand Logo & Name (Borderless Logo as-is) */}
         <Link href="/" className="group flex items-center gap-2 sm:gap-3 focus:outline-none min-w-0">
-          <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden border border-slate-200 shadow-xs bg-white shrink-0 group-hover:scale-105 transition-transform duration-200">
+          <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0 group-hover:scale-105 transition-transform duration-200">
             <Image
               src="/images/rise_up_consultancy_pune_logo.png"
               alt="Rise Up Consultancy Logo"
               fill
-              className="object-cover"
+              className="object-contain select-none"
               priority
             />
           </div>
 
           <div className="flex flex-col min-w-0">
-            <span className="text-[13px] sm:text-lg font-black text-slate-900 tracking-tight uppercase font-heading whitespace-nowrap">
+            <span className="text-[13px] sm:text-base lg:text-lg font-black text-slate-900 tracking-tight uppercase font-heading whitespace-nowrap">
               RISE UP CONSULTANCY
             </span>
-            <span className="text-[8px] sm:text-[10px] font-bold text-blue-600 tracking-wider uppercase whitespace-nowrap">
+            <span className="text-[8px] sm:text-[9px] font-bold text-blue-600 tracking-wider uppercase whitespace-nowrap">
               Staffing &amp; Recruiting Services
             </span>
           </div>
@@ -147,7 +175,11 @@ export default function Header() {
             href="https://www.linkedin.com/company/rise-up-consultancy-pune"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-blue-600 hover:text-blue-600 text-slate-700 transition-all rounded-xl shadow-2xs"
+            className={`hidden sm:inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 transition-all rounded-xl shadow-2xs ${
+              isScrolled || !isHomePage
+                ? "bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-blue-600 hover:text-blue-600 text-slate-700"
+                : "bg-white/70 backdrop-blur-xs border border-slate-200/80 hover:bg-white hover:text-blue-600 text-slate-700"
+            }`}
             title="Rise Up Consultancy on LinkedIn"
           >
             <span className="font-extrabold text-xs">in</span>
@@ -156,7 +188,11 @@ export default function Header() {
           {/* Direct HR Call Button (Desktop & Tablet) */}
           <a
             href="tel:+919359892819"
-            className="hidden md:inline-flex items-center gap-2 px-3 py-2 bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-slate-900 hover:bg-white text-xs font-semibold text-slate-800 transition-all rounded-xl shadow-2xs"
+            className={`hidden md:inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-800 transition-all rounded-xl shadow-2xs ${
+              isScrolled || !isHomePage
+                ? "bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-slate-900 hover:bg-white"
+                : "bg-white/70 backdrop-blur-xs border border-slate-200/80 hover:bg-white hover:border-slate-900"
+            }`}
             title="Call Meenakshi Patel (HR Manager)"
           >
             <span className="w-1.5 h-1.5 bg-blue-600 rounded-full shrink-0" />
@@ -169,7 +205,11 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="group flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-slate-900 transition-all text-left focus:outline-none rounded-xl shadow-2xs"
+              className={`group flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1.5 sm:py-2 text-left focus:outline-none rounded-xl shadow-2xs transition-all ${
+                isScrolled || !isHomePage
+                  ? "bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-slate-900"
+                  : "bg-white/70 backdrop-blur-xs border border-slate-200/80 hover:bg-white hover:border-slate-900"
+              }`}
             >
               {selectedCountry.flagComponent}
               <div className="flex items-center gap-1 text-xs font-semibold text-slate-800">

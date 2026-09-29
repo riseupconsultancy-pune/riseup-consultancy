@@ -11,7 +11,7 @@ interface HeroProps {
 
 export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
   return (
-    <section className="relative pt-6 pb-16 sm:pt-10 sm:pb-20 lg:pt-16 lg:pb-24 bg-gradient-to-b from-slate-50 via-blue-50/25 to-white border-b border-slate-200/80 overflow-hidden">
+    <section className="relative pt-6 pb-16 sm:pt-10 sm:pb-20 md:pt-28 md:pb-20 lg:pt-32 lg:pb-24 bg-gradient-to-b from-slate-50 via-blue-50/25 to-white border-b border-slate-200/80 overflow-hidden">
       
       {/* Decorative Atmospheric Ambient Glow Orbs */}
       <div className="absolute -top-32 -right-24 w-96 sm:w-[540px] h-96 sm:h-[540px] bg-gradient-to-br from-blue-400/15 via-indigo-300/10 to-transparent rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
