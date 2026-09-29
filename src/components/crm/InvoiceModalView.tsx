@@ -103,19 +103,19 @@ export default function InvoiceModalView({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
-      <div className="relative w-full max-w-4xl bg-white rounded-none shadow-2xl border border-slate-300 overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
+      <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[92vh]">
         {/* Top Control Bar (Hidden when printing) */}
-        <div className="print:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-900 text-white border-b border-slate-800">
+        <div className="print:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-950 text-white border-b border-white/10">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-none bg-blue-600 flex items-center justify-center font-bold text-white shadow-2xs shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-md shadow-blue-500/20 shrink-0">
               <FileText className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-bold text-base tracking-tight font-mono">{invoice.invoiceNumber}</span>
+                <span className="font-black text-base tracking-tight font-mono">{invoice.invoiceNumber}</span>
                 <span
-                  className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-none ${
+                  className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-2xs ${
                     invoice.status === "PAID"
                       ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                       : invoice.status === "REVISION_REQUESTED"
@@ -131,7 +131,7 @@ export default function InvoiceModalView({
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Official Bill • {invoice.clientName}
+                Official Bill &bull; {invoice.clientName}
               </p>
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function InvoiceModalView({
             {canMarkPaid && invoice.status !== "PAID" && onMarkPaid && (
               <button
                 onClick={onMarkPaid}
-                className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-none bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider shadow-2xs transition min-h-[44px]"
+                className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-emerald-600/20 transition-all min-h-[40px] cursor-pointer"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Mark Paid</span>
@@ -150,7 +150,7 @@ export default function InvoiceModalView({
             {canRequestRevision && invoice.status !== "PAID" && onRequestRevision && (
               <button
                 onClick={onRequestRevision}
-                className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-none bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold uppercase tracking-wider shadow-2xs transition min-h-[44px]"
+                className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all min-h-[40px] cursor-pointer"
               >
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>Request Revision</span>
@@ -159,7 +159,7 @@ export default function InvoiceModalView({
 
             <a
               href={`/api/invoices/${invoice.id}/download-docx`}
-              className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-none bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider shadow-2xs transition min-h-[44px]"
+              className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-blue-500/20 transition-all min-h-[40px] cursor-pointer"
               title="Download Editable Microsoft Word (.docx)"
             >
               <Download className="w-3.5 h-3.5" />
@@ -168,7 +168,7 @@ export default function InvoiceModalView({
 
             <button
               onClick={handlePrint}
-              className="inline-flex items-center justify-center space-x-1.5 px-3 py-2 rounded-none bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold uppercase tracking-wider transition min-h-[44px]"
+              className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold uppercase tracking-wider transition-all min-h-[40px] cursor-pointer"
               title="Print / Save PDF"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -177,7 +177,7 @@ export default function InvoiceModalView({
 
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-none transition min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition min-h-[40px] min-w-[40px] flex items-center justify-center cursor-pointer"
               aria-label="Close Modal"
             >
               <X className="w-5 h-5" />
