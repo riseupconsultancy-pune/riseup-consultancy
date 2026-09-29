@@ -59,31 +59,33 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="bg-white border border-slate-200 p-5 sm:p-8 rounded-none shadow-2xs">
-      
+    <div className="relative bg-gradient-to-b from-white via-slate-50/70 to-blue-50/20 border border-slate-200/80 p-6 sm:p-10 rounded-3xl shadow-xl shadow-slate-200/30 overflow-hidden">
+      {/* Top Sheen */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/25 to-transparent" />
+
       {/* Header */}
-      <div className="mb-6 pb-4 border-b border-slate-200">
-        <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700 block mb-1">
+      <div className="mb-8 pb-5 border-b border-slate-200/80">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-200/60 rounded-full text-[10px] font-bold uppercase tracking-wider text-blue-700 mb-3 shadow-2xs">
           Direct Intake Channel
-        </span>
-        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+        </div>
+        <h3 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">
           Send a Direct Message to Our Pune Recruitment Desk
         </h3>
-        <p className="mt-1 text-xs sm:text-sm text-slate-600">
+        <p className="mt-2 text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
           Whether you are an employer looking to staff an operation or a candidate seeking a verified role, our team will review and respond promptly.
         </p>
       </div>
 
       {/* Success State */}
       {successMessage ? (
-        <div className="p-6 bg-emerald-50 border border-emerald-200 rounded-none animate-fadeIn text-center">
-          <div className="w-12 h-12 bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
-            <CheckCircle2 className="w-6 h-6" />
+        <div className="p-8 bg-emerald-50/90 border border-emerald-200 rounded-3xl animate-fadeIn text-center shadow-sm">
+          <div className="w-14 h-14 bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 rounded-2xl shadow-2xs">
+            <CheckCircle2 className="w-7 h-7" />
           </div>
-          <h4 className="text-base font-bold text-emerald-950 mb-1">
+          <h4 className="text-lg font-black text-emerald-950 mb-1.5">
             Inquiry Submitted Successfully
           </h4>
-          <p className="text-xs sm:text-sm text-emerald-800 leading-relaxed max-w-lg mx-auto mb-5">
+          <p className="text-xs sm:text-sm text-emerald-800 leading-relaxed max-w-lg mx-auto mb-6 font-medium">
             {successMessage}
           </p>
 
@@ -91,7 +93,7 @@ export default function ContactForm() {
             <button
               type="button"
               onClick={() => setSuccessMessage(null)}
-              className="px-5 py-2.5 bg-white border border-emerald-300 text-emerald-900 font-bold text-xs uppercase tracking-wider hover:bg-emerald-100/50 transition-colors rounded-none"
+              className="px-6 py-3 bg-white border border-emerald-300 text-emerald-900 font-bold text-xs uppercase tracking-wider hover:bg-emerald-100/50 transition-colors rounded-xl shadow-2xs cursor-pointer"
             >
               Send Another Message
             </button>
@@ -99,29 +101,29 @@ export default function ContactForm() {
               href="https://wa.me/919359892819?text=Hello%20Meenakshi%20Patel,%20I%20just%20submitted%20a%20message%20on%20your%20website"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-none"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs uppercase tracking-wider transition-all rounded-xl shadow-md shadow-emerald-600/20 active:scale-[0.98]"
             >
-              <WhatsAppIcon className="w-3.5 h-3.5" />
+              <WhatsAppIcon className="w-4 h-4" />
               <span>Connect on WhatsApp</span>
             </a>
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           
           {/* User Type Switcher */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5">
               I am contacting as:
             </label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setUserType("CANDIDATE")}
-                className={`py-2.5 px-3 text-xs font-bold uppercase tracking-wider border rounded-none transition-all ${
+                className={`py-3 px-4 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
                   userType === "CANDIDATE"
-                    ? "bg-slate-900 text-white border-slate-900 shadow-xs"
-                    : "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400"
+                    ? "bg-slate-900 text-white shadow-md shadow-slate-900/10"
+                    : "bg-white text-slate-700 border border-slate-200/90 hover:bg-slate-50"
                 }`}
               >
                 Job Seeker / Candidate
@@ -129,10 +131,10 @@ export default function ContactForm() {
               <button
                 type="button"
                 onClick={() => setUserType("EMPLOYER")}
-                className={`py-2.5 px-3 text-xs font-bold uppercase tracking-wider border rounded-none transition-all ${
+                className={`py-3 px-4 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
                   userType === "EMPLOYER"
-                    ? "bg-blue-600 text-white border-blue-600 shadow-xs"
-                    : "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20"
+                    : "bg-white text-slate-700 border border-slate-200/90 hover:bg-slate-50"
                 }`}
               >
                 Employer / Hiring Company
@@ -143,7 +145,7 @@ export default function ContactForm() {
           {/* Row 1: Full Name & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="fullName" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label htmlFor="fullName" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Full Name <span className="text-rose-500">*</span>
               </label>
               <input
@@ -153,12 +155,12 @@ export default function ContactForm() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="e.g. Rahul Sharma"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-slate-900 focus:bg-white text-xs text-slate-900 outline-none transition-all rounded-none"
+                className="w-full px-4 py-3 bg-white border border-slate-200/90 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 text-xs text-slate-900 outline-none transition-all rounded-xl shadow-2xs"
               />
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label htmlFor="phone" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Phone Number (WhatsApp) <span className="text-rose-500">*</span>
               </label>
               <input
@@ -168,7 +170,7 @@ export default function ContactForm() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="e.g. +91 98765 43210"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-slate-900 focus:bg-white text-xs text-slate-900 outline-none transition-all rounded-none"
+                className="w-full px-4 py-3 bg-white border border-slate-200/90 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 text-xs text-slate-900 outline-none transition-all rounded-xl shadow-2xs"
               />
             </div>
           </div>
@@ -176,7 +178,7 @@ export default function ContactForm() {
           {/* Row 2: Email & Subject */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="email" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label htmlFor="email" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Email Address <span className="text-rose-500">*</span>
               </label>
               <input
@@ -186,12 +188,12 @@ export default function ContactForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. rahul@example.com"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-slate-900 focus:bg-white text-xs text-slate-900 outline-none transition-all rounded-none"
+                className="w-full px-4 py-3 bg-white border border-slate-200/90 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 text-xs text-slate-900 outline-none transition-all rounded-xl shadow-2xs"
               />
             </div>
 
             <div>
-              <label htmlFor="subject" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label htmlFor="subject" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 {userType === "CANDIDATE" ? "Role or Query Topic" : "Company Name or Hiring Profile"}
               </label>
               <input
@@ -200,14 +202,14 @@ export default function ContactForm() {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder={userType === "CANDIDATE" ? "e.g. Customer Support / Voice Process" : "e.g. TechCorp Solutions Pvt Ltd"}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-slate-900 focus:bg-white text-xs text-slate-900 outline-none transition-all rounded-none"
+                className="w-full px-4 py-3 bg-white border border-slate-200/90 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 text-xs text-slate-900 outline-none transition-all rounded-xl shadow-2xs"
               />
             </div>
           </div>
 
           {/* Message Textarea */}
           <div>
-            <label htmlFor="message" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+            <label htmlFor="message" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
               Your Message or Specific Requirements <span className="text-rose-500">*</span>
             </label>
             <textarea
@@ -221,24 +223,24 @@ export default function ContactForm() {
                   ? "Briefly describe your qualification, total experience (or fresher), and shift preference..."
                   : "Describe the positions, headcount, expected joining timeline, and location..."
               }
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 focus:border-slate-900 focus:bg-white text-xs text-slate-900 outline-none transition-all rounded-none resize-y"
+              className="w-full px-4 py-3 bg-white border border-slate-200/90 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 text-xs text-slate-900 outline-none transition-all rounded-xl shadow-2xs resize-y"
             />
           </div>
 
           {/* Error Message */}
           {errorMessage && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 rounded-none">
+            <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2.5 rounded-xl">
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {/* Submit Action */}
-          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-none shadow-xs cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/30 cursor-pointer active:scale-[0.98]"
             >
               {isLoading ? (
                 <>
@@ -253,8 +255,8 @@ export default function ContactForm() {
               )}
             </button>
 
-            <span className="text-[11px] text-slate-500 text-center sm:text-right">
-              Response guaranteed within 2 business hours • 100% Confidential
+            <span className="text-[11px] text-slate-500 text-center sm:text-right font-medium">
+              Response guaranteed within 2 business hours &bull; 100% Confidential
             </span>
           </div>
 
