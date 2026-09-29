@@ -6,8 +6,15 @@ import WhatsAppIcon from "./WhatsAppIcon";
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-white pt-16 pb-32 border-t border-slate-800 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-gradient-to-b from-slate-950 via-[#070D1B] to-slate-950 text-white pt-16 pb-32 border-t border-slate-800/80 relative overflow-hidden">
+      {/* Top Hairline Gradient Glow */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent pointer-events-none" aria-hidden="true" />
+
+      {/* Atmospheric Ambient Glow Orbs */}
+      <div className="absolute -top-32 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+      <div className="absolute bottom-10 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
           
           {/* Brand Info with Official Logo */}
