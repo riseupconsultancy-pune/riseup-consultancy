@@ -36,7 +36,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative pt-6 pb-16 sm:pt-10 sm:pb-20 md:pt-28 md:pb-20 lg:pt-32 lg:pb-24 bg-gradient-to-b from-slate-50 via-blue-50/25 to-white border-b border-slate-200/80 overflow-hidden"
+      className="relative min-h-[calc(100vh-4rem)] lg:min-h-[92vh] flex items-center pt-20 pb-14 sm:pt-24 sm:pb-16 md:pt-28 md:pb-20 lg:pt-32 lg:pb-24 bg-gradient-to-b from-slate-50 via-blue-50/25 to-white border-b border-slate-200/80 overflow-hidden"
     >
       {/* Decorative Atmospheric Ambient Glow Orbs with Slow Breathing Animation */}
       <div
@@ -64,14 +64,14 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
         aria-hidden="true"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-2 sm:py-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8 xl:gap-12 items-center">
           
-          {/* Column 1: Desktop Left (Text & Buttons & Seamless Ticker) | Mobile Order 2 */}
+          {/* Column 1: Desktop Left (Text & Services & Actions & Marquee) | Mobile Order 2 */}
           <div className="lg:col-span-7 order-2 lg:order-1 flex flex-col justify-center items-center text-center lg:items-start lg:text-left z-10">
             
-            {/* Hero Text Headlines */}
-            <div>
+            {/* Hero Text Headlines with Entrance Animation */}
+            <div className="animate-hero-fade-up-1">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl 2xl:text-[5rem] font-black text-slate-900 tracking-tight uppercase font-heading leading-[1.04] sm:leading-[1.02]">
                 RISE UP{" "}
                 <span className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 bg-clip-text text-transparent block sm:inline">
@@ -81,13 +81,43 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
               <span className="mt-2.5 sm:mt-3 text-xs sm:text-sm lg:text-base font-extrabold uppercase tracking-widest text-blue-600 block">
                 Staffing &amp; Recruiting Services
               </span>
-              <p className="mt-4 sm:mt-5 text-sm sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed max-w-md sm:max-w-xl mx-auto lg:mx-0">
-                Direct company payroll staffing and verified recruitment across Pune, Pan-India, and international corridors. Connecting ambitious talent with premier organizations with 100% free placement assistance.
-              </p>
             </div>
 
-            {/* Two Action Buttons with Natural Rounded Corners & Ambient Shadows */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto mt-7 sm:mt-8">
+            {/* Dual Audience Service Value Points (> Bullet Lines) with Entrance Animation */}
+            <div className="mt-5 sm:mt-6 space-y-2.5 sm:space-y-3 text-left w-full max-w-2xl animate-hero-fade-up-2">
+              {/* Line 1: Corporate Clients */}
+              <div className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm lg:text-[15px] text-slate-700 leading-relaxed group">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-md bg-blue-100 text-blue-700 font-black text-xs shrink-0 mt-0.5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
+                  &gt;
+                </span>
+                <span>
+                  <strong className="text-slate-900 font-bold font-heading">For Corporate Clients:</strong> Direct company payroll staffing, executive search, and volume hiring with guaranteed <span className="font-semibold text-blue-700">24–48h sourcing SLA</span>.
+                </span>
+              </div>
+
+              {/* Line 2: Job Seekers */}
+              <div className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm lg:text-[15px] text-slate-700 leading-relaxed group">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-md bg-blue-100 text-blue-700 font-black text-xs shrink-0 mt-0.5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
+                  &gt;
+                </span>
+                <span>
+                  <strong className="text-slate-900 font-bold font-heading">For Job Seekers:</strong> <span className="font-semibold text-blue-700">100% free placement support</span>, authentic MNC walk-in interviews, direct client payroll offers, and zero sub-broker policy.
+                </span>
+              </div>
+
+              {/* Line 3: Geographic & International Reach */}
+              <div className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm lg:text-[15px] text-slate-700 leading-relaxed group">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-md bg-blue-100 text-blue-700 font-black text-xs shrink-0 mt-0.5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
+                  &gt;
+                </span>
+                <span>
+                  <strong className="text-slate-900 font-bold font-heading">Pune HQ &amp; Global Corridors:</strong> Verified talent pipelines across Pune tech corridors, Pan-India metros, and cross-border international markets.
+                </span>
+              </div>
+            </div>
+
+            {/* Two Action Buttons with Natural Rounded Corners & Entrance Animation */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto mt-7 sm:mt-8 animate-hero-fade-up-3">
               {/* Button 1: Request Talent (Employers) */}
               <button
                 onClick={onHireClick}
@@ -111,8 +141,8 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
               </button>
             </div>
 
-            {/* Seamless Borderless Flowing Marquee Ticker */}
-            <div className="mt-8 sm:mt-10 lg:mt-12 pt-6 sm:pt-7 border-t border-slate-200/80 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+            {/* Seamless Borderless Flowing Marquee Ticker with Entrance Animation */}
+            <div className="mt-8 sm:mt-10 lg:mt-12 pt-6 sm:pt-7 border-t border-slate-200/80 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] animate-hero-fade-up-4">
               <div className="animate-marquee-left-fast flex items-center gap-8 sm:gap-10 py-1">
                 {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-2.5 sm:gap-3 shrink-0">
@@ -133,9 +163,9 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
 
           </div>
 
-          {/* Column 2: Desktop Right (1.5x Logo with Subtle Ambient Luminous Halo) */}
-          <div className="lg:col-span-5 order-1 lg:order-2 flex items-center justify-center lg:justify-end">
-            <div className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-[460px] lg:h-[460px] xl:w-[500px] xl:h-[500px] 2xl:w-[540px] 2xl:h-[540px] aspect-square flex items-center justify-center shrink-0">
+          {/* Column 2: Desktop Right (Enlarged Responsive Logo with Halo & Entrance Animation) | Mobile Order 1 */}
+          <div className="lg:col-span-5 order-1 lg:order-2 flex items-center justify-center lg:justify-end animate-hero-scale-fade my-2 sm:my-3 lg:my-0">
+            <div className="relative w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 lg:w-[460px] lg:h-[460px] xl:w-[500px] xl:h-[500px] 2xl:w-[540px] 2xl:h-[540px] aspect-square flex items-center justify-center shrink-0">
               
               {/* Subtle Ambient Halo behind Logo */}
               <div className="absolute inset-4 sm:inset-8 bg-radial from-blue-500/15 via-indigo-400/5 to-transparent rounded-full blur-2xl pointer-events-none animate-ambient-float" />
@@ -147,7 +177,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
                   fill
                   priority
                   className="object-contain select-none"
-                  sizes="(max-width: 640px) 144px, (max-width: 1024px) 208px, (max-width: 1280px) 500px, 540px"
+                  sizes="(max-width: 640px) 176px, (max-width: 768px) 208px, (max-width: 1024px) 240px, (max-width: 1280px) 500px, 540px"
                 />
               </div>
             </div>
