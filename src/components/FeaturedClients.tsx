@@ -163,16 +163,28 @@ export default function FeaturedClients({
           {marqueeItems.map((client, index) => (
             <div
               key={`${client.name}-${index}`}
-              className="w-[200px] sm:w-[235px] h-[88px] sm:h-[98px] bg-white border border-slate-700/60 hover:border-blue-400 transition-all duration-200 shadow-md shadow-black/25 hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center p-3.5 sm:p-4 rounded-2xl shrink-0 group/card relative overflow-hidden"
+              className="w-[200px] sm:w-[235px] h-[88px] sm:h-[98px] bg-gradient-to-b from-white via-slate-50/95 to-blue-50/75 border border-white/80 ring-1 ring-blue-400/20 hover:ring-blue-400/50 hover:border-white transition-all duration-300 shadow-[0_8px_20px_-6px_rgba(0,0,0,0.35),0_0_12px_rgba(59,130,246,0.12)] hover:shadow-[0_12px_28px_-6px_rgba(37,99,235,0.35),0_0_18px_rgba(96,165,250,0.25)] hover:-translate-y-1 flex items-center justify-center p-3.5 sm:p-4 rounded-2xl shrink-0 group/card relative overflow-hidden backdrop-blur-xs"
             >
-              <div className="relative w-full h-full flex items-center justify-center">
+              {/* Glossy Top Sheen Reflection */}
+              <div 
+                className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/80 via-white/25 to-transparent pointer-events-none" 
+                aria-hidden="true" 
+              />
+
+              {/* Hover Diagonal Light Flare */}
+              <div 
+                className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none" 
+                aria-hidden="true" 
+              />
+
+              <div className="relative w-full h-full flex items-center justify-center z-10">
                 <Image
                   src={client.logo}
                   alt={client.alt}
                   width={client.width}
                   height={client.height}
                   loading="lazy"
-                  className="max-h-11 sm:max-h-12 max-w-[155px] sm:max-w-[190px] w-auto h-auto object-contain transition-transform duration-200 group-hover/card:scale-105 pointer-events-none"
+                  className="max-h-11 sm:max-h-12 max-w-[155px] sm:max-w-[190px] w-auto h-auto object-contain transition-transform duration-300 group-hover/card:scale-105 pointer-events-none filter drop-shadow-2xs"
                 />
               </div>
 
