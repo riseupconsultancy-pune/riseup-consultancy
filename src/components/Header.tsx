@@ -55,6 +55,20 @@ export default function Header() {
   const [selectedCity, setSelectedCity] = useState("Pune");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Light gradient & cursor tracking state
+  const headerCapsuleRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!headerCapsuleRef.current) return;
+    const rect = headerCapsuleRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -121,14 +135,27 @@ export default function Header() {
       }`}
     >
       <div
-        className={`w-full max-w-7xl mx-auto transition-all duration-300 pointer-events-auto rounded-full flex items-center justify-between gap-2 px-3.5 sm:px-6 h-14 md:h-16 ${
+        ref={headerCapsuleRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`relative w-full max-w-7xl mx-auto transition-all duration-300 pointer-events-auto rounded-full flex items-center justify-between gap-2 px-3.5 sm:px-6 h-14 md:h-16 ${
           isScrolled
-            ? "liquid-glass border border-slate-200/80 shadow-md md:shadow-lg md:shadow-slate-900/5"
+            ? "liquid-glass bg-gradient-to-r from-white/95 via-blue-50/50 to-white/95 border border-white/90 shadow-md md:shadow-lg md:shadow-slate-900/5 ring-1 ring-slate-200/80"
             : isHomePage
             ? "bg-transparent border-transparent shadow-none"
-            : "bg-white/95 backdrop-blur-md border border-slate-200/80 shadow-xs"
+            : "bg-gradient-to-r from-white/95 via-blue-50/40 to-white/95 backdrop-blur-md border border-white/80 shadow-xs ring-1 ring-slate-200/80"
         }`}
       >
+        {/* Interactive Cursor Spotlight Glow */}
+        <div
+          className="pointer-events-none absolute inset-0 rounded-full overflow-hidden transition-opacity duration-300"
+          style={{
+            opacity: isHovered && (isScrolled || !isHomePage) ? 1 : isHovered ? 0.75 : 0,
+            background: `radial-gradient(180px circle at ${mousePos.x}px ${mousePos.y}px, rgba(37, 99, 235, 0.12), transparent 75%)`,
+          }}
+          aria-hidden="true"
+        />
         
         {/* Left: Official Brand Logo & Name (Big Bold Brand Name) */}
         <Link href="/" className="group flex items-center gap-1.5 sm:gap-3 focus:outline-none min-w-0">
