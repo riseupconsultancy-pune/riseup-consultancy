@@ -433,7 +433,7 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                     /* SLIM, HIGH-DENSITY ULTRA-PREMIUM JOB CARD */
                     <div
                       key={job.id}
-                      className="group relative bg-white sm:bg-gradient-to-b sm:from-white sm:via-slate-50/70 sm:to-blue-50/20 border border-slate-200/90 hover:border-blue-400/70 hover:shadow-md p-3 sm:p-5 rounded-xl sm:rounded-2xl shadow-2xs transition-all duration-200 flex flex-col justify-between overflow-hidden min-w-0 w-full h-full"
+                      className="group relative bg-white sm:bg-gradient-to-b sm:from-white sm:via-slate-50/70 sm:to-blue-50/20 border border-slate-200/90 hover:border-blue-400/70 hover:shadow-md p-3 sm:p-5 rounded-xl sm:rounded-2xl shadow-2xs transition-all duration-200 flex flex-col justify-between overflow-hidden min-w-0 w-full h-auto self-start"
                     >
                       {/* Top Sheen */}
                       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/25 to-transparent" />

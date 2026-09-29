@@ -34,50 +34,6 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Video ref and smooth continuous loop without end glitch / black screen
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    let animId: number;
-
-    const handleLoop = () => {
-      if (video && video.duration && !video.paused) {
-        // Frame 173 at (duration - 1.0s) is the optimal match to Frame 0, skipping the end black screen glitch
-        const loopThreshold = Math.max(0, video.duration - 1.0);
-        if (video.currentTime >= loopThreshold) {
-          video.currentTime = 0;
-          video.play().catch(() => {});
-        }
-      }
-      animId = requestAnimationFrame(handleLoop);
-    };
-
-    animId = requestAnimationFrame(handleLoop);
-
-    return () => {
-      cancelAnimationFrame(animId);
-    };
-  }, []);
-
-  const handleTimeUpdate = () => {
-    const video = videoRef.current;
-    if (!video || !video.duration) return;
-    if (video.currentTime >= Math.max(0, video.duration - 1.0)) {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    }
-  };
-
-  const handleEnded = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.currentTime = 0;
-    video.play().catch(() => {});
-  };
-
   useEffect(() => {
     const currentPhrase = TYPEWRITER_PHRASES[phraseIndex];
     let timer: NodeJS.Timeout;
@@ -225,32 +181,22 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
 
           </div>
 
-          {/* Column 2: Desktop Right (Animated Video Logo with Ambient Halo) | Mobile Order 1 */}
-          <div className="lg:col-span-5 order-1 lg:order-2 flex items-center justify-center lg:justify-end my-1 sm:my-2 lg:my-0">
+          {/* Column 2: Desktop Right (Enlarged Responsive Logo with Halo) | Mobile Order 1 */}
+          <div className="lg:col-span-5 order-1 lg:order-2 flex items-center justify-center lg:justify-end animate-hero-scale-fade my-1 sm:my-2 lg:my-0">
             <div className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-56 md:h-56 lg:w-[420px] lg:h-[420px] xl:w-[460px] xl:h-[460px] 2xl:w-[500px] 2xl:h-[500px] aspect-square flex items-center justify-center shrink-0">
               
-              {/* Subtle Ambient Halo behind Video Logo */}
+              {/* Subtle Ambient Halo behind Logo */}
               <div className="absolute inset-2 sm:inset-4 lg:inset-8 bg-radial from-blue-500/15 via-indigo-400/5 to-transparent rounded-full blur-xl sm:blur-2xl pointer-events-none animate-ambient-float" />
 
-              {/* Seamless Looped Animated Video Logo Container */}
               <div className="relative w-full h-full flex items-center justify-center">
-                {/* Seamless Programmatically Looped Animated Video Logo (1s glitch trimmed) */}
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  muted
-                  playsInline
-                  preload="auto"
-                  poster="/images/rise_up_consultancy_pune_logo.png"
-                  onTimeUpdate={handleTimeUpdate}
-                  onEnded={handleEnded}
-                  className="w-full h-full object-contain mix-blend-multiply select-none pointer-events-none"
-                >
-                  <source src="/images/hero_video.mov" type="video/quicktime" />
-                  <source src="/images/hero video.MOV" type="video/quicktime" />
-                  <source src="/images/hero_video.mov" type="video/mp4" />
-                  <source src="/images/hero video.MOV" type="video/mp4" />
-                </video>
+                <Image
+                  src="/images/rise_up_consultancy_pune_logo.png"
+                  alt="Rise Up Consultancy Official Logo"
+                  fill
+                  priority
+                  className="object-contain select-none"
+                  sizes="(max-width: 640px) 176px, (max-width: 768px) 224px, (max-width: 1024px) 280px, (max-width: 1280px) 460px, 500px"
+                />
               </div>
             </div>
           </div>
