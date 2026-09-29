@@ -72,7 +72,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative min-h-[100dvh] lg:h-[100dvh] flex flex-col justify-between pt-16 pb-2 sm:pt-20 sm:pb-3 md:pt-22 md:pb-4 lg:pt-24 lg:pb-4 bg-gradient-to-b from-slate-50 via-blue-50/25 to-white border-b border-slate-200/80 overflow-hidden"
+      className="relative min-h-[100dvh] lg:h-[100dvh] flex flex-col justify-between pt-16 sm:pt-20 md:pt-20 lg:pt-22 bg-gradient-to-b from-slate-50 via-blue-50/25 to-white border-b border-slate-200/80 overflow-hidden"
     >
       {/* Decorative Atmospheric Ambient Glow Orbs with Slow Breathing Animation */}
       <div
@@ -101,7 +101,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
       />
 
       {/* Center Body: Vertically Centered Grid Layout */}
-      <div className="flex-1 flex items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-2">
+      <div className="flex-1 flex items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-1 sm:py-2">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 xl:gap-12 items-center w-full">
           
           {/* Column 1: Desktop Left (Text & Services & Actions) | Mobile Order 2 */}
@@ -181,9 +181,9 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
 
           </div>
 
-          {/* Column 2: Desktop Right (Well-Proportioned Logo with Halo) | Mobile Order 1 */}
+          {/* Column 2: Desktop Right (Enlarged Responsive Logo with Halo) | Mobile Order 1 */}
           <div className="lg:col-span-5 order-1 lg:order-2 flex items-center justify-center lg:justify-end animate-hero-scale-fade my-1 sm:my-2 lg:my-0">
-            <div className="relative w-28 h-28 sm:w-36 sm:h-36 md:w-52 md:h-52 lg:w-[420px] lg:h-[420px] xl:w-[460px] xl:h-[460px] 2xl:w-[500px] 2xl:h-[500px] aspect-square flex items-center justify-center shrink-0">
+            <div className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-56 md:h-56 lg:w-[420px] lg:h-[420px] xl:w-[460px] xl:h-[460px] 2xl:w-[500px] 2xl:h-[500px] aspect-square flex items-center justify-center shrink-0">
               
               {/* Subtle Ambient Halo behind Logo */}
               <div className="absolute inset-2 sm:inset-4 lg:inset-8 bg-radial from-blue-500/15 via-indigo-400/5 to-transparent rounded-full blur-xl sm:blur-2xl pointer-events-none animate-ambient-float" />
@@ -195,7 +195,7 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
                   fill
                   priority
                   className="object-contain select-none"
-                  sizes="(max-width: 640px) 144px, (max-width: 768px) 208px, (max-width: 1024px) 260px, (max-width: 1280px) 460px, 500px"
+                  sizes="(max-width: 640px) 176px, (max-width: 768px) 224px, (max-width: 1024px) 280px, (max-width: 1280px) 460px, 500px"
                 />
               </div>
             </div>
@@ -204,9 +204,9 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
         </div>
       </div>
 
-      {/* Seamless Borderless Flowing Marquee Ticker anchored at base */}
-      <div className="w-full relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-auto pt-2 sm:pt-3 pb-2 border-t border-slate-200/80 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] animate-hero-fade-up-4">
-        <div className="animate-marquee-left-fast flex items-center gap-6 sm:gap-10 py-0.5">
+      {/* Seamless Borderless Flowing Marquee Ticker: Positioned EXACTLY above the fixed bottom navigation dock */}
+      <div className="w-full relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-auto pt-2.5 sm:pt-3.5 pb-20 sm:pb-24 lg:pb-24 border-t border-slate-200/80 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] animate-hero-fade-up-4">
+        <div className="animate-marquee-left-fast flex items-center gap-6 sm:gap-10 py-1">
           {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
             <div key={idx} className="flex items-center gap-2 sm:gap-2.5 shrink-0">
               <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-600 shrink-0 shadow-xs shadow-blue-500/50" />
