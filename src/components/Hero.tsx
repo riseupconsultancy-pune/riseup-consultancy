@@ -126,26 +126,26 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
             </div>
 
             {/* Concise Single-Line Service Points with Proper Proportional Sizing */}
-            <div className="mt-3 sm:mt-4 space-y-1.5 sm:space-y-2 text-left w-full max-w-xl">
+            <div className="mt-3.5 sm:mt-4.5 space-y-2 sm:space-y-2.5 lg:space-y-3 text-left w-full max-w-2xl">
               {/* Line 1: Corporate Clients */}
-              <div className="flex items-center gap-2 text-xs sm:text-sm md:text-base lg:text-[17px] text-slate-700 leading-normal animate-reveal-left-1">
-                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 shrink-0 stroke-[2.5]" />
+              <div className="flex items-center gap-2 sm:gap-2.5 text-sm sm:text-[15px] md:text-base lg:text-lg xl:text-[19px] text-slate-800 font-medium leading-normal animate-reveal-left-1">
+                <ChevronRight className="w-4.5 h-4.5 sm:w-5 sm:h-5 lg:w-5.5 lg:h-5.5 text-blue-600 shrink-0 stroke-[2.5]" />
                 <span>
                   <strong className="font-bold text-slate-900 font-heading">Corporate Clients:</strong> Direct Payroll &amp; 24–48h SLA
                 </span>
               </div>
 
               {/* Line 2: Job Seekers */}
-              <div className="flex items-center gap-2 text-xs sm:text-sm md:text-base lg:text-[17px] text-slate-700 leading-normal animate-reveal-left-2">
-                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 shrink-0 stroke-[2.5]" />
+              <div className="flex items-center gap-2 sm:gap-2.5 text-sm sm:text-[15px] md:text-base lg:text-lg xl:text-[19px] text-slate-800 font-medium leading-normal animate-reveal-left-2">
+                <ChevronRight className="w-4.5 h-4.5 sm:w-5 sm:h-5 lg:w-5.5 lg:h-5.5 text-blue-600 shrink-0 stroke-[2.5]" />
                 <span>
                   <strong className="font-bold text-slate-900 font-heading">Job Seekers:</strong> 100% Free Placement &amp; MNC Drives
                 </span>
               </div>
 
               {/* Line 3: Active Network */}
-              <div className="flex items-center gap-2 text-xs sm:text-sm md:text-base lg:text-[17px] text-slate-700 leading-normal animate-reveal-left-3">
-                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 shrink-0 stroke-[2.5]" />
+              <div className="flex items-center gap-2 sm:gap-2.5 text-sm sm:text-[15px] md:text-base lg:text-lg xl:text-[19px] text-slate-800 font-medium leading-normal animate-reveal-left-3">
+                <ChevronRight className="w-4.5 h-4.5 sm:w-5 sm:h-5 lg:w-5.5 lg:h-5.5 text-blue-600 shrink-0 stroke-[2.5]" />
                 <span>
                   <strong className="font-bold text-slate-900 font-heading">Active Network:</strong> Pune HQ, Pan-India &amp; Global
                 </span>
