@@ -99,7 +99,7 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all duration-300">
+    <header className="w-full sticky top-0 z-40 bg-white/90 backdrop-blur-lg border-b border-slate-200/80 transition-all duration-300 shadow-2xs">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
         
         {/* Left: Official Brand Logo & Name */}
@@ -147,7 +147,7 @@ export default function Header() {
             href="https://www.linkedin.com/company/rise-up-consultancy-pune"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-slate-50 border border-slate-300 hover:border-blue-600 hover:text-blue-600 text-slate-700 transition-all rounded-xl"
+            className="hidden sm:inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-blue-600 hover:text-blue-600 text-slate-700 transition-all rounded-xl shadow-2xs"
             title="Rise Up Consultancy on LinkedIn"
           >
             <span className="font-extrabold text-xs">in</span>
@@ -156,7 +156,7 @@ export default function Header() {
           {/* Direct HR Call Button (Desktop & Tablet) */}
           <a
             href="tel:+919359892819"
-            className="hidden md:inline-flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white text-xs font-semibold text-slate-800 transition-all rounded-xl"
+            className="hidden md:inline-flex items-center gap-2 px-3 py-2 bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-slate-900 hover:bg-white text-xs font-semibold text-slate-800 transition-all rounded-xl shadow-2xs"
             title="Call Meenakshi Patel (HR Manager)"
           >
             <span className="w-1.5 h-1.5 bg-blue-600 rounded-full shrink-0" />
@@ -169,7 +169,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="group flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-slate-50 border border-slate-300 hover:border-slate-900 hover:bg-white transition-all text-left focus:outline-none rounded-xl"
+              className="group flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-gradient-to-b from-white to-slate-50 border border-slate-200 hover:border-slate-900 transition-all text-left focus:outline-none rounded-xl shadow-2xs"
             >
               {selectedCountry.flagComponent}
               <div className="flex items-center gap-1 text-xs font-semibold text-slate-800">

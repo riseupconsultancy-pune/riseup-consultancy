@@ -33,7 +33,7 @@ export default function TrustBanner() {
   ];
 
   return (
-    <section className="bg-white border-b border-slate-200 py-8 sm:py-10 relative">
+    <section className="bg-gradient-to-b from-white via-slate-50/60 to-slate-50/30 border-b border-slate-200 py-8 sm:py-10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header with Authentic Direct Sourcing Badge */}
@@ -58,14 +58,14 @@ export default function TrustBanner() {
             return (
               <div
                 key={idx}
-                className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 hover:bg-white transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md group"
+                className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-gradient-to-b from-white to-slate-50/80 border border-slate-200/90 hover:border-blue-500 hover:shadow-md transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs group"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <div className="w-9 h-9 bg-white border border-slate-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <div className="w-9 h-9 bg-gradient-to-br from-blue-50 to-indigo-50/70 border border-blue-200/60 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                       <Icon className="w-4 h-4" />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-white border border-slate-200 rounded-full px-2.5 py-0.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-900 bg-blue-50/70 border border-blue-200/60 rounded-full px-2.5 py-0.5">
                       {item.badge}
                     </span>
                   </div>

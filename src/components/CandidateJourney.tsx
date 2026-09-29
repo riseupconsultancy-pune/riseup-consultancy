@@ -45,8 +45,12 @@ const STEPS: Step[] = [
 
 export default function CandidateJourney() {
   return (
-    <section className="py-12 sm:py-16 bg-white border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-12 sm:py-16 bg-gradient-to-b from-slate-50/50 via-blue-50/15 to-white border-b border-slate-200 overflow-hidden">
+      
+      {/* Subtle Ambient Background Light */}
+      <div className="absolute top-1/2 -right-40 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Editorial Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4 border-b border-slate-200">
@@ -75,7 +79,7 @@ export default function CandidateJourney() {
           {STEPS.map((step, idx) => (
             <div
               key={idx}
-              className="relative p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-2xl group shadow-2xs hover:shadow-md"
+              className="relative p-5 bg-gradient-to-b from-white to-slate-50/80 border border-slate-200/90 hover:border-blue-500 transition-all duration-200 flex flex-col justify-between rounded-2xl group shadow-2xs hover:shadow-lg hover:-translate-y-1"
             >
               {/* Step Number Tag & Timeline Pill */}
               <div>
@@ -110,8 +114,8 @@ export default function CandidateJourney() {
           ))}
         </div>
 
-        {/* Practical Candidate Reassurance Strip */}
-        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-blue-950 rounded-2xl shadow-2xs">
+        {/* Practical Candidate Reassurance Strip with Gradient */}
+        <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 via-indigo-50/40 to-blue-50 border border-blue-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-blue-950 rounded-2xl shadow-xs">
           <div className="flex items-center gap-2 font-bold">
             <span className="w-2 h-2 bg-blue-600 rounded-full" />
             <span>Candidate Guarantee: Rise Up Consultancy never charges registration fees, security deposits, or commission from job seekers.</span>

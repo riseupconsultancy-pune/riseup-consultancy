@@ -61,7 +61,7 @@ export default function HomePage() {
       <SpecializationMatrix onJobsClick={handleJobsClick} />
 
       {/* 7. Featured Open Positions */}
-      <section className="py-12 sm:py-16 bg-white border-b border-slate-200">
+      <section className="relative py-12 sm:py-16 bg-gradient-to-b from-white via-slate-50/60 to-slate-50/90 border-b border-slate-200 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-3 border-b border-slate-200 gap-4">
@@ -86,10 +86,10 @@ export default function HomePage() {
           <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 sm:pb-0 gap-3.5 sm:grid sm:grid-cols-3 -mx-4 px-4 sm:mx-0 sm:px-0">
             
             {/* Card 1: Voice */}
-            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md group">
+            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-gradient-to-b from-white to-slate-50/80 border border-slate-200/90 hover:border-blue-500 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-lg hover:-translate-y-1 group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 rounded-full px-2.5 py-0.5">
+                  <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider bg-blue-50/80 border border-blue-200/60 rounded-full px-2.5 py-0.5">
                     Voice Process
                   </span>
                   <VerificationBadge label="IMMEDIATE" variant="outline" size="sm" />
@@ -120,10 +120,10 @@ export default function HomePage() {
             </div>
 
             {/* Card 2: Non-Voice */}
-            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md group">
+            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-gradient-to-b from-white to-slate-50/80 border border-slate-200/90 hover:border-blue-500 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-lg hover:-translate-y-1 group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 rounded-full px-2.5 py-0.5">
+                  <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider bg-blue-50/80 border border-blue-200/60 rounded-full px-2.5 py-0.5">
                     Non-Voice / Back Office
                   </span>
                   <VerificationBadge label="IMMEDIATE" variant="outline" size="sm" />
@@ -154,10 +154,10 @@ export default function HomePage() {
             </div>
 
             {/* Card 3: Chat & Email */}
-            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md group">
+            <div className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-gradient-to-b from-white to-slate-50/80 border border-slate-200/90 hover:border-blue-500 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-lg hover:-translate-y-1 group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-white border border-slate-200 rounded-full px-2.5 py-0.5">
+                  <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider bg-blue-50/80 border border-blue-200/60 rounded-full px-2.5 py-0.5">
                     Chat & Email Support
                   </span>
                   <VerificationBadge label="IMMEDIATE" variant="outline" size="sm" />
@@ -198,11 +198,14 @@ export default function HomePage() {
       </section>
 
       {/* 7. Dedicated Page Spotlight: About Us & Leadership Profile */}
-      <section className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200">
+      <section className="relative py-12 sm:py-16 bg-gradient-to-b from-slate-50/80 via-blue-50/20 to-slate-50/80 border-b border-slate-200 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white border border-slate-200 p-5 sm:p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 rounded-3xl shadow-xs">
+          <div className="relative bg-gradient-to-br from-white via-slate-50/90 to-blue-50/30 border border-slate-200/90 p-5 sm:p-8 lg:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 rounded-3xl shadow-sm overflow-hidden">
             
-            <div className="max-w-2xl">
+            {/* Subtle Ambient Halo */}
+            <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-400/8 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="max-w-2xl relative z-10">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700 block mb-1">
                 Established January 2025 • Pune, India
               </span>
@@ -214,33 +217,33 @@ export default function HomePage() {
               </p>
 
               {/* 3 Highlights */}
-              <div className="grid grid-cols-3 gap-3 mt-6 pt-5 border-t border-slate-100">
-                <div>
+              <div className="grid grid-cols-3 gap-3 mt-6 pt-5 border-t border-slate-200/80">
+                <div className="p-2 sm:p-3 bg-white/70 backdrop-blur-xs rounded-xl border border-slate-200/60">
                   <span className="text-xl sm:text-2xl font-black text-slate-900 block font-mono">1,200+</span>
                   <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Candidates Placed</span>
                 </div>
-                <div>
+                <div className="p-2 sm:p-3 bg-white/70 backdrop-blur-xs rounded-xl border border-slate-200/60">
                   <span className="text-xl sm:text-2xl font-black text-slate-900 block font-mono">24-48h</span>
                   <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Sourcing SLA</span>
                 </div>
-                <div>
+                <div className="p-2 sm:p-3 bg-white/70 backdrop-blur-xs rounded-xl border border-slate-200/60">
                   <span className="text-xl sm:text-2xl font-black text-blue-600 block font-mono">100%</span>
                   <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Free for Seekers</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 shrink-0 lg:w-72">
+            <div className="flex flex-col gap-3 shrink-0 lg:w-72 relative z-10">
               <Link
                 href="/about"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-xl shadow-xs"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-slate-900 via-slate-900 to-blue-950 hover:from-blue-600 hover:to-indigo-600 text-white font-bold text-xs uppercase tracking-wider transition-all rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5"
               >
                 <span>Read Story & Leadership</span>
                 <ChevronRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/services"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-white border border-slate-300 hover:border-slate-900 text-slate-900 font-bold text-xs uppercase tracking-wider transition-colors rounded-xl"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-white/90 backdrop-blur-xs border border-slate-300 hover:border-slate-900 text-slate-900 font-bold text-xs uppercase tracking-wider transition-all rounded-xl shadow-2xs hover:shadow-sm"
               >
                 <span>All 13 Practice Areas</span>
                 <ArrowUpRight className="w-4 h-4" />
@@ -252,7 +255,7 @@ export default function HomePage() {
       </section>
 
       {/* 8. Dedicated Page Spotlight: Chandan Nagar HQ & Direct Contact */}
-      <section className="py-12 sm:py-16 bg-white border-b border-slate-200">
+      <section className="relative py-12 sm:py-16 bg-gradient-to-b from-white via-slate-50/40 to-slate-100/50 border-b border-slate-200 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
@@ -274,9 +277,9 @@ export default function HomePage() {
                 {/* Meenakshi Patel */}
                 <a
                   href="tel:+919359892819"
-                  className="p-3.5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex items-center gap-3 rounded-2xl shadow-2xs group"
+                  className="p-3.5 bg-gradient-to-r from-white to-slate-50 border border-slate-200/90 hover:border-blue-500 hover:shadow-md transition-all duration-200 flex items-center gap-3 rounded-2xl shadow-2xs group hover:-translate-y-0.5"
                 >
-                  <div className="w-8 h-8 bg-white border border-slate-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 bg-blue-50 border border-blue-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <PhoneCall className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -288,9 +291,9 @@ export default function HomePage() {
                 {/* Shaziya Khan */}
                 <a
                   href="tel:+917030122065"
-                  className="p-3.5 bg-slate-50 border border-slate-200 hover:border-slate-900 transition-colors flex items-center gap-3 rounded-2xl shadow-2xs group"
+                  className="p-3.5 bg-gradient-to-r from-white to-slate-50 border border-slate-200/90 hover:border-blue-500 hover:shadow-md transition-all duration-200 flex items-center gap-3 rounded-2xl shadow-2xs group hover:-translate-y-0.5"
                 >
-                  <div className="w-8 h-8 bg-white border border-slate-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 bg-blue-50 border border-blue-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <PhoneCall className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -302,7 +305,7 @@ export default function HomePage() {
               </div>
 
               {/* Physical Address Pill */}
-              <div className="mt-3.5 p-3.5 bg-slate-50 border border-slate-200 flex items-start gap-3 rounded-2xl">
+              <div className="mt-3.5 p-3.5 bg-gradient-to-r from-white to-slate-50 border border-slate-200/90 flex items-start gap-3 rounded-2xl shadow-2xs">
                 <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <div className="text-xs text-slate-700">
                   <strong className="font-bold text-slate-900">Pune HQ:</strong> Near Kumar Megaplex, Chandan Nagar, Pune, Maharashtra 411014.
@@ -310,11 +313,15 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right: Quick Action Banner */}
-            <div className="lg:col-span-5 bg-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-md flex flex-col justify-between">
-              <div>
+            {/* Right: Quick Action Banner with Executive Midnight Gradient & Radiant Glow */}
+            <div className="lg:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between relative overflow-hidden border border-slate-800">
+              
+              {/* Internal Radiant Glow Orb */}
+              <div className="absolute -top-16 -right-16 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="relative z-10">
                 <VerificationBadge label="OFFICIAL RECRUITMENT DESK" variant="solid" size="sm" className="mb-4" />
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-2 font-heading">
                   Need Immediate Hiring Assistance?
                 </h3>
                 <p className="text-xs text-slate-300 leading-relaxed mb-6">
@@ -322,18 +329,18 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-2.5 relative z-10">
                 <button
                   type="button"
                   onClick={handleHireClick}
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-colors rounded-xl"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs uppercase tracking-wider transition-all rounded-xl shadow-md shadow-blue-500/20 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
                 >
                   <span>Submit Corporate Hiring Requirement</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </button>
                 <Link
                   href="/contact"
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider transition-colors rounded-xl"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-800/90 hover:bg-slate-700 text-slate-200 font-bold text-xs uppercase tracking-wider transition-colors rounded-xl border border-slate-700"
                 >
                   <span>View Google Map & Virtual Nigeria Hub</span>
                   <ChevronRight className="w-4 h-4" />

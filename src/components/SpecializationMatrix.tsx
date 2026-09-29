@@ -80,7 +80,7 @@ const SPECIALIZATIONS = [
 
 export default function SpecializationMatrix({ onJobsClick }: SpecializationMatrixProps) {
   return (
-    <section className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200 relative">
+    <section className="relative py-12 sm:py-16 bg-gradient-to-b from-slate-50/90 via-blue-50/20 to-slate-50/80 border-b border-slate-200 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -112,7 +112,7 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
             return (
               <div
                 key={idx}
-                className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-white border border-slate-200 hover:border-slate-900 hover:shadow-md transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs group"
+                className="snap-start shrink-0 w-[80vw] max-w-[320px] sm:w-auto p-4 sm:p-5 bg-gradient-to-b from-white to-slate-50/70 border border-slate-200/90 hover:border-blue-500 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between rounded-2xl shadow-2xs group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -169,7 +169,7 @@ export default function SpecializationMatrix({ onJobsClick }: SpecializationMatr
         </div>
 
         {/* Official Note regarding IT / Future expansion */}
-        <div className="mt-10 p-4 sm:p-5 bg-white border border-blue-200 flex items-start sm:items-center gap-3.5 rounded-2xl shadow-2xs">
+        <div className="mt-10 p-4 sm:p-5 bg-gradient-to-r from-blue-50/90 via-white to-indigo-50/40 border border-blue-200/90 flex items-start sm:items-center gap-3.5 rounded-2xl shadow-xs">
           <div className="w-8 h-8 bg-blue-50 border border-blue-200 rounded-xl text-blue-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
             <Info className="w-4 h-4" />
           </div>
