@@ -197,6 +197,7 @@ export default function Header() {
               src="/images/rise_up_consultancy_pune_logo.png"
               alt="Rise Up Consultancy Logo"
               fill
+              sizes="(max-width: 640px) 28px, 40px"
               className="object-contain select-none"
               priority
             />

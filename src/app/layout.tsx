@@ -7,8 +7,6 @@ import "./globals.css";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 const outfit = Outfit({
@@ -271,12 +269,12 @@ export default function RootLayout({
       <body suppressHydrationWarning className="antialiased min-h-screen flex flex-col font-sans">
         {/* Google tag (gtag.js) */}
         <Script
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://www.googletagmanager.com/gtag/js?id=G-QS11NZHQ73"
         />
         <Script
           id="google-analytics"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         >
           {`
             window.dataLayer = window.dataLayer || [];

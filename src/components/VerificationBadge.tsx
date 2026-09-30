@@ -58,8 +58,10 @@ export default function VerificationBadge({
             variant === "solid"
               ? "border-blue-400 text-blue-100"
               : variant === "dark"
-              ? "border-slate-700 text-slate-300"
-              : "border-slate-200 text-slate-500"
+              ? "border-slate-700 text-slate-200"
+              : variant === "blue"
+              ? "border-blue-300 text-blue-950 font-bold"
+              : "border-slate-300 text-slate-800 font-semibold"
           }`}
         >
           {sublabel}

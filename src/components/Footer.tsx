@@ -25,6 +25,7 @@ export default function Footer() {
                   src="/images/rise_up_consultancy_pune_logo.png"
                   alt="Rise Up Consultancy Logo"
                   fill
+                  sizes="48px"
                   className="object-cover"
                 />
               </div>
@@ -95,23 +96,23 @@ export default function Footer() {
               Chandan Nagar, Pune – 411014,<br />
               Maharashtra, India.
             </p>
-            <div className="mt-3 flex flex-col gap-1.5 text-xs text-slate-400">
-              <a href="tel:+919359892819" className="flex items-center gap-2 hover:text-white transition-colors">
-                <Phone className="w-3.5 h-3.5 text-blue-400" />
+            <div className="mt-3 flex flex-col gap-1 text-xs text-slate-400">
+              <a href="tel:+919359892819" className="flex items-center gap-2 hover:text-white transition-colors py-1.5 min-h-[36px]">
+                <Phone className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                 <span>+91 93598 92819 (Meenakshi Patel)</span>
               </a>
-              <a href="tel:+917030122065" className="flex items-center gap-2 hover:text-white transition-colors">
-                <Phone className="w-3.5 h-3.5 text-blue-400" />
+              <a href="tel:+917030122065" className="flex items-center gap-2 hover:text-white transition-colors py-1.5 min-h-[36px]">
+                <Phone className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                 <span>+91 70301 22065 (Shaziya Khan)</span>
               </a>
               <a
                 href="https://share.google/EHi7eqNdq3gmPzWCD"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 text-xs font-semibold mt-1"
+                className="inline-flex items-center gap-1.5 text-blue-400 hover:text-blue-300 text-xs font-semibold py-1.5 min-h-[36px]"
               >
                 <span>View Google Maps Pin</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
               </a>
             </div>
           </div>
