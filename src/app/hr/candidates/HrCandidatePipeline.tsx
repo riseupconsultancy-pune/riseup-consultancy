@@ -24,7 +24,6 @@ import {
   AlertTriangle,
   UserX,
   RotateCcw,
-  Trash2,
   ExternalLink,
   Copy,
   Check
@@ -34,8 +33,7 @@ import {
   dispatchCandidateToInterviewAction,
   bulkDispatchCandidatesToInterviewAction,
   setCandidatePlacedOutsideAction,
-  reactivateCandidateAction,
-  deleteCandidateAction
+  reactivateCandidateAction
 } from "@/app/actions/hr-actions";
 import { formatWhatsAppPhone } from "@/lib/utils";
 
@@ -365,6 +363,7 @@ export default function HrCandidatePipeline({
   const [interviewTime, setInterviewTime] = useState("10:30 AM");
   const [interviewNote, setInterviewNote] = useState("");
   const [copiedNotice, setCopiedNotice] = useState(false);
+  const [modalWhatsAppSent, setModalWhatsAppSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Bulk Dispatch Modal
@@ -373,9 +372,6 @@ export default function HrCandidatePipeline({
     new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0]
   );
   const [bulkInterviewNote, setBulkInterviewNote] = useState("");
-
-  // Delete Confirmation Modal
-  const [deletingCandidate, setDeletingCandidate] = useState<CandidateItem | null>(null);
 
   // Filter candidates
   const filteredCandidates = candidates.filter((c) => {
@@ -435,47 +431,6 @@ export default function HrCandidatePipeline({
     }
   };
 
-  // 1-Tap WhatsApp Handler
-  const handleWhatsAppConnect = async (candidate: CandidateItem) => {
-    const cleanPhone = formatWhatsAppPhone(candidate.phone, candidate.country);
-
-    // Resolve target vacancy by id or jobId to extract Google Maps URL and Interview Venue
-    const targetVac = activeVacancies.find(
-      (v) => v.id === candidate.vacancyId || v.jobId === candidate.vacancyJobId
-    );
-
-    // Build the official shortlisted interview message with Vacancy name, Company name, Interview location, and Google Maps URL
-    const formattedMessage = buildInterviewWhatsAppMessage({
-      template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
-      candidate,
-      targetVacancy: targetVac,
-      interviewDateStr: candidate.interviewDate,
-      recruiterName,
-      recruiterPhone,
-    });
-
-    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
-    window.open(waUrl, "_blank");
-
-    if (candidate.status === "APPLIED") {
-      try {
-        const res = await updateCandidateStatusByHrAction(
-          candidate.id,
-          "CONNECTED",
-          null,
-          "Recruiter initiated WhatsApp outreach"
-        );
-        if (res.success) {
-          setCandidates((prev) =>
-            prev.map((c) => (c.id === candidate.id ? { ...c, status: "CONNECTED" } : c))
-          );
-        }
-      } catch {
-        // non-blocking
-      }
-    }
-  };
-
   // Open Single Dispatch Modal
   const openDispatchModal = (candidate: CandidateItem) => {
     setDispatchModalCandidate(candidate);
@@ -489,10 +444,58 @@ export default function HrCandidatePipeline({
     setInterviewTime("10:30 AM");
     setInterviewNote("");
     setCopiedNotice(false);
+    setModalWhatsAppSent(false);
   };
 
-  // Confirm Single Dispatch
-  const handleConfirmSingleDispatch = async (openWhatsApp = false) => {
+  // Launch WhatsApp Message from Interview Modal without confirming interview schedule
+  const handleSendModalWhatsAppOnly = async () => {
+    if (!dispatchModalCandidate || !modalTargetVacancyId) {
+      setErrorMessage("Please select an active target opening.");
+      return;
+    }
+
+    const targetVac = activeVacancies.find((v) => v.id === modalTargetVacancyId);
+    const combinedDateStr = `${interviewDate} ${interviewTime}`.trim();
+
+    const callLetter = buildInterviewWhatsAppMessage({
+      template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
+      candidate: dispatchModalCandidate,
+      targetVacancy: targetVac,
+      interviewDateStr: combinedDateStr,
+      recruiterName,
+      recruiterPhone,
+    });
+
+    const cleanPhone = formatWhatsAppPhone(dispatchModalCandidate.phone, dispatchModalCandidate.country);
+    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(callLetter)}`;
+    window.open(waUrl, "_blank");
+
+    setModalWhatsAppSent(true);
+
+    // Update status to CONNECTED if currently APPLIED, indicating outreach initiated without dispatching
+    if (dispatchModalCandidate.status === "APPLIED") {
+      try {
+        const res = await updateCandidateStatusByHrAction(
+          dispatchModalCandidate.id,
+          "CONNECTED",
+          null,
+          `Recruiter sent WhatsApp interview invite for ${targetVac?.title || "role"}. Awaiting candidate confirmation.`
+        );
+        if (res.success) {
+          setCandidates((prev) =>
+            prev.map((c) =>
+              c.id === dispatchModalCandidate.id ? { ...c, status: "CONNECTED" } : c
+            )
+          );
+        }
+      } catch {
+        // non-blocking
+      }
+    }
+  };
+
+  // Confirm Single Dispatch (Triggered ONLY when candidate confirms they will attend)
+  const handleConfirmSingleDispatch = async () => {
     if (!dispatchModalCandidate || !modalTargetVacancyId) {
       setErrorMessage("Please select an active target opening.");
       return;
@@ -513,20 +516,6 @@ export default function HrCandidatePipeline({
       dateToStore = new Date(interviewDate).toISOString();
     }
 
-    if (openWhatsApp) {
-      const callLetter = buildInterviewWhatsAppMessage({
-        template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
-        candidate: dispatchModalCandidate,
-        targetVacancy: targetVac,
-        interviewDateStr: combinedDateStr,
-        recruiterName,
-        recruiterPhone,
-      });
-      const cleanPhone = formatWhatsAppPhone(dispatchModalCandidate.phone, dispatchModalCandidate.country);
-      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(callLetter)}`;
-      window.open(waUrl, "_blank");
-    }
-
     setIsSubmitting(true);
     setActionMessage(null);
     setErrorMessage(null);
@@ -536,7 +525,7 @@ export default function HrCandidatePipeline({
         candidateId: dispatchModalCandidate.id,
         targetVacancyId: modalTargetVacancyId,
         interviewDate: dateToStore,
-        note: interviewNote || `Dispatched for interview on ${combinedDateStr}`,
+        note: interviewNote || `Dispatched for interview on ${combinedDateStr} (Candidate confirmed attendance)`,
       });
 
       if (res.success) {
@@ -562,11 +551,7 @@ export default function HrCandidatePipeline({
               : c
           )
         );
-        setActionMessage(
-          openWhatsApp
-            ? "Candidate dispatched & WhatsApp Call Letter launched!"
-            : (res.message || "Candidate successfully dispatched for interview.")
-        );
+        setActionMessage(res.message || "Candidate successfully confirmed & dispatched for interview.");
         setDispatchModalCandidate(null);
       } else {
         setErrorMessage(res.error || "Failed to dispatch candidate.");
@@ -669,30 +654,6 @@ export default function HrCandidatePipeline({
       }
     } catch {
       setErrorMessage("Network error reactivating candidate.");
-    }
-  };
-
-  // Confirm Delete
-  const handleConfirmDelete = async () => {
-    if (!deletingCandidate) return;
-    setIsSubmitting(true);
-    setActionMessage(null);
-    setErrorMessage(null);
-
-    try {
-      const res = await deleteCandidateAction(deletingCandidate.id);
-      if (res.success) {
-        setCandidates((prev) => prev.filter((c) => c.id !== deletingCandidate.id));
-        setSelectedCandidateIds((prev) => prev.filter((id) => id !== deletingCandidate.id));
-        setActionMessage(res.message || "Candidate profile permanently deleted.");
-        setDeletingCandidate(null);
-      } else {
-        setErrorMessage(res.error || "Failed to delete candidate.");
-      }
-    } catch {
-      setErrorMessage("Network error deleting candidate.");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -1160,23 +1121,6 @@ export default function HrCandidatePipeline({
                       <span>Resume PDF</span>
                     </button>
 
-                    {/* 1-Tap WhatsApp */}
-                    {!isPlacedOutside && (
-                      <button
-                        type="button"
-                        onClick={() => handleWhatsAppConnect(candidate)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-2 text-white text-[11px] font-bold uppercase tracking-wider rounded-xl shadow-sm transition-all cursor-pointer min-h-[36px] ${
-                          isInterview
-                            ? "bg-emerald-700 hover:bg-emerald-800 shadow-emerald-700/20"
-                            : "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20"
-                        }`}
-                        title={isInterview ? "Open WhatsApp with auto-filled Interview Call Letter" : "Initiate screening WhatsApp"}
-                      >
-                        <MessageSquare className="w-3.5 h-3.5" />
-                        <span>{isInterview ? "WhatsApp Call Letter" : "WhatsApp"}</span>
-                      </button>
-                    )}
-
                     {/* Send for Interview */}
                     {!isSelected && !isPlacedOutside && (
                       <button
@@ -1213,16 +1157,6 @@ export default function HrCandidatePipeline({
                         </button>
                       )
                     )}
-
-                    {/* Delete Profile */}
-                    <button
-                      type="button"
-                      onClick={() => setDeletingCandidate(candidate)}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-red-50 text-red-600 hover:text-red-700 text-[11px] font-bold uppercase tracking-wider rounded-xl border border-red-200 hover:border-red-300 transition-all cursor-pointer min-h-[36px]"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Delete</span>
-                    </button>
                   </div>
                 </div>
               </div>
@@ -1291,7 +1225,7 @@ export default function HrCandidatePipeline({
                     Schedule Interview & WhatsApp Dispatch
                   </h3>
                   <p className="text-xs text-slate-500">
-                    Verify client opening details & send formatted call letter
+                    Send WhatsApp call letter &bull; Confirm attendance only after candidate agrees
                   </p>
                 </div>
               </div>
@@ -1465,6 +1399,19 @@ export default function HrCandidatePipeline({
               </div>
             </div>
 
+            {/* Notification when WhatsApp launched */}
+            {modalWhatsAppSent && (
+              <div className="p-3.5 bg-emerald-50 border border-emerald-200/90 rounded-2xl flex items-start gap-2.5 text-xs text-emerald-950 animate-fadeIn shadow-2xs">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-bold text-emerald-900">WhatsApp Invitation Launched!</p>
+                  <p className="text-[11px] text-emerald-800 leading-relaxed">
+                    Message opened in WhatsApp. Candidate is marked as <strong className="font-bold text-emerald-950">CONNECTED</strong>. Please wait for candidate response. Only after they confirm they will attend the interview, click <strong className="font-bold text-emerald-950">&ldquo;Confirm Dispatch Only&rdquo;</strong> below.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Modal Actions */}
             <div className="flex flex-wrap items-center justify-between gap-2.5 pt-3 border-t border-slate-100">
               <button
@@ -1478,20 +1425,23 @@ export default function HrCandidatePipeline({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => handleConfirmSingleDispatch(false)}
+                  onClick={handleSendModalWhatsAppOnly}
                   disabled={isSubmitting || !modalTargetVacancyId}
-                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-2xs disabled:opacity-50 cursor-pointer min-h-[44px] transition-all"
+                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-emerald-500/20 disabled:opacity-50 cursor-pointer flex items-center gap-1.5 min-h-[44px] transition-all"
+                  title="Send formatted interview letter via WhatsApp (does NOT confirm schedule)"
                 >
-                  {isSubmitting ? "Dispatching..." : "Confirm Dispatch Only"}
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>Send WhatsApp Message</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleConfirmSingleDispatch(true)}
+                  onClick={handleConfirmSingleDispatch}
                   disabled={isSubmitting || !modalTargetVacancyId}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-emerald-500/20 disabled:opacity-50 cursor-pointer flex items-center gap-1.5 min-h-[44px] transition-all"
+                  className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-2xs disabled:opacity-50 cursor-pointer flex items-center gap-1.5 min-h-[44px] transition-all"
+                  title="Confirm candidate attendance and officially schedule in ATS pipeline"
                 >
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Confirm & Open WhatsApp</span>
+                  <Calendar className="w-3.5 h-3.5 text-blue-400" />
+                  <span>{isSubmitting ? "Dispatching..." : "Confirm Dispatch Only"}</span>
                 </button>
               </div>
             </div>
@@ -1618,49 +1568,6 @@ export default function HrCandidatePipeline({
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-blue-500/20 disabled:opacity-50 cursor-pointer min-h-[44px] transition-all"
               >
                 {isSubmitting ? "Dispatching..." : `Dispatch ${selectedCandidateIds.length} Candidates`}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL 4: DELETE CONFIRMATION */}
-      {deletingCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-3 sm:p-4 animate-fadeIn">
-          <div className="relative bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-md p-5 sm:p-6 space-y-3.5 overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-rose-500/40 to-transparent pointer-events-none" />
-            <div className="flex items-center gap-2.5 text-rose-600">
-              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shadow-2xs shrink-0">
-                <AlertCircle className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold uppercase tracking-wider text-slate-900 font-heading">
-                  Permanently Delete Candidate?
-                </h3>
-                <p className="text-xs text-slate-500">Irreversible deletion of applicant profile</p>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/80">
-              Are you sure you want to permanently delete <strong className="text-slate-900 font-bold">{deletingCandidate.fullName}</strong> ({deletingCandidate.candidateId})? This will delete their profile and remove their resume document from storage.
-            </p>
-
-            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setDeletingCandidate(null)}
-                disabled={isSubmitting}
-                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer min-h-[44px] transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirmDelete}
-                disabled={isSubmitting}
-                className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-red-500/20 disabled:opacity-50 cursor-pointer min-h-[44px] transition-all"
-              >
-                {isSubmitting ? "Deleting..." : "Permanently Delete"}
               </button>
             </div>
           </div>
