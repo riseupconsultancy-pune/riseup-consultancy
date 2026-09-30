@@ -29,8 +29,8 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
-  // Typewriter typing animation state
-  const [typewriterText, setTypewriterText] = useState("");
+  // Typewriter typing animation state - pre-filled with first phrase to eliminate CLS and render immediately in SSR
+  const [typewriterText, setTypewriterText] = useState(TYPEWRITER_PHRASES[0]);
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -107,8 +107,8 @@ export default function Hero({ onHireClick, onJobsClick }: HeroProps) {
           {/* Column 1: Desktop Left (Text & Services & Actions) | Mobile Order 2 */}
           <div className="lg:col-span-7 order-2 lg:order-1 flex flex-col justify-center items-center text-center lg:items-start lg:text-left">
             
-            {/* Hero Text Headlines with Entrance Animation */}
-            <div className="animate-hero-fade-up-1">
+            {/* Hero Text Headlines - Rendered immediately for lightning-fast LCP */}
+            <div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-black text-slate-900 tracking-tight uppercase font-heading leading-[1.05] sm:leading-[1.02]">
                 RISE UP{" "}
                 <span className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 bg-clip-text text-transparent block sm:inline">

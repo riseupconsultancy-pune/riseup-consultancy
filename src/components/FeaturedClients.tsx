@@ -184,7 +184,8 @@ export default function FeaturedClients({
                   width={client.width}
                   height={client.height}
                   loading="lazy"
-                  sizes="(max-width: 640px) 160px, 200px"
+                  quality={65}
+                  sizes="(max-width: 640px) 140px, 180px"
                   className="max-h-11 sm:max-h-12 max-w-[155px] sm:max-w-[190px] w-auto h-auto object-contain transition-transform duration-300 group-hover/card:scale-105 pointer-events-none filter drop-shadow-2xs"
                 />
               </div>

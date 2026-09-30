@@ -12,14 +12,12 @@ export const viewport: Viewport = {
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-heading",
-  weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
 });
 
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -267,21 +265,40 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning className="antialiased min-h-screen flex flex-col font-sans">
-        {/* Google tag (gtag.js) */}
+        {/* Google Analytics (Interaction & Idle Deferred Loader for Core Web Vitals) */}
         <Script
-          strategy="lazyOnload"
-          src="https://www.googletagmanager.com/gtag/js?id=G-QS11NZHQ73"
-        />
-        <Script
-          id="google-analytics"
-          strategy="lazyOnload"
+          id="google-analytics-deferred"
+          strategy="afterInteractive"
         >
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
             gtag('js', new Date());
 
-            gtag('config', 'G-QS11NZHQ73');
+            var gtmLoaded = false;
+            function loadGTM() {
+              if (gtmLoaded) return;
+              gtmLoaded = true;
+              ['scroll', 'pointerdown', 'touchstart', 'mousemove', 'keydown'].forEach(function(ev) {
+                window.removeEventListener(ev, loadGTM, { passive: true });
+              });
+              var s = document.createElement('script');
+              s.async = true;
+              s.src = 'https://www.googletagmanager.com/gtag/js?id=G-QS11NZHQ73';
+              document.head.appendChild(s);
+              gtag('config', 'G-QS11NZHQ73');
+            }
+
+            ['scroll', 'pointerdown', 'touchstart', 'mousemove', 'keydown'].forEach(function(ev) {
+              window.addEventListener(ev, loadGTM, { passive: true, once: true });
+            });
+
+            if ('requestIdleCallback' in window) {
+              window.requestIdleCallback(function() { setTimeout(loadGTM, 4000); });
+            } else {
+              setTimeout(loadGTM, 4000);
+            }
           `}
         </Script>
         {children}
