@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { assignCandidateToHrAction, bulkAssignCandidatesToHrAction } from "@/app/actions/public-actions";
 import { deleteCandidateAction, setCandidatePlacedOutsideAction } from "@/app/actions/hr-actions";
+import { formatWhatsAppPhone } from "@/lib/utils";
 
 export interface AdminCandidateItem {
   id: string;
@@ -321,7 +322,7 @@ export default function AdminCandidatePool({
 
   // WhatsApp Outreach Direct
   const handleWhatsAppDirect = (candidate: AdminCandidateItem) => {
-    const cleanPhone = candidate.phone.replace(/[^0-9]/g, "");
+    const cleanPhone = formatWhatsAppPhone(candidate.phone, candidate.country);
     const message = `Hello ${candidate.fullName}, this is RiseUp Consultancy Super Admin Desk regarding your application for ${candidate.vacancyTitle} in ${candidate.city}. We are reviewing your profile for interview dispatch.`;
     window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, "_blank");
   };

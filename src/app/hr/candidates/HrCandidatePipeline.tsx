@@ -37,6 +37,7 @@ import {
   reactivateCandidateAction,
   deleteCandidateAction
 } from "@/app/actions/hr-actions";
+import { formatWhatsAppPhone } from "@/lib/utils";
 
 export interface CandidateItem {
   id: string;
@@ -436,7 +437,7 @@ export default function HrCandidatePipeline({
 
   // 1-Tap WhatsApp Handler
   const handleWhatsAppConnect = async (candidate: CandidateItem) => {
-    const cleanPhone = candidate.phone.replace(/[^0-9]/g, "");
+    const cleanPhone = formatWhatsAppPhone(candidate.phone, candidate.country);
 
     // Resolve target vacancy by id or jobId to extract Google Maps URL and Interview Venue
     const targetVac = activeVacancies.find(
@@ -521,7 +522,7 @@ export default function HrCandidatePipeline({
         recruiterName,
         recruiterPhone,
       });
-      const cleanPhone = dispatchModalCandidate.phone.replace(/[^0-9]/g, "");
+      const cleanPhone = formatWhatsAppPhone(dispatchModalCandidate.phone, dispatchModalCandidate.country);
       const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(callLetter)}`;
       window.open(waUrl, "_blank");
     }

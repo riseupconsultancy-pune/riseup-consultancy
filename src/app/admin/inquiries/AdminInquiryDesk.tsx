@@ -35,6 +35,7 @@ import {
   convertInquiryToClientAction, 
   deleteInquiryAction 
 } from "@/app/actions/inquiry-actions";
+import { formatWhatsAppPhone } from "@/lib/utils";
 
 export interface InquiryItem {
   id: string;
@@ -75,12 +76,7 @@ export default function AdminInquiryDesk({ initialInquiries }: AdminInquiryDeskP
 
   // Helper to format phone for WhatsApp
   const formatWhatsAppUrl = (phone: string, inquiry: InquiryItem) => {
-    let cleanPhone = phone.replace(/[^\d+]/g, "");
-    if (cleanPhone.startsWith("+")) {
-      cleanPhone = cleanPhone.substring(1);
-    } else if (cleanPhone.length === 10 && /^[6-9]/.test(cleanPhone)) {
-      cleanPhone = `91${cleanPhone}`;
-    }
+    const cleanPhone = formatWhatsAppPhone(phone, inquiry.country);
 
     let defaultMsg = "";
     if (inquiry.type === "TALENT_REQUEST") {

@@ -13,6 +13,7 @@ import {
   ExternalLink,
   ArrowRight
 } from "lucide-react";
+import { formatWhatsAppPhone } from "@/lib/utils";
 
 export interface ExistingApplicationDetails {
   candidateId: string;
@@ -64,13 +65,7 @@ export default function AlreadyAppliedModal({
 
   // Clean phone number for WhatsApp link
   const rawPhone = recruiter.phone || "+919359892819";
-  const digitsOnly = rawPhone.replace(/\D/g, "");
-  const whatsappNumber =
-    digitsOnly.length === 10
-      ? `91${digitsOnly}`
-      : digitsOnly.startsWith("0") && digitsOnly.length === 11
-      ? `91${digitsOnly.slice(1)}`
-      : digitsOnly;
+  const whatsappNumber = formatWhatsAppPhone(rawPhone, "India");
 
   // Pre-filled WhatsApp greeting message
   const prefilledWhatsappMsg = `Hello ${recruiter.name}, I have already applied for ${jobTitle} (Job ID: ${jobId}, Candidate ID: ${candidateId}). I am contacting you to follow up on my application status.`;
