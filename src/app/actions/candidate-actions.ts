@@ -89,6 +89,89 @@ export async function submitCandidateApplicationAction(formData: FormData) {
       return { success: false, error: "This job opening has been fulfilled or closed by the employer." };
     }
 
+    // -------------------------------------------------------------
+    // DUPLICATE APPLICATION CHECK (BY EMAIL OR PHONE FOR THIS JOB)
+    // -------------------------------------------------------------
+    const normalizedEmail = email.toLowerCase().trim();
+    const inputPhoneDigits = phone.replace(/\D/g, "");
+    const inputPhoneLast10 = inputPhoneDigits.length >= 10 ? inputPhoneDigits.slice(-10) : inputPhoneDigits;
+
+    const existingCandidatesForVacancy = await prisma.candidate.findMany({
+      where: {
+        vacancyId: link.vacancyId,
+      },
+      select: {
+        id: true,
+        candidateId: true,
+        fullName: true,
+        email: true,
+        phone: true,
+        status: true,
+        createdAt: true,
+        hr: {
+          select: {
+            employeeCode: true,
+            user: {
+              select: {
+                fullName: true,
+                phone: true,
+                email: true,
+              },
+            },
+          },
+        },
+        vacancy: {
+          select: {
+            jobId: true,
+            title: true,
+          },
+        },
+      },
+    });
+
+    const duplicateCandidate = existingCandidatesForVacancy.find((c) => {
+      // 1. Email matching
+      if (c.email && c.email.toLowerCase().trim() === normalizedEmail) {
+        return true;
+      }
+      // 2. Phone matching (matches exact digits or last 10 digits)
+      if (c.phone) {
+        const cPhoneDigits = c.phone.replace(/\D/g, "");
+        const cPhoneLast10 = cPhoneDigits.length >= 10 ? cPhoneDigits.slice(-10) : cPhoneDigits;
+        if (
+          cPhoneDigits === inputPhoneDigits ||
+          (inputPhoneLast10.length >= 7 && cPhoneLast10 === inputPhoneLast10)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (duplicateCandidate) {
+      // Prioritize the assigned HR recruiter from the existing record, fallback to current link's HR
+      const assignedRecruiterUser = duplicateCandidate.hr?.user || link.hr.user;
+      const assignedRecruiterProfile = duplicateCandidate.hr || link.hr;
+
+      return {
+        success: false,
+        alreadyApplied: true,
+        candidateId: duplicateCandidate.candidateId,
+        candidateName: duplicateCandidate.fullName,
+        jobId: link.vacancy.jobId,
+        jobTitle: link.vacancy.title,
+        appliedDate: duplicateCandidate.createdAt.toISOString(),
+        currentStatus: duplicateCandidate.status,
+        recruiter: {
+          name: assignedRecruiterUser?.fullName || "RiseUp Recruitment Partner",
+          phone: assignedRecruiterUser?.phone || "+91 93598 92819",
+          email: assignedRecruiterUser?.email || "info@riseupconsultancyy.com",
+          code: assignedRecruiterProfile?.employeeCode || "HR-RECRUITER",
+        },
+        message: `An active application for "${link.vacancy.title}" (${link.vacancy.jobId}) is already registered with your contact details.`,
+      };
+    }
+
     // Process and validate resume file upload
     const resumeFile = formData.get("resume");
     if (!resumeFile || typeof resumeFile === "string") {

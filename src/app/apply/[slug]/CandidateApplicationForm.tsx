@@ -17,9 +17,10 @@ import {
   X,
   Sparkles,
   ShieldCheck,
-  Calendar
+  Calendar,
 } from "lucide-react";
 import { submitCandidateApplicationAction } from "@/app/actions/candidate-actions";
+import AlreadyAppliedModal, { ExistingApplicationDetails } from "@/components/AlreadyAppliedModal";
 
 interface CandidateApplicationFormProps {
   slug: string;
@@ -84,6 +85,7 @@ export default function CandidateApplicationForm({ slug, vacancyDetails, recruit
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [alreadyAppliedData, setAlreadyAppliedData] = useState<ExistingApplicationDetails | null>(null);
   const [successData, setSuccessData] = useState<{
     candidateId: string;
     referralTag: string;
@@ -185,6 +187,22 @@ export default function CandidateApplicationForm({ slug, vacancyDetails, recruit
           hrName: res.hrName || recruiterInfo.hrName,
           message: res.message || "Application submitted successfully!",
         });
+      } else if (res.alreadyApplied && res.candidateId) {
+        setAlreadyAppliedData({
+          candidateId: res.candidateId,
+          candidateName: res.candidateName || formData.fullName,
+          jobId: res.jobId || vacancyDetails.jobId,
+          jobTitle: res.jobTitle || vacancyDetails.title,
+          appliedDate: res.appliedDate,
+          currentStatus: res.currentStatus,
+          recruiter: res.recruiter || {
+            name: recruiterInfo.hrName,
+            phone: "+91 93598 92819",
+            email: "info@riseupconsultancyy.com",
+            code: "HR-RECRUITER",
+          },
+          message: res.message,
+        });
       } else {
         setErrorMessage(res.error || "Failed to submit application.");
       }
@@ -240,7 +258,8 @@ export default function CandidateApplicationForm({ slug, vacancyDetails, recruit
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-none shadow-xs p-6 sm:p-8 space-y-6">
+    <>
+      <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-none shadow-xs p-6 sm:p-8 space-y-6">
       <div className="border-b border-slate-100 pb-4">
         <h2 className="text-base font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 font-heading">
           <User className="w-4 h-4 text-blue-600" />
@@ -482,5 +501,12 @@ export default function CandidateApplicationForm({ slug, vacancyDetails, recruit
         </button>
       </div>
     </form>
+
+    <AlreadyAppliedModal
+      isOpen={!!alreadyAppliedData}
+      onClose={() => setAlreadyAppliedData(null)}
+      data={alreadyAppliedData}
+    />
+  </>
   );
 }

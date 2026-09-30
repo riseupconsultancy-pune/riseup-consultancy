@@ -52,6 +52,105 @@ export async function applyDirectJobAction(formData: FormData) {
 
     const { fullName, email, phone, country, city, qualification, totalExperience, availability, interestedRoles, vacancyId } = parsed.data;
 
+    // Find target vacancy first
+    let targetVacancy = null;
+    if (vacancyId) {
+      targetVacancy = await prisma.vacancy.findUnique({ where: { id: vacancyId } });
+    }
+
+    if (!targetVacancy) {
+      targetVacancy = await prisma.vacancy.findFirst({
+        where: { status: "ACTIVE" },
+        orderBy: { createdAt: "desc" },
+      });
+    }
+
+    if (!targetVacancy) {
+      return { success: false, error: "No active vacancies currently open for direct application." };
+    }
+
+    // -------------------------------------------------------------
+    // DUPLICATE APPLICATION CHECK (BY EMAIL OR PHONE FOR THIS JOB)
+    // -------------------------------------------------------------
+    const normalizedEmail = email.toLowerCase().trim();
+    const inputPhoneDigits = phone.replace(/\D/g, "");
+    const inputPhoneLast10 = inputPhoneDigits.length >= 10 ? inputPhoneDigits.slice(-10) : inputPhoneDigits;
+
+    const existingCandidatesForVacancy = await prisma.candidate.findMany({
+      where: {
+        vacancyId: targetVacancy.id,
+      },
+      select: {
+        id: true,
+        candidateId: true,
+        fullName: true,
+        email: true,
+        phone: true,
+        status: true,
+        createdAt: true,
+        hr: {
+          select: {
+            employeeCode: true,
+            user: {
+              select: {
+                fullName: true,
+                phone: true,
+                email: true,
+              },
+            },
+          },
+        },
+        vacancy: {
+          select: {
+            jobId: true,
+            title: true,
+          },
+        },
+      },
+    });
+
+    const duplicateCandidate = existingCandidatesForVacancy.find((c) => {
+      // 1. Email matching
+      if (c.email && c.email.toLowerCase().trim() === normalizedEmail) {
+        return true;
+      }
+      // 2. Phone matching
+      if (c.phone) {
+        const cPhoneDigits = c.phone.replace(/\D/g, "");
+        const cPhoneLast10 = cPhoneDigits.length >= 10 ? cPhoneDigits.slice(-10) : cPhoneDigits;
+        if (
+          cPhoneDigits === inputPhoneDigits ||
+          (inputPhoneLast10.length >= 7 && cPhoneLast10 === inputPhoneLast10)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (duplicateCandidate) {
+      const assignedRecruiterUser = duplicateCandidate.hr?.user;
+      const assignedRecruiterProfile = duplicateCandidate.hr;
+
+      return {
+        success: false,
+        alreadyApplied: true,
+        candidateId: duplicateCandidate.candidateId,
+        candidateName: duplicateCandidate.fullName,
+        jobId: targetVacancy.jobId,
+        jobTitle: targetVacancy.title,
+        appliedDate: duplicateCandidate.createdAt.toISOString(),
+        currentStatus: duplicateCandidate.status,
+        recruiter: {
+          name: assignedRecruiterUser?.fullName || "RiseUp Central HR Desk",
+          phone: assignedRecruiterUser?.phone || "+91 93598 92819",
+          email: assignedRecruiterUser?.email || "info@riseupconsultancyy.com",
+          code: assignedRecruiterProfile?.employeeCode || "HR-CENTRAL",
+        },
+        message: `An active application for "${targetVacancy.title}" (${targetVacancy.jobId}) is already registered with your contact details.`,
+      };
+    }
+
     // File Validation & Binary Magic Byte Check
     const resumeFile = formData.get("resume");
     if (!resumeFile || typeof resumeFile === "string") {
@@ -103,23 +202,6 @@ export async function applyDirectJobAction(formData: FormData) {
 
     const resumeUrl = `/uploads/resumes/${safeDiskFileName}`;
     const sanitizedOriginalName = path.basename(file.name).replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 100);
-
-    // Find target vacancy
-    let targetVacancy = null;
-    if (vacancyId) {
-      targetVacancy = await prisma.vacancy.findUnique({ where: { id: vacancyId } });
-    }
-
-    if (!targetVacancy) {
-      targetVacancy = await prisma.vacancy.findFirst({
-        where: { status: "ACTIVE" },
-        orderBy: { createdAt: "desc" },
-      });
-    }
-
-    if (!targetVacancy) {
-      return { success: false, error: "No active vacancies currently open for direct application." };
-    }
 
     const candidateId = await generateCandidateId();
 

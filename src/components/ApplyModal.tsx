@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { X, Upload, FileText, CheckCircle2, AlertCircle, Loader2, Sparkles, Check } from "lucide-react";
 import { applyDirectJobAction } from "@/app/actions/public-actions";
+import AlreadyAppliedModal, { ExistingApplicationDetails } from "./AlreadyAppliedModal";
 
 interface ApplyModalProps {
   isOpen: boolean;
@@ -52,6 +53,7 @@ export default function ApplyModal({
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [successCandidateId, setSuccessCandidateId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [alreadyAppliedData, setAlreadyAppliedData] = useState<ExistingApplicationDetails | null>(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -148,6 +150,22 @@ export default function ApplyModal({
 
       if (res.success && res.candidateId) {
         setSuccessCandidateId(res.candidateId);
+      } else if (res.alreadyApplied && res.candidateId) {
+        setAlreadyAppliedData({
+          candidateId: res.candidateId,
+          candidateName: res.candidateName || formData.fullName,
+          jobId: res.jobId || "JOB-REQ",
+          jobTitle: res.jobTitle || jobTitle,
+          appliedDate: res.appliedDate,
+          currentStatus: res.currentStatus,
+          recruiter: res.recruiter || {
+            name: "RiseUp Recruitment Desk",
+            phone: "+91 93598 92819",
+            email: "info@riseupconsultancyy.com",
+            code: "HR-CENTRAL",
+          },
+          message: res.message,
+        });
       } else {
         setErrorMessage(res.error || "Failed to register application. Please try again.");
       }
@@ -161,6 +179,7 @@ export default function ApplyModal({
   const handleResetAndClose = () => {
     setSuccessCandidateId(null);
     setErrorMessage(null);
+    setAlreadyAppliedData(null);
     setFileError("");
     setResumeFile(null);
     onClose();
@@ -449,6 +468,12 @@ export default function ApplyModal({
           </div>
         )}
       </div>
+
+      <AlreadyAppliedModal
+        isOpen={!!alreadyAppliedData}
+        onClose={() => setAlreadyAppliedData(null)}
+        data={alreadyAppliedData}
+      />
     </div>
   );
 }
