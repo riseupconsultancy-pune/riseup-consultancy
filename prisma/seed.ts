@@ -130,6 +130,34 @@ async function main() {
   const clientProfileId = clientUser.clientProfile!.id;
 
   // 4. Create Sample HR Recruiter (Priya Sharma)
+  const hrDefaultTemplate = `Dear {candidate_name},
+
+Congratulations! You have been shortlisted for an interview with {company_name} for the position of *{job_title}* (Job ID: *{job_id}*).
+
+Your interview has been scheduled. Please visit the given location for your interview:
+
+📅 *Interview Date & Time:*
+{interview_date}
+
+📍 *Interview Venue / Location:*
+{interview_venue}
+
+🗺️ *Google Maps GPS Location:*
+{google_map_url}
+
+👤 *Contact Person / SPOC:* {contact_person}
+📞 *Contact Phone:* {contact_phone}
+
+⚠️ *Important Instructions:*
+1. Kindly visit the above interview location on your scheduled date & time.
+2. At the company reception desk, please don't forget to mention *RiseUp Consultancy* as your consultancy referral.
+3. Carry 2 printed hard copies of your updated resume and a valid Government Photo ID.
+{interview_instructions}
+
+Best of luck!
+— {recruiter_name} | RiseUp Consultancy
+📞 {recruiter_phone}`;
+
   const hrPasswordHash = await bcrypt.hash("HRPriya@2026", 12);
   const hrUser = await prisma.user.upsert({
     where: { email: "hr.priya@riseupconsultancy.in" },
@@ -141,9 +169,11 @@ async function main() {
           create: {
             employeeCode: "RUP-HR-101",
             commissionRate: 5.0,
-            whatsappTemplate: "Hello {Candidate_Name}, this is Priya from RiseUp Consultancy regarding your application for {Job_Title} in {City}. Are you available for a brief discussion regarding the interview schedule?",
+            whatsappTemplate: hrDefaultTemplate,
           },
-          update: {},
+          update: {
+            whatsappTemplate: hrDefaultTemplate,
+          },
         },
       },
     },
@@ -158,7 +188,7 @@ async function main() {
         create: {
           employeeCode: "RUP-HR-101",
           commissionRate: 5.0,
-          whatsappTemplate: "Hello {Candidate_Name}, this is Priya from RiseUp Consultancy regarding your application for {Job_Title} in {City}. Are you available for a brief discussion regarding the interview schedule?",
+          whatsappTemplate: hrDefaultTemplate,
         },
       },
     },

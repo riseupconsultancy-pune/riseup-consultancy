@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { getSession, hashPassword } from "@/lib/auth";
 import { generateHREmployeeCode, generateAgreementId } from "@/lib/id-generator";
+import { DEFAULT_WHATSAPP_TEMPLATE } from "@/lib/templates";
 
 // Guard: verify Super Admin session
 async function assertAdmin() {
@@ -142,7 +143,7 @@ export async function createHrAction(formData: FormData) {
           create: {
             employeeCode,
             commissionRate,
-            whatsappTemplate: "Hello {Candidate_Name}, this is {HR_Name} from RiseUp Consultancy regarding your application for {Job_Title} in {City}. Are you available for a brief discussion regarding the interview schedule?",
+            whatsappTemplate: DEFAULT_WHATSAPP_TEMPLATE,
           },
         },
       },

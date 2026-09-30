@@ -121,10 +121,12 @@ export const DEFAULT_WHATSAPP_TEMPLATE = `Dear {candidate_name},
 
 Congratulations! You have been shortlisted for an interview with {company_name} for the position of *{job_title}* (Job ID: *{job_id}*).
 
+Your interview has been scheduled. Please visit the given location for your interview:
+
 📅 *Interview Date & Time:*
 {interview_date}
 
-📍 *Interview Venue:*
+📍 *Interview Venue / Location:*
 {interview_venue}
 
 🗺️ *Google Maps GPS Location:*
@@ -134,7 +136,7 @@ Congratulations! You have been shortlisted for an interview with {company_name} 
 📞 *Contact Phone:* {contact_phone}
 
 ⚠️ *Important Instructions:*
-1. Kindly call {contact_phone} once you reach the venue.
+1. Kindly visit the above interview location on your scheduled date & time.
 2. At the company reception desk, please don't forget to mention *RiseUp Consultancy* as your consultancy referral.
 3. Carry 2 printed hard copies of your updated resume and a valid Government Photo ID.
 {interview_instructions}
@@ -144,7 +146,7 @@ Best of luck!
 📞 {recruiter_phone}`;
 
 function formatInterviewDateTime(dateStr?: string | null): string {
-  if (!dateStr) return "To be confirmed by recruiter";
+  if (!dateStr) return "Today / Tomorrow (Reporting Window: 10:30 AM to 4:00 PM)";
   try {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
@@ -177,49 +179,115 @@ function buildInterviewWhatsAppMessage({
   recruiterName: string;
   recruiterPhone?: string | null;
 }): string {
-  const company = targetVacancy?.clientCompanyName || candidate.clientCompanyName || "Company Office";
-  const title = targetVacancy?.title || candidate.vacancyTitle;
-  const jobId = targetVacancy?.jobId || candidate.vacancyJobId;
-  const city = targetVacancy?.city || candidate.vacancyCity;
+  // If the template is empty or the obsolete single-sentence draft, upgrade to comprehensive template
+  const isLegacyTemplate =
+    !template ||
+    template.trim().length === 0 ||
+    template.includes("brief discussion regarding the interview schedule") ||
+    template.includes("regarding your application for {Job_Title}") ||
+    template.includes("regarding your application for {job_title}");
 
-  const venue = targetVacancy?.interviewVenue || candidate.vacancyInterviewVenue || "Company Office (Reach SPOC on arrival)";
-  const mapsUrl = targetVacancy?.interviewLocationUrl || candidate.vacancyInterviewLocationUrl || "";
-  const displayMapsUrl = mapsUrl || "Will be shared upon arrival";
-  const contactPerson = targetVacancy?.interviewContactPerson || candidate.vacancyInterviewContactPerson || "Reception / HR Desk";
-  const contactPhone = targetVacancy?.interviewContactPhone || candidate.vacancyInterviewContactPhone || recruiterPhone || "Reception Desk";
-  const instructions = (targetVacancy?.interviewInstructions || candidate.vacancyInterviewInstructions)
-    ? `\n📌 *Special Note:* ${targetVacancy?.interviewInstructions || candidate.vacancyInterviewInstructions}`
-    : "";
+  const effectiveTemplate = isLegacyTemplate ? DEFAULT_WHATSAPP_TEMPLATE : template;
+
+  const company = targetVacancy?.clientCompanyName || candidate.clientCompanyName || "Company Corporate Office";
+  const title = targetVacancy?.title || candidate.vacancyTitle || "Job Position";
+  const jobId = targetVacancy?.jobId || candidate.vacancyJobId || "RUP-JOB";
+  const city = targetVacancy?.city || candidate.vacancyCity || "Pune";
+
+  const venue =
+    targetVacancy?.interviewVenue ||
+    candidate.vacancyInterviewVenue ||
+    "Company Office (Report to SPOC / Reception on arrival)";
+
+  const rawMapsUrl = targetVacancy?.interviewLocationUrl || candidate.vacancyInterviewLocationUrl || "";
+  const displayMapsUrl = rawMapsUrl && rawMapsUrl.trim().length > 0 ? rawMapsUrl.trim() : "https://maps.google.com";
+
+  const contactPerson =
+    targetVacancy?.interviewContactPerson ||
+    candidate.vacancyInterviewContactPerson ||
+    "Reception / HR SPOC";
+
+  const contactPhone =
+    targetVacancy?.interviewContactPhone ||
+    candidate.vacancyInterviewContactPhone ||
+    recruiterPhone ||
+    "+91 93598 92819";
+
+  const rawInstructions =
+    targetVacancy?.interviewInstructions ||
+    candidate.vacancyInterviewInstructions ||
+    "";
+  const instructions =
+    rawInstructions && rawInstructions.trim().length > 0
+      ? `\n📌 *Special Note:* ${rawInstructions.trim()}`
+      : "";
 
   const formattedDate = formatInterviewDateTime(interviewDateStr);
 
-  let message = template
-    .replace(/{candidate_name}/g, candidate.fullName)
-    .replace(/{company_name}/g, company)
-    .replace(/{job_title}/g, title)
-    .replace(/{job_id}/g, jobId)
-    .replace(/{work_city}/g, city)
-    .replace(/{interview_date}/g, formattedDate)
-    .replace(/{interview_venue}/g, venue)
-    .replace(/{venue}/g, venue)
-    .replace(/{interview_location}/g, venue)
-    .replace(/{venue_location_url}/g, displayMapsUrl)
-    .replace(/{google_map_url}/g, displayMapsUrl)
-    .replace(/{google_maps_url}/g, displayMapsUrl)
-    .replace(/{map_url}/g, displayMapsUrl)
-    .replace(/{interview_location_url}/g, displayMapsUrl)
-    .replace(/{interview_map_url}/g, displayMapsUrl)
-    .replace(/{location_url}/g, displayMapsUrl)
-    .replace(/{contact_person}/g, contactPerson)
-    .replace(/{contact_phone}/g, contactPhone)
-    .replace(/{interview_instructions}/g, instructions)
-    .replace(/{recruiter_name}/g, recruiterName)
-    .replace(/{recruiter_phone}/g, recruiterPhone || "RiseUp Helpdesk")
-    .replace(/{referral_tag}/g, candidate.referralTag);
+  let message = effectiveTemplate
+    // Candidate Name
+    .replace(/{candidate_name}/gi, candidate.fullName)
+    .replace(/{candidateName}/gi, candidate.fullName)
+    .replace(/{name}/gi, candidate.fullName)
+    // Company Name
+    .replace(/{company_name}/gi, company)
+    .replace(/{companyName}/gi, company)
+    .replace(/{company}/gi, company)
+    .replace(/{client_name}/gi, company)
+    // Job Title & Role
+    .replace(/{job_title}/gi, title)
+    .replace(/{jobTitle}/gi, title)
+    .replace(/{job_role}/gi, title)
+    .replace(/{vacancy_title}/gi, title)
+    .replace(/{vacancy_name}/gi, title)
+    .replace(/{role}/gi, title)
+    // Job ID
+    .replace(/{job_id}/gi, jobId)
+    .replace(/{jobId}/gi, jobId)
+    // City
+    .replace(/{work_city}/gi, city)
+    .replace(/{city}/gi, city)
+    // Interview Date & Time
+    .replace(/{interview_date}/gi, formattedDate)
+    .replace(/{interviewDate}/gi, formattedDate)
+    .replace(/{date}/gi, formattedDate)
+    // Interview Venue
+    .replace(/{interview_venue}/gi, venue)
+    .replace(/{interviewVenue}/gi, venue)
+    .replace(/{venue}/gi, venue)
+    .replace(/{interview_location}/gi, venue)
+    .replace(/{location}/gi, venue)
+    // Google Maps URL
+    .replace(/{google_map_url}/gi, displayMapsUrl)
+    .replace(/{google_maps_url}/gi, displayMapsUrl)
+    .replace(/{venue_location_url}/gi, displayMapsUrl)
+    .replace(/{map_url}/gi, displayMapsUrl)
+    .replace(/{maps_url}/gi, displayMapsUrl)
+    .replace(/{interview_location_url}/gi, displayMapsUrl)
+    .replace(/{interview_map_url}/gi, displayMapsUrl)
+    .replace(/{location_url}/gi, displayMapsUrl)
+    // Contact Person & Phone
+    .replace(/{contact_person}/gi, contactPerson)
+    .replace(/{contactPerson}/gi, contactPerson)
+    .replace(/{spoc}/gi, contactPerson)
+    .replace(/{contact_phone}/gi, contactPhone)
+    .replace(/{contactPhone}/gi, contactPhone)
+    // Recruiter info
+    .replace(/{recruiter_name}/gi, recruiterName)
+    .replace(/{recruiterName}/gi, recruiterName)
+    .replace(/{hr_name}/gi, recruiterName)
+    .replace(/{hrName}/gi, recruiterName)
+    .replace(/{recruiter_phone}/gi, recruiterPhone || "+91 93598 92819")
+    .replace(/{recruiterPhone}/gi, recruiterPhone || "+91 93598 92819")
+    .replace(/{hr_phone}/gi, recruiterPhone || "+91 93598 92819")
+    // Referral Tag & Instructions
+    .replace(/{referral_tag}/gi, candidate.referralTag)
+    .replace(/{referralTag}/gi, candidate.referralTag)
+    .replace(/{interview_instructions}/gi, instructions);
 
   // If a valid Google Map URL exists from the selected Job ID and it's not already embedded in the message, attach it with Interview Venue tag
-  if (mapsUrl && !message.includes(mapsUrl)) {
-    message += `\n\n📍 *Interview Venue:* ${venue}\n🗺️ *Google Maps GPS Location:*\n${mapsUrl}`;
+  if (rawMapsUrl && !message.includes(rawMapsUrl)) {
+    message += `\n\n📍 *Interview Venue:* ${venue}\n🗺️ *Google Maps GPS Location:*\n${rawMapsUrl}`;
   }
 
   return message;
@@ -375,44 +443,18 @@ export default function HrCandidatePipeline({
       (v) => v.id === candidate.vacancyId || v.jobId === candidate.vacancyJobId
     );
 
-    // If candidate is already scheduled for interview, open interview call letter with full venue & Google Maps GPS details
-    if (candidate.status === "GOING_FOR_INTERVIEW") {
-      const formattedMessage = buildInterviewWhatsAppMessage({
-        template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
-        candidate,
-        targetVacancy: targetVac,
-        interviewDateStr: candidate.interviewDate,
-        recruiterName,
-        recruiterPhone,
-      });
-      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
-      window.open(waUrl, "_blank");
-      return;
-    }
+    // Build the official shortlisted interview message with Vacancy name, Company name, Interview location, and Google Maps URL
+    const formattedMessage = buildInterviewWhatsAppMessage({
+      template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
+      candidate,
+      targetVacancy: targetVac,
+      interviewDateStr: candidate.interviewDate,
+      recruiterName,
+      recruiterPhone,
+    });
 
-    // If recruiter has configured a custom WhatsApp template in settings, use it with mapped GPS & Venue
-    if (whatsappTemplate && whatsappTemplate.trim().length > 0) {
-      const formattedMessage = buildInterviewWhatsAppMessage({
-        template: whatsappTemplate,
-        candidate,
-        targetVacancy: targetVac,
-        interviewDateStr: candidate.interviewDate,
-        recruiterName,
-        recruiterPhone,
-      });
-      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
-      window.open(waUrl, "_blank");
-    } else {
-      // Outreach message extracting selected Job ID along with Google Maps GPS link & Interview Venue
-      const formattedMessage = buildScreeningWhatsAppMessage({
-        candidate,
-        targetVacancy: targetVac,
-        recruiterName,
-        recruiterPhone,
-      });
-      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
-      window.open(waUrl, "_blank");
-    }
+    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
+    window.open(waUrl, "_blank");
 
     if (candidate.status === "APPLIED") {
       try {
