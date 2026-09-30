@@ -32,7 +32,7 @@ Congratulations! You have been shortlisted for an interview with {company_name} 
 {interview_venue}
 
 🗺️ *Google Maps GPS Location:*
-{venue_location_url}
+{google_map_url}
 
 👤 *Contact Person / SPOC:* {contact_person}
 📞 *Contact Phone:* {contact_phone}
@@ -55,7 +55,8 @@ const PLACEHOLDERS = [
   { tag: "{work_city}", label: "Work City" },
   { tag: "{interview_date}", label: "Interview Date & Time" },
   { tag: "{interview_venue}", label: "Interview Venue" },
-  { tag: "{venue_location_url}", label: "Google Maps URL" },
+  { tag: "{google_map_url}", label: "Google Maps URL" },
+  { tag: "{venue_location_url}", label: "Maps GPS Link" },
   { tag: "{contact_person}", label: "On-site SPOC" },
   { tag: "{contact_phone}", label: "Contact Phone" },
   { tag: "{recruiter_name}", label: "Recruiter Name" },
@@ -116,7 +117,12 @@ export default function HrSettingsView({
     .replace(/{company_name}/g, "Digitide Business Solutions")
     .replace(/{interview_date}/g, "Thu, 24 Sep 2026, 10:30 AM")
     .replace(/{interview_venue}/g, "4th Floor, Cerebrum IT Park, Kalyani Nagar, Pune - 411014")
+    .replace(/{venue}/g, "4th Floor, Cerebrum IT Park, Kalyani Nagar, Pune - 411014")
+    .replace(/{google_map_url}/g, "https://maps.app.goo.gl/sample123")
+    .replace(/{google_maps_url}/g, "https://maps.app.goo.gl/sample123")
     .replace(/{venue_location_url}/g, "https://maps.app.goo.gl/sample123")
+    .replace(/{map_url}/g, "https://maps.app.goo.gl/sample123")
+    .replace(/{interview_location_url}/g, "https://maps.app.goo.gl/sample123")
     .replace(/{contact_person}/g, "Sneha Deshmukh (HR Manager)")
     .replace(/{contact_phone}/g, "+91 91234 56789")
     .replace(/{interview_instructions}/g, "Dress Code: Formal attire. Report 15 minutes before slot.")

@@ -128,7 +128,7 @@ Congratulations! You have been shortlisted for an interview with {company_name} 
 {interview_venue}
 
 🗺️ *Google Maps GPS Location:*
-{venue_location_url}
+{google_map_url}
 
 👤 *Contact Person / SPOC:* {contact_person}
 📞 *Contact Phone:* {contact_phone}
@@ -183,7 +183,8 @@ function buildInterviewWhatsAppMessage({
   const city = targetVacancy?.city || candidate.vacancyCity;
 
   const venue = targetVacancy?.interviewVenue || candidate.vacancyInterviewVenue || "Company Office (Reach SPOC on arrival)";
-  const mapsUrl = targetVacancy?.interviewLocationUrl || candidate.vacancyInterviewLocationUrl || "Location link will be shared";
+  const mapsUrl = targetVacancy?.interviewLocationUrl || candidate.vacancyInterviewLocationUrl || "";
+  const displayMapsUrl = mapsUrl || "Will be shared upon arrival";
   const contactPerson = targetVacancy?.interviewContactPerson || candidate.vacancyInterviewContactPerson || "Reception / HR Desk";
   const contactPhone = targetVacancy?.interviewContactPhone || candidate.vacancyInterviewContactPhone || recruiterPhone || "Reception Desk";
   const instructions = (targetVacancy?.interviewInstructions || candidate.vacancyInterviewInstructions)
@@ -192,7 +193,7 @@ function buildInterviewWhatsAppMessage({
 
   const formattedDate = formatInterviewDateTime(interviewDateStr);
 
-  return template
+  let message = template
     .replace(/{candidate_name}/g, candidate.fullName)
     .replace(/{company_name}/g, company)
     .replace(/{job_title}/g, title)
@@ -200,33 +201,61 @@ function buildInterviewWhatsAppMessage({
     .replace(/{work_city}/g, city)
     .replace(/{interview_date}/g, formattedDate)
     .replace(/{interview_venue}/g, venue)
-    .replace(/{venue_location_url}/g, mapsUrl)
+    .replace(/{venue}/g, venue)
+    .replace(/{interview_location}/g, venue)
+    .replace(/{venue_location_url}/g, displayMapsUrl)
+    .replace(/{google_map_url}/g, displayMapsUrl)
+    .replace(/{google_maps_url}/g, displayMapsUrl)
+    .replace(/{map_url}/g, displayMapsUrl)
+    .replace(/{interview_location_url}/g, displayMapsUrl)
+    .replace(/{interview_map_url}/g, displayMapsUrl)
+    .replace(/{location_url}/g, displayMapsUrl)
     .replace(/{contact_person}/g, contactPerson)
     .replace(/{contact_phone}/g, contactPhone)
     .replace(/{interview_instructions}/g, instructions)
     .replace(/{recruiter_name}/g, recruiterName)
     .replace(/{recruiter_phone}/g, recruiterPhone || "RiseUp Helpdesk")
     .replace(/{referral_tag}/g, candidate.referralTag);
+
+  // If a valid Google Map URL exists from the selected Job ID and it's not already embedded in the message, attach it with Interview Venue tag
+  if (mapsUrl && !message.includes(mapsUrl)) {
+    message += `\n\n📍 *Interview Venue:* ${venue}\n🗺️ *Google Maps GPS Location:*\n${mapsUrl}`;
+  }
+
+  return message;
 }
 
 function buildScreeningWhatsAppMessage({
   candidate,
+  targetVacancy,
   recruiterName,
   recruiterPhone,
 }: {
   candidate: CandidateItem;
+  targetVacancy?: ActiveVacancyOption | null;
   recruiterName: string;
   recruiterPhone?: string | null;
 }): string {
-  return `Hello ${candidate.fullName}, this is ${recruiterName} from RiseUp Consultancy regarding your application for ${candidate.vacancyTitle} at ${candidate.clientCompanyName}.
+  const company = targetVacancy?.clientCompanyName || candidate.clientCompanyName || "Company Office";
+  const title = targetVacancy?.title || candidate.vacancyTitle;
+  const jobId = targetVacancy?.jobId || candidate.vacancyJobId;
+  const venue = targetVacancy?.interviewVenue || candidate.vacancyInterviewVenue || "Company Office (Reach SPOC on arrival)";
+  const mapsUrl = targetVacancy?.interviewLocationUrl || candidate.vacancyInterviewLocationUrl || "";
+
+  let msg = `Hello ${candidate.fullName}, this is ${recruiterName} from RiseUp Consultancy regarding your application for *${title}* (Job ID: *${jobId}*) at ${company}.
 
 We have reviewed your profile and would like to connect for a quick screening round before scheduling your client interview.
 
-*Mandatory Referral Code at Interview:*
-${candidate.referralTag}
+📍 *Interview Venue:*
+${venue}`;
 
-Please reply to confirm your availability.
-— ${recruiterName} | RiseUp Consultancy (${recruiterPhone || "Pune HQ"})`;
+  if (mapsUrl) {
+    msg += `\n\n🗺️ *Google Maps GPS Location:*\n${mapsUrl}`;
+  }
+
+  msg += `\n\n*Mandatory Referral Code at Interview:*\n${candidate.referralTag}\n\nPlease reply to confirm your availability.\n— ${recruiterName} | RiseUp Consultancy (${recruiterPhone || "Pune HQ"})`;
+
+  return msg;
 }
 
 export default function HrCandidatePipeline({
@@ -341,9 +370,13 @@ export default function HrCandidatePipeline({
   const handleWhatsAppConnect = async (candidate: CandidateItem) => {
     const cleanPhone = candidate.phone.replace(/[^0-9]/g, "");
 
-    // If candidate is already scheduled for interview, open interview call letter with full venue details
+    // Resolve target vacancy by id or jobId to extract Google Maps URL and Interview Venue
+    const targetVac = activeVacancies.find(
+      (v) => v.id === candidate.vacancyId || v.jobId === candidate.vacancyJobId
+    );
+
+    // If candidate is already scheduled for interview, open interview call letter with full venue & Google Maps GPS details
     if (candidate.status === "GOING_FOR_INTERVIEW") {
-      const targetVac = activeVacancies.find((v) => v.id === candidate.vacancyId);
       const formattedMessage = buildInterviewWhatsAppMessage({
         template: whatsappTemplate || DEFAULT_WHATSAPP_TEMPLATE,
         candidate,
@@ -357,15 +390,29 @@ export default function HrCandidatePipeline({
       return;
     }
 
-    // Default outreach message for new or connected leads
-    const formattedMessage = buildScreeningWhatsAppMessage({
-      candidate,
-      recruiterName,
-      recruiterPhone,
-    });
-
-    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
-    window.open(waUrl, "_blank");
+    // If recruiter has configured a custom WhatsApp template in settings, use it with mapped GPS & Venue
+    if (whatsappTemplate && whatsappTemplate.trim().length > 0) {
+      const formattedMessage = buildInterviewWhatsAppMessage({
+        template: whatsappTemplate,
+        candidate,
+        targetVacancy: targetVac,
+        interviewDateStr: candidate.interviewDate,
+        recruiterName,
+        recruiterPhone,
+      });
+      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
+      window.open(waUrl, "_blank");
+    } else {
+      // Outreach message extracting selected Job ID along with Google Maps GPS link & Interview Venue
+      const formattedMessage = buildScreeningWhatsAppMessage({
+        candidate,
+        targetVacancy: targetVac,
+        recruiterName,
+        recruiterPhone,
+      });
+      const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(formattedMessage)}`;
+      window.open(waUrl, "_blank");
+    }
 
     if (candidate.status === "APPLIED") {
       try {
@@ -521,6 +568,11 @@ export default function HrCandidatePipeline({
                   vacancyTitle: targetVac?.title || c.vacancyTitle,
                   vacancyCity: targetVac?.city || c.vacancyCity,
                   clientCompanyName: targetVac?.clientCompanyName || c.clientCompanyName,
+                  vacancyInterviewVenue: targetVac?.interviewVenue || null,
+                  vacancyInterviewLocationUrl: targetVac?.interviewLocationUrl || null,
+                  vacancyInterviewContactPerson: targetVac?.interviewContactPerson || null,
+                  vacancyInterviewContactPhone: targetVac?.interviewContactPhone || null,
+                  vacancyInterviewInstructions: targetVac?.interviewInstructions || null,
                   vacancyStatus: "ACTIVE",
                 }
               : c
