@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { generateJobId } from "@/lib/id-generator";
+import { notifyGoogleOfJobVacancy } from "@/lib/google-indexing";
 
 // Guard: verify Corporate Client session
 async function assertClient() {
@@ -181,10 +182,18 @@ export async function toggleClientVacancyStatusAction(vacancyId: string, targetS
       data: { status: targetStatus },
     });
 
+    if (vacancy.isPostedOnWebsite) {
+      const type = targetStatus === "ACTIVE" ? "URL_UPDATED" : "URL_DELETED";
+      notifyGoogleOfJobVacancy(vacancy.title, vacancy.city, vacancy.jobId, type).catch((err) => {
+        console.warn("Background Google Indexing ping failed:", err);
+      });
+    }
+
     revalidatePath("/client/vacancies");
     revalidatePath("/client/dashboard");
     revalidatePath("/admin/vacancies");
     revalidatePath("/hr/vacancies");
+    revalidatePath("/jobs");
 
     return {
       success: true,

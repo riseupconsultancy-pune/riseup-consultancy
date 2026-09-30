@@ -2,11 +2,13 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
 import ApplyModal from "@/components/ApplyModal";
 import HireModal from "@/components/HireModal";
+import { generateJobSlug } from "@/lib/job-slug";
 import { 
   Search, 
   MapPin, 
@@ -454,12 +456,14 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                           </span>
                         </div>
 
-                        {/* Job Role Title - Strictly 1 line with ellipsis across all views to maintain card sizing consistency */}
+                        {/* Job Role Title - Clickable link for crawlers & candidates */}
                         <h3
                           title={job.title}
                           className="text-sm sm:text-base md:text-lg font-bold sm:font-black text-slate-900 font-heading leading-tight group-hover:text-blue-600 transition-colors truncate whitespace-nowrap overflow-hidden text-ellipsis block w-full min-w-0"
                         >
-                          {job.title}
+                          <Link href={`/jobs/${generateJobSlug(job.title, job.city, job.jobId || job.id)}`} className="hover:underline">
+                            {job.title}
+                          </Link>
                         </h3>
 
                         {/* Structured Quick Specs Strip */}
@@ -550,14 +554,22 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                           </span>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => handleOpenApply(job.title, job.id)}
-                          className="inline-flex items-center justify-center gap-1 px-3.5 sm:px-5 py-1.5 sm:py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider rounded-lg sm:rounded-xl transition-all shadow-xs hover:shadow-md cursor-pointer min-h-[32px] sm:min-h-[38px] whitespace-nowrap"
-                        >
-                          <span>Apply Now</span>
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center gap-1.5">
+                          <Link
+                            href={`/jobs/${generateJobSlug(job.title, job.city, job.jobId || job.id)}`}
+                            className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1.5 sm:py-2 text-slate-600 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 text-[10.5px] sm:text-xs font-semibold rounded-lg sm:rounded-xl transition-all min-h-[32px] sm:min-h-[38px] whitespace-nowrap"
+                          >
+                            Details
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => handleOpenApply(job.title, job.id)}
+                            className="inline-flex items-center justify-center gap-1 px-3.5 sm:px-5 py-1.5 sm:py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider rounded-lg sm:rounded-xl transition-all shadow-xs hover:shadow-md cursor-pointer min-h-[32px] sm:min-h-[38px] whitespace-nowrap"
+                          >
+                            <span>Apply Now</span>
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );

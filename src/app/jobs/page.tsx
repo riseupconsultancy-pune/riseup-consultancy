@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import JobsDirectoryClient, { MinimalistJob } from "./JobsDirectoryClient";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site-config";
+import { generateJobSlug } from "@/lib/job-slug";
 
 export const dynamic = "force-dynamic";
 
@@ -141,64 +142,42 @@ export default async function JobsPage() {
 
   const jobsToDisplay = formattedDbJobs.length > 0 ? formattedDbJobs : FALLBACK_JOBS;
 
-  // JSON-LD structured data for Google Jobs, Indeed, LinkedIn, Naukri automated scrapers
+  // Valid Schema.org structured data for Directory / Collection Page
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "ItemList",
-    itemListElement: jobsToDisplay.slice(0, 20).map((job, index) => {
-      const datePosted = job.createdAt
-        ? new Date(job.createdAt).toISOString().split("T")[0]
-        : new Date().toISOString().split("T")[0];
-      const validThroughDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0];
-
-      const jobPostingItem: Record<string, any> = {
-        "@type": "JobPosting",
-        title: job.title,
-        description:
-          job.description ||
-          `Immediate opening for ${job.title} in ${job.city}, ${job.country}. Free placement assistance provided by RiseUp Consultancy. Candidate requirements: ${job.skills.join(
-            ", "
-          )}.`,
-        datePosted,
-        validThrough: validThroughDate,
-        employmentType: "FULL_TIME",
-        directApply: true,
-        hiringOrganization: {
-          "@type": "Organization",
-          name: "RiseUp Consultancy Client Partner",
-          sameAs: SITE_URL,
-        },
-        jobLocation: {
-          "@type": "Place",
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: job.city,
-            addressCountry: job.country === "Nigeria" ? "NG" : "IN",
-          },
-        },
-      };
-
-      if (job.salaryMin || job.salaryMax) {
-        jobPostingItem.baseSalary = {
-          "@type": "MonetaryAmount",
-          currency: job.salaryCurrency || (job.country === "Nigeria" ? "NGN" : "INR"),
-          value: {
-            "@type": "QuantitativeValue",
-            minValue: job.salaryMin || 0,
-            maxValue: job.salaryMax || job.salaryMin || 0,
-            unitText: "YEAR",
-          },
-        };
-      }
-
-      return {
+    "@type": "CollectionPage",
+    name: "Verified Open Job Vacancies | RiseUp Consultancy",
+    url: `${SITE_URL}/jobs`,
+    description: "Browse verified BPO, BPM, Back Office, and Corporate positions with 100% Free Placement Assistance.",
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: jobsToDisplay.length,
+      itemListElement: jobsToDisplay.slice(0, 30).map((job, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        item: jobPostingItem,
-      };
-    }),
+        url: `${SITE_URL}/jobs/${generateJobSlug(job.title, job.city, job.jobId || job.id)}`,
+        name: `${job.title} in ${job.city}`,
+      })),
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Jobs",
+        item: `${SITE_URL}/jobs`,
+      },
+    ],
   };
 
   return (
@@ -206,6 +185,10 @@ export default async function JobsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <React.Suspense fallback={<div className="min-h-screen bg-[#f8fafc]" />}>
         <JobsDirectoryClient initialJobs={jobsToDisplay} />

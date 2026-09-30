@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import { getSession, hashPassword } from "@/lib/auth";
 import { generateHREmployeeCode, generateAgreementId } from "@/lib/id-generator";
 import { DEFAULT_WHATSAPP_TEMPLATE } from "@/lib/templates";
+import { notifyGoogleOfJobVacancy } from "@/lib/google-indexing";
 
 // Guard: verify Super Admin session
 async function assertAdmin() {
@@ -230,12 +231,17 @@ export async function broadcastVacancyToHRsAction(vacancyId: string) {
 export async function publishVacancyToWebsiteAction(vacancyId: string) {
   try {
     await assertAdmin();
-    await prisma.vacancy.update({
+    const updated = await prisma.vacancy.update({
       where: { id: vacancyId },
       data: {
         isPostedOnWebsite: true,
         status: "ACTIVE",
       },
+    });
+
+    // Notify Google Indexing in background for immediate Google for Jobs discovery
+    notifyGoogleOfJobVacancy(updated.title, updated.city, updated.jobId, "URL_UPDATED").catch((err) => {
+      console.warn("Background Google Indexing ping failed:", err);
     });
 
     revalidatePath("/admin/vacancies");
@@ -250,10 +256,18 @@ export async function publishVacancyToWebsiteAction(vacancyId: string) {
 export async function toggleVacancyStatusAction(vacancyId: string, status: string) {
   try {
     await assertAdmin();
-    await prisma.vacancy.update({
+    const updated = await prisma.vacancy.update({
       where: { id: vacancyId },
       data: { status },
     });
+
+    // Notify Google Indexing if page is public on website
+    if (updated.isPostedOnWebsite) {
+      const type = status === "ACTIVE" ? "URL_UPDATED" : "URL_DELETED";
+      notifyGoogleOfJobVacancy(updated.title, updated.city, updated.jobId, type).catch((err) => {
+        console.warn("Background Google Indexing ping failed:", err);
+      });
+    }
 
     revalidatePath("/admin/vacancies");
     revalidatePath("/admin/dashboard");
@@ -373,5 +387,43 @@ export async function createAgreementAction(formData: FormData) {
   } catch (error: any) {
     console.error("createAgreementAction error:", error);
     return { success: false, error: error.message || "Failed to create agreement." };
+  }
+}
+
+// -------------------------------------------------------------
+// 6. GOOGLE INDEXING API BULK NOTIFICATION
+// -------------------------------------------------------------
+
+export async function syncAllVacanciesToGoogleIndexingAction() {
+  try {
+    await assertAdmin();
+    const activeVacancies = await prisma.vacancy.findMany({
+      where: {
+        status: "ACTIVE",
+        isPostedOnWebsite: true,
+      },
+      select: {
+        title: true,
+        city: true,
+        jobId: true,
+      },
+    });
+
+    const results = [];
+    for (const v of activeVacancies) {
+      const res = await notifyGoogleOfJobVacancy(v.title, v.city, v.jobId, "URL_UPDATED");
+      results.push({ jobId: v.jobId, ...res });
+    }
+
+    return {
+      success: true,
+      count: activeVacancies.length,
+      results,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message || "Failed to sync vacancies to Google Indexing API.",
+    };
   }
 }

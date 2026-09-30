@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
 import { METRO_CITY_SEO_PROFILES } from "@/lib/seo-knowledge";
 import { SITE_URL } from "@/lib/site-config";
+import { generateJobSlug } from "@/lib/job-slug";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
@@ -61,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  // 3. Dynamic Active Job Vacancies
+  // 3. Dynamic Active Job Vacancies (Canonical SEO URLs for Google for Jobs & Crawlers)
   let jobRoutes: MetadataRoute.Sitemap = [];
   try {
     const activeVacancies = await prisma.vacancy.findMany({
@@ -71,15 +72,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       select: {
         id: true,
+        jobId: true,
+        title: true,
+        city: true,
         updatedAt: true,
       },
     });
 
     jobRoutes = activeVacancies.map((vacancy) => ({
-      url: `${baseUrl}/apply/${vacancy.id}`,
+      url: `${baseUrl}/jobs/${generateJobSlug(vacancy.title, vacancy.city, vacancy.jobId)}`,
       lastModified: vacancy.updatedAt,
-      changeFrequency: "daily",
-      priority: 0.85,
+      changeFrequency: "hourly",
+      priority: 0.9,
     }));
   } catch {
     // safe fallback if DB query fails during build
