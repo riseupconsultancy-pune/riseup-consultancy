@@ -69,6 +69,17 @@ try {
       console.warn('[RiseUp Auto-DB] Note: prisma db push skipped or encountered non-fatal notice:', pushErr.message);
     }
   }
+
+  // Synchronize Master Super Admin credentials to ensure login works on every deployment
+  try {
+    const syncScript = path.join(__dirname, 'sync-admin-credentials.js');
+    if (fs.existsSync(syncScript)) {
+      console.log('[RiseUp Auto-DB] Synchronizing Super Admin credentials...');
+      execSync(`node "${syncScript}"`, { stdio: 'inherit' });
+    }
+  } catch (syncErr) {
+    console.warn('[RiseUp Auto-DB] Admin sync notice (non-fatal):', syncErr.message);
+  }
 } catch (err) {
   console.error('[RiseUp Auto-DB] Auto-sync notice:', err.message);
 }

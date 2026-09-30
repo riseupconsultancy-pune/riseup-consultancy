@@ -69,12 +69,12 @@ async function main() {
   });
 
   // 2. Create Master Super Admin
-  const adminPasswordHash = await bcrypt.hash("AdminRiseUp@2026", 12);
+  const adminPasswordHash = await bcrypt.hash("Admin@Riseup@2025", 12);
   const adminUser = await prisma.user.upsert({
-    where: { email: "admin@riseupconsultancy.in" },
+    where: { email: "admin@riseupconsultancyy.com" },
     update: { passwordHash: adminPasswordHash, status: "ACTIVE" },
     create: {
-      email: "admin@riseupconsultancy.in",
+      email: "admin@riseupconsultancyy.com",
       fullName: "RiseUp Executive Admin",
       passwordHash: adminPasswordHash,
       role: "SUPER_ADMIN",

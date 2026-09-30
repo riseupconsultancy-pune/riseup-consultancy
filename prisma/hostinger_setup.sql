@@ -377,10 +377,10 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 -- 2. SEED USERS & PROFILES
 -- ==========================================================
 
--- Super Admin: admin@riseupconsultancy.in / AdminRiseUp@2026
+-- Super Admin: admin@riseupconsultancyy.com / Admin@Riseup@2025
 INSERT INTO `User` (`id`, `email`, `passwordHash`, `fullName`, `phone`, `role`, `status`, `createdAt`, `updatedAt`) VALUES
-('usr_super_admin_001', 'admin@riseupconsultancy.in', '$2b$12$Es/N3ICutaHwMlz21CW7TuLHH4ibbQezKE6AE7j7PKD/q06F3jKYC', 'RiseUp Executive Admin', '+91 98765 43210', 'SUPER_ADMIN', 'ACTIVE', NOW(3), NOW(3))
-ON DUPLICATE KEY UPDATE `passwordHash` = VALUES(`passwordHash`), `status` = 'ACTIVE';
+('usr_super_admin_001', 'admin@riseupconsultancyy.com', '$2b$12$IfdIXJF2RmJsnZQTRsGQT.DQaae9fQUUEuhZx50jxtKbHxh0KtgBm', 'RiseUp Executive Admin', '+91 98765 43210', 'SUPER_ADMIN', 'ACTIVE', NOW(3), NOW(3))
+ON DUPLICATE KEY UPDATE `email` = VALUES(`email`), `passwordHash` = VALUES(`passwordHash`), `status` = 'ACTIVE';
 
 -- Corporate Client: client@apexglobal.com / ClientApex@2026
 INSERT INTO `User` (`id`, `email`, `passwordHash`, `fullName`, `phone`, `role`, `status`, `createdAt`, `updatedAt`) VALUES

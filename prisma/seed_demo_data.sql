@@ -18,14 +18,14 @@ ON DUPLICATE KEY UPDATE `currentValue` = VALUES(`currentValue`);
 
 -- 2. USERS (Super Admin, Corporate Clients, HR Recruiters)
 -- Passwords:
--- admin@riseupconsultancy.in   => AdminRiseUp@2026
+-- admin@riseupconsultancyy.com  => Admin@Riseup@2025
 -- client@apexglobal.com        => ClientApex@2026
 -- client@digitide.com          => ClientDigitide@2026
 -- hr.priya@riseupconsultancy.in=> HRPriya@2026
 -- hr.rahul@riseupconsultancy.in=> HRRahul@2026
 
 INSERT INTO `User` (`id`, `email`, `passwordHash`, `fullName`, `phone`, `role`, `status`, `createdAt`, `updatedAt`) VALUES
-('usr_super_admin_001', 'admin@riseupconsultancy.in', '$2b$12$HYmY6tBq0SMtSa/aeq9VZuycuuq4IeCGX8Y3km6PB/BMhE1AVPO3G', 'Rohit Sharma (Executive Director)', '+91 93598 92819', 'SUPER_ADMIN', 'ACTIVE', NOW(3), NOW(3)),
+('usr_super_admin_001', 'admin@riseupconsultancyy.com', '$2b$12$IfdIXJF2RmJsnZQTRsGQT.DQaae9fQUUEuhZx50jxtKbHxh0KtgBm', 'RiseUp Executive Admin', '+91 93598 92819', 'SUPER_ADMIN', 'ACTIVE', NOW(3), NOW(3)),
 ('usr_client_apex_001', 'client@apexglobal.com', '$2b$12$Sha0YUh4kb0ZtvqdEXjZc.8Svic5XgnsIFv9pkrEEkyzKaAyxRNmK', 'Rajesh Kulkarni (Director HR)', '+91 98220 11223', 'CLIENT', 'ACTIVE', NOW(3), NOW(3)),
 ('usr_client_digitide_001', 'client@digitide.com', '$2b$12$yLt6GWMUWK3SuQ/lKMeRbeFBQcaC1xrXuUx7hBenxh0AdernoWETy', 'Nitin Patil (Head TA)', '+91 98900 12345', 'CLIENT', 'ACTIVE', NOW(3), NOW(3)),
 ('usr_hr_priya_001', 'hr.priya@riseupconsultancy.in', '$2b$12$gWz3mE8o3rtykBT/QfcXtewwTc0tEimLjNyowU9sE37c/5MLAVgjS', 'Priya Sharma (Senior Recruiter)', '+91 97654 32109', 'HR_RECRUITER', 'ACTIVE', NOW(3), NOW(3)),
