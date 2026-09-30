@@ -5,21 +5,44 @@ import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
 import Link from "next/link";
 import { ShieldCheck, Lock, Eye, FileCheck } from "lucide-react";
-import { SITE_URL } from "@/lib/site-config";
+import { SITE_URL, SITE_NAME } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Rise Up Consultancy Pune",
+  title: "Candidate Privacy Policy & Data Protection",
   description:
-    "Official privacy policy of Rise Up Consultancy Pune. Details how candidate resumes, applicant data, and client inquiries are securely managed and protected.",
+    "Official privacy policy of Riseup Consultancy Pune. Details how candidate resumes, applicant data, and client inquiries are securely managed and protected.",
   alternates: {
     canonical: `${SITE_URL}/privacy`,
   },
   openGraph: {
-    title: "Privacy Policy | Rise Up Consultancy Pune",
+    title: `Candidate Privacy Policy | ${SITE_NAME}`,
     description: "Our commitment to candidate data privacy and secure recruitment operations.",
     url: `${SITE_URL}/privacy`,
     type: "website",
   },
+};
+
+const PRIVACY_SCHEMA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: SITE_URL,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Privacy Policy",
+          item: `${SITE_URL}/privacy`,
+        },
+      ],
+    },
+  ],
 };
 
 export default function PrivacyPage() {
@@ -27,6 +50,10 @@ export default function PrivacyPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(PRIVACY_SCHEMA) }}
+      />
       <Header />
 
       <main className="flex-1">

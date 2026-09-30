@@ -23,13 +23,15 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
   title: {
-    default: `${SITE_NAME} | Staffing & Recruiting Services Pune`,
+    default: `${SITE_NAME} | Official Recruitment & Corporate Staffing Platform`,
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Official website of Rise Up Consultancy Pune. Talent Aligned. Futures Elevated. Direct company payroll staffing and verified recruitment across Pune, Pan-India, and international corridors. 100% Free placement for job seekers.",
+    "Official website of Riseup Consultancy Pune. Talent Aligned. Futures Elevated. Direct company payroll staffing and verified recruitment across Pune, Pan-India, and international corridors. 100% Free placement for job seekers.",
   keywords: [
+    "Riseup Consultancy",
     "Rise Up Consultancy Pune",
     "Best talent supply agency in pune",
     "Talent supply in pune",
@@ -58,7 +60,7 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: `${SITE_NAME} | Staffing & Recruiting Services Pune`,
+    title: `${SITE_NAME} | Official Recruitment & Corporate Staffing Platform`,
     description:
       "Direct company payroll staffing and verified recruitment across Pune, Pan-India, and international corridors. 100% Free placement for job seekers.",
     url: SITE_URL,
@@ -70,25 +72,30 @@ export const metadata: Metadata = {
         url: "/images/rise_up_consultancy_pune_logo.png",
         width: 1254,
         height: 1254,
-        alt: "Rise Up Consultancy Official Brand Mark",
+        alt: "Riseup Consultancy Official Brand Mark",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} | Staffing & Recruiting Services Pune`,
+    title: `${SITE_NAME} | Official Recruitment & Corporate Staffing Platform`,
     description: "Direct company payroll staffing across Pune & Pan-India. 100% Free candidate placement.",
     images: ["/images/rise_up_consultancy_pune_logo.png"],
   },
   icons: {
     icon: [
-      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-48.png", type: "image/png", sizes: "48x48" },
+      { url: "/icon-96.png", type: "image/png", sizes: "96x96" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/favicon.png", type: "image/png", sizes: "512x512" },
     ],
-    shortcut: "/favicon.png",
+    shortcut: "/favicon.ico",
     apple: [
-      { url: "/favicon.png", type: "image/png" },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
+  manifest: "/manifest.json",
   robots: {
     index: true,
     follow: true,
@@ -194,11 +201,48 @@ const ORGANIZATION_SCHEMA = {
         },
         "query-input": "required name=search_term_string",
       },
+      hasPart: [
+        {
+          "@type": "WebPage",
+          "@id": `${SITE_URL}/jobs`,
+          url: `${SITE_URL}/jobs`,
+          name: "Verified Open Job Vacancies",
+          description: "Browse verified BPO, Customer Support, and Back Office job openings in Pune and Pan-India.",
+        },
+        {
+          "@type": "WebPage",
+          "@id": `${SITE_URL}/services`,
+          url: `${SITE_URL}/services`,
+          name: "Corporate Recruitment & Staffing Services",
+          description: "High-volume BPO staffing, permanent lateral hiring, and turnkey RPO solutions.",
+        },
+        {
+          "@type": "WebPage",
+          "@id": `${SITE_URL}/about`,
+          url: `${SITE_URL}/about`,
+          name: "About Riseup Consultancy",
+          description: "Authorized recruitment agency profile, zero candidate fee pledge, and Pune headquarters.",
+        },
+        {
+          "@type": "WebPage",
+          "@id": `${SITE_URL}/contact`,
+          url: `${SITE_URL}/contact`,
+          name: "Contact Recruitment Desk",
+          description: "Official Pune office address, direct HR calling numbers, and mandate submission desk.",
+        },
+        {
+          "@type": "WebPage",
+          "@id": `${SITE_URL}/privacy`,
+          url: `${SITE_URL}/privacy`,
+          name: "Candidate Privacy Policy & Data Protection",
+          description: "Candidate data confidentiality, applicant privacy rights, and security policies.",
+        },
+      ],
     },
     {
       "@type": "ItemList",
       "@id": `${SITE_URL}/#sitelinks`,
-      name: "Rise Up Consultancy Site Navigation",
+      name: "Riseup Consultancy Main Sitelinks",
       itemListElement: [
         {
           "@type": "SiteNavigationElement",
@@ -231,16 +275,16 @@ const ORGANIZATION_SCHEMA = {
         {
           "@type": "SiteNavigationElement",
           position: 5,
-          name: "Terms & Conditions",
-          description: "Official terms of service, candidate rights, and corporate placement SLAs.",
-          url: `${SITE_URL}/terms`,
+          name: "Privacy Policy",
+          description: "Data confidentiality, resume protection, and privacy grievance contact.",
+          url: `${SITE_URL}/privacy`,
         },
         {
           "@type": "SiteNavigationElement",
           position: 6,
-          name: "Privacy Policy",
-          description: "Data confidentiality, resume protection, and privacy grievance contact.",
-          url: `${SITE_URL}/privacy`,
+          name: "Terms & Conditions",
+          description: "Official terms of service, candidate rights, and corporate placement SLAs.",
+          url: `${SITE_URL}/terms`,
         },
       ],
     },
@@ -255,9 +299,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${outfit.variable} ${manrope.variable} scroll-smooth`}>
       <head>
-        <link rel="icon" href="/favicon.png" type="image/png" />
-        <link rel="shortcut icon" href="/favicon.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon-48.png" type="image/png" sizes="48x48" />
+        <link rel="icon" href="/icon-96.png" type="image/png" sizes="96x96" />
+        <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+        <link rel="icon" href="/favicon.png" type="image/png" sizes="512x512" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="application-name" content={SITE_NAME} />
+        <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
         <meta property="og:site_name" content={SITE_NAME} />
         <script
           type="application/ld+json"

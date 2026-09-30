@@ -209,7 +209,7 @@ export default function Header() {
         </Link>
 
         {/* Center Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-slate-700">
+        <nav aria-label="Main Navigation" className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-slate-700">
           <Link href="/services" className="hover:text-blue-600 transition-colors">
             Services
           </Link>

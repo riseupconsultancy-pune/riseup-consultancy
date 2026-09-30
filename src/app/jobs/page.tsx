@@ -8,7 +8,7 @@ import { generateJobSlug } from "@/lib/job-slug";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Browse Open Job Vacancies | RiseUp Consultancy Pune & Nigeria",
+  title: "Browse Open Job Vacancies",
   description:
     "Apply directly for verified BPO, BPM, Back Office, IT, and Corporate positions in Pune, Mumbai, Bengaluru, Lagos, and Abuja. 100% Free placement assistance for job seekers.",
   keywords: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     canonical: `${SITE_URL}/jobs`,
   },
   openGraph: {
-    title: "Open Job Vacancies | RiseUp Consultancy",
+    title: "Browse Open Job Vacancies | Riseup Consultancy",
     description: "Browse verified corporate and BPO jobs in India & Nigeria. 100% Free candidate placement services.",
     url: `${SITE_URL}/jobs`,
     type: "website",
