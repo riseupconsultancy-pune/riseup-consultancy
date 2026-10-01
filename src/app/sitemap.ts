@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { METRO_CITY_SEO_PROFILES } from "@/lib/seo-knowledge";
 import { SITE_URL } from "@/lib/site-config";
 import { generateJobSlug } from "@/lib/job-slug";
+import { getAllBlogPosts } from "@/lib/blog-service";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
@@ -27,6 +28,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/about`,
@@ -89,5 +96,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // safe fallback if DB query fails during build
   }
 
-  return [...staticRoutes, ...cityRoutes, ...jobRoutes];
+  // 4. Dynamic SEO Blog Playbook Routes
+  const blogPosts = await getAllBlogPosts();
+  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.85,
+  }));
+
+  return [...staticRoutes, ...cityRoutes, ...jobRoutes, ...blogRoutes];
 }
