@@ -32,6 +32,9 @@ async function syncAdminCredentials() {
   const NEW_ADMIN_PASSWORD = 'Admin@Riseup@2025';
   const OLD_ADMIN_EMAIL = 'admin@riseupconsultancy.in';
 
+  const CLIENT_EMAIL = 'info@riseupconsultancyy.com';
+  const CLIENT_PASSWORD = 'Client@1810';
+
   console.log(`[RiseUp Admin Sync] Synchronizing Super Admin credentials to: ${NEW_ADMIN_EMAIL}...`);
 
   try {
@@ -100,9 +103,88 @@ async function syncAdminCredentials() {
       }
     }
 
-    console.log('[RiseUp Admin Sync] Admin credentials sync completed successfully!');
+    // 3. Clean up demo users if present on deployment (Apex Global, Digitide, Priya HR)
+    const demoEmails = ['client@apexglobal.com', 'client@digitide.com', 'hr.priya@riseupconsultancy.in'];
+    for (const email of demoEmails) {
+      const demoUser = await prisma.user.findUnique({ where: { email } });
+      if (demoUser) {
+        await prisma.user.delete({ where: { id: demoUser.id } });
+        console.log(`[RiseUp Admin Sync] Purged demo account: ${email}`);
+      }
+    }
+
+    // 4. Synchronize Fresh Client Profile (info@riseupconsultancyy.com / Client@1810)
+    console.log(`[RiseUp Client Sync] Synchronizing Client profile for: ${CLIENT_EMAIL}...`);
+    const clientPassHash = await bcrypt.hash(CLIENT_PASSWORD, 12);
+    const existingClient = await prisma.user.findUnique({
+      where: { email: CLIENT_EMAIL },
+      include: { clientProfile: true },
+    });
+
+    if (existingClient) {
+      await prisma.user.update({
+        where: { id: existingClient.id },
+        data: {
+          passwordHash: clientPassHash,
+          role: 'CLIENT',
+          status: 'ACTIVE',
+          fullName: 'Rise Up Consultancy',
+        },
+      });
+
+      if (!existingClient.clientProfile) {
+        await prisma.clientProfile.create({
+          data: {
+            userId: existingClient.id,
+            companyName: 'Rise Up Consultancy',
+            country: 'India',
+            city: 'Pune',
+            industry: 'BPO / BPM / Staffing',
+            contactPerson: 'Operations Desk',
+            phone: '+91 93598 92819',
+            billingAddress: '1st floor, S.No-49, opp. Hari-Krushna Complex, Chandan Nagar, Pune, Maharashtra 411014.',
+            billingGstin: '27ABLFR4477Q1Z4',
+            billingPan: 'ABLFR4477Q',
+            billingContactPerson: 'Operations Desk',
+            billingEmail: CLIENT_EMAIL,
+            billingPhone: '+91 93598 92819',
+          },
+        });
+      }
+      console.log(`[RiseUp Client Sync] Verified and updated Client credentials for ${CLIENT_EMAIL}.`);
+    } else {
+      await prisma.user.create({
+        data: {
+          email: CLIENT_EMAIL,
+          passwordHash: clientPassHash,
+          fullName: 'Rise Up Consultancy',
+          role: 'CLIENT',
+          status: 'ACTIVE',
+          phone: '+91 93598 92819',
+          clientProfile: {
+            create: {
+              companyName: 'Rise Up Consultancy',
+              country: 'India',
+              city: 'Pune',
+              industry: 'BPO / BPM / Staffing',
+              contactPerson: 'Operations Desk',
+              phone: '+91 93598 92819',
+              billingAddress: '1st floor, S.No-49, opp. Hari-Krushna Complex, Chandan Nagar, Pune, Maharashtra 411014.',
+              billingGstin: '27ABLFR4477Q1Z4',
+              billingPan: 'ABLFR4477Q',
+              billingContactPerson: 'Operations Desk',
+              billingEmail: CLIENT_EMAIL,
+              billingPhone: '+91 93598 92819',
+            },
+          },
+        },
+      });
+      console.log(`[RiseUp Client Sync] Created fresh Client profile for ${CLIENT_EMAIL}.`);
+    }
+
+    console.log('[RiseUp Admin Sync] Credentials sync completed successfully!');
   } catch (err) {
-    console.error('[RiseUp Admin Sync] Error during admin sync:', err.message);
+    console.error('[RiseUp Admin Sync] Error during sync:', err.message);
   } finally {
     await prisma.$disconnect();
   }
