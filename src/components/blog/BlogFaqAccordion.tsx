@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { BlogFaq } from "@/types/blog";
-import { ChevronDown, HelpCircle } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 interface BlogFaqAccordionProps {
   faqs: BlogFaq[];
@@ -17,48 +17,39 @@ export default function BlogFaqAccordion({ faqs, topicTitle }: BlogFaqAccordionP
   };
 
   return (
-    <section className="my-12 p-6 sm:p-8 bg-white rounded-3xl border border-slate-200/90 shadow-sm">
-      <div className="flex items-center gap-2 mb-2 text-blue-600 font-bold text-xs uppercase tracking-wider">
-        <HelpCircle className="w-4 h-4" />
-        <span>Frequently Asked Questions</span>
-      </div>
+    <section className="my-10">
+      <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-5">
+        Frequently Asked Questions
+      </h2>
 
-      <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-heading mb-6">
-        {topicTitle ? `Pune BPO Staffing FAQs: Everything Employers Ask` : "Frequently Asked Questions"}
-      </h3>
-
-      <div className="space-y-3">
+      <div className="space-y-2">
         {faqs.map((faq, index) => {
           const isOpen = openIndex === index;
           return (
             <div
               key={index}
-              className={`rounded-2xl border transition-all ${
-                isOpen 
-                  ? "border-blue-300 bg-blue-50/20 shadow-2xs" 
-                  : "border-slate-200 bg-slate-50/60 hover:bg-slate-50"
+              className={`rounded-xl border transition-colors ${
+                isOpen ? "border-slate-300 bg-slate-50" : "border-slate-200"
               }`}
             >
               <button
                 type="button"
                 onClick={() => toggleIndex(index)}
-                className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left cursor-pointer"
+                className="w-full p-4 flex items-center justify-between gap-4 text-left cursor-pointer"
                 aria-expanded={isOpen}
               >
-                <span className="font-bold text-xs sm:text-sm text-slate-900 leading-snug">
+                <span className="font-semibold text-sm text-slate-900 leading-snug">
                   {faq.question}
                 </span>
-                <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-transform ${
-                    isOpen ? "rotate-180 bg-blue-600 text-white" : "bg-slate-200/80 text-slate-600"
+                <ChevronDown
+                  className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${
+                    isOpen ? "rotate-180" : ""
                   }`}
-                >
-                  <ChevronDown className="w-3.5 h-3.5" />
-                </div>
+                />
               </button>
 
               {isOpen && (
-                <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-blue-100/60 mt-1">
+                <div className="px-4 pb-4 text-sm text-slate-600 leading-relaxed border-t border-slate-200">
                   <p className="pt-3">{faq.answer}</p>
                 </div>
               )}
