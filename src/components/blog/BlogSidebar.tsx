@@ -21,21 +21,32 @@ export default function BlogSidebar({
   return (
     <aside className="w-full lg:w-[340px] shrink-0 space-y-5 lg:sticky lg:top-24">
 
-      {/* 1. Request Talent CTA — Opens the same HireModal */}
+      {/* 1. Request Talent CTA — Adapts to candidate job search or employer mandate */}
       <div className="p-5 bg-white rounded-2xl border border-slate-200 space-y-3">
         <h3 className="text-base font-bold text-slate-900">
-          Need Staffing Support?
+          {currentPost.cta?.primaryLink ? "Looking for BPO Jobs?" : "Need Staffing Support?"}
         </h3>
         <p className="text-sm text-slate-600 leading-relaxed">
-          Share your hiring requirements and receive pre-screened candidate shortlists within 24 hours.
+          {currentPost.cta?.primaryLink
+            ? "Explore active voice, non-voice chat, and technical support vacancies with 100% zero candidate fees."
+            : "Share your hiring requirements and receive pre-screened candidate shortlists within 24 hours."}
         </p>
-        <button
-          type="button"
-          onClick={onOpenConsultationModal}
-          className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold uppercase tracking-wider rounded-xl transition-colors cursor-pointer"
-        >
-          Request Talent
-        </button>
+        {currentPost.cta?.primaryLink ? (
+          <Link
+            href={currentPost.cta.primaryLink}
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold uppercase tracking-wider rounded-xl transition-colors cursor-pointer text-center block"
+          >
+            {currentPost.cta.primaryText || "Browse Active Jobs"}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={onOpenConsultationModal}
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold uppercase tracking-wider rounded-xl transition-colors cursor-pointer"
+          >
+            Request Talent
+          </button>
+        )}
       </div>
 
       {/* 2. Direct Contact Card */}

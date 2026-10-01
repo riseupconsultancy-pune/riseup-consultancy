@@ -112,4 +112,12 @@ export interface BlogPost {
   comments: BlogComment[];
   tags: string[];
   seoKeywords: string[];
+  cta?: {
+    title: string;
+    subtitle: string;
+    primaryText: string;
+    primaryLink?: string;
+    secondaryText?: string;
+    secondaryLink?: string;
+  };
 }

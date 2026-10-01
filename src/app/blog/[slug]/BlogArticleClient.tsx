@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
@@ -132,12 +133,16 @@ export default function BlogArticleClient({ post, relatedPosts }: BlogArticleCli
             </section>
 
             {/* ============================================================== */}
-            {/* INLINE CTA — Opens HireModal                                   */}
+            {/* INLINE CTA — Adapts to Candidate Job-Seeker vs Employer Intent */}
             {/* ============================================================== */}
             <BlogInlineHook
               onOpenModal={() => setIsHireModalOpen(true)}
-              title="Need 15 to 50+ Pre-Assessed BPO Voice Agents in Pune This Week?"
-              subtitle="Avoid Day-1 ghosting and unvetted resume spam. Receive voice-cleared candidate shortlists with verified night-shift transport viability in 24–48 hours."
+              title={post.cta?.title || "Need 15 to 50+ Pre-Assessed BPO Voice Agents in Pune This Week?"}
+              subtitle={post.cta?.subtitle || "Avoid Day-1 ghosting and unvetted resume spam. Receive voice-cleared candidate shortlists with verified night-shift transport viability in 24–48 hours."}
+              primaryText={post.cta?.primaryText || "Request Talent"}
+              primaryLink={post.cta?.primaryLink}
+              secondaryText={post.cta?.secondaryText || "WhatsApp Us"}
+              secondaryLink={post.cta?.secondaryLink}
             />
 
             {/* ============================================================== */}
@@ -202,13 +207,22 @@ export default function BlogArticleClient({ post, relatedPosts }: BlogArticleCli
                           <span><strong>Best Fit:</strong> {srv.suitableFor}</span>
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setIsHireModalOpen(true)}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-colors shrink-0 cursor-pointer"
-                      >
-                        Get in Touch →
-                      </button>
+                      {post.cta?.primaryLink ? (
+                        <Link
+                          href={post.cta.primaryLink}
+                          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-colors shrink-0 cursor-pointer inline-flex items-center gap-1.5"
+                        >
+                          View Openings →
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setIsHireModalOpen(true)}
+                          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-colors shrink-0 cursor-pointer"
+                        >
+                          Get in Touch →
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
