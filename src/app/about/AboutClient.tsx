@@ -42,18 +42,11 @@ const LEADERSHIP = [
     description: "Directing virtual international staffing operations and enterprise talent corridors across Nigeria and regional African markets.",
   },
   {
-    name: "Muskaan Mulani",
+    name: "Shaziya Khan",
     role: "Operations Manager",
     department: "BPO & Process Coordination",
-    initials: "MM",
-    description: "Driving operational execution, candidate coordination, and process compliance across high-volume staffing mandates.",
-  },
-  {
-    name: "Shaziya Khan",
-    role: "Recruitment & Sourcing Manager",
-    department: "Talent Sourcing & Candidate Pipeline",
     initials: "SK",
-    description: "Managing candidate outreach, structured interview schedules, and applicant tracking systems.",
+    description: "Driving operational execution, candidate coordination, and process compliance across high-volume staffing mandates.",
   },
 ];
 

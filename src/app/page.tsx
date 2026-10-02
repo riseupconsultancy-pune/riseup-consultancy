@@ -297,7 +297,7 @@ export default function HomePage() {
                     <PhoneCall className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Shaziya Khan (Recruiter)</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Shaziya Khan (Operations)</span>
                     <span className="text-xs font-extrabold text-slate-900 truncate block font-mono">+91 70301 22065</span>
                   </div>
                 </a>
