@@ -36,6 +36,7 @@ import {
   reactivateCandidateAction
 } from "@/app/actions/hr-actions";
 import { formatWhatsAppPhone } from "@/lib/utils";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export interface CandidateItem {
   id: string;
@@ -445,6 +446,38 @@ export default function HrCandidatePipeline({
     setInterviewNote("");
     setCopiedNotice(false);
     setModalWhatsAppSent(false);
+  };
+
+  // Quick Outreach via WhatsApp to connect and convince candidate before scheduling interview
+  const handleQuickWhatsAppConnect = async (candidate: CandidateItem) => {
+    const rawDigits = candidate.phone ? candidate.phone.replace(/\D/g, "") : "";
+    const clean10 = rawDigits.length >= 10 ? rawDigits.slice(-10) : rawDigits;
+    const outreachMessage = `Hello ${candidate.fullName}, we received your job application for post of ${candidate.vacancyTitle}. You are shortlisted for interview, are you available for interview today? Reply fast.`;
+    const waUrl = `https://wa.me/91${clean10}?text=${encodeURIComponent(outreachMessage)}`;
+    window.open(waUrl, "_blank");
+
+    // If candidate status is currently APPLIED (New Lead), automatically progress to CONNECTED
+    if (candidate.status === "APPLIED") {
+      try {
+        const res = await updateCandidateStatusByHrAction(
+          candidate.id,
+          "CONNECTED",
+          null,
+          `Recruiter sent initial WhatsApp screening message for ${candidate.vacancyTitle}. Awaiting availability response.`
+        );
+        if (res.success) {
+          setCandidates((prev) =>
+            prev.map((c) =>
+              c.id === candidate.id ? { ...c, status: "CONNECTED" } : c
+            )
+          );
+          setActionMessage(`Connected with ${candidate.fullName}. Interview can be scheduled once candidate confirms.`);
+          setTimeout(() => setActionMessage(null), 4000);
+        }
+      } catch {
+        // non-blocking
+      }
+    }
   };
 
   // Launch WhatsApp Message from Interview Modal without confirming interview schedule
@@ -919,6 +952,8 @@ export default function HrCandidatePipeline({
             const isAbsent = candidate.status === "ABSENT";
             const isPlacedOutside = candidate.status === "PLACED_OUTSIDE";
             const isVacancyClosed = candidate.vacancyStatus !== "ACTIVE";
+            const rawPhoneDigits = candidate.phone ? candidate.phone.replace(/\D/g, "") : "";
+            const clean10Phone = rawPhoneDigits.length >= 10 ? rawPhoneDigits.slice(-10) : rawPhoneDigits;
 
             return (
               <div
@@ -1027,9 +1062,24 @@ export default function HrCandidatePipeline({
 
                   {/* Candidate Attributes Inline Strip */}
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] text-slate-600 bg-slate-50/80 rounded-2xl p-3 border border-slate-100">
-                    <span>
+                    <span className="inline-flex items-center gap-1.5">
                       <strong className="text-slate-500 font-medium uppercase text-[10px]">Phone:</strong>{" "}
                       <span className="font-mono text-slate-900 font-semibold">{candidate.phone}</span>
+                      <a
+                        href={`tel:+91${clean10Phone}`}
+                        title={`Call +91 ${clean10Phone}`}
+                        className="p-1 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-md transition-colors"
+                      >
+                        <Phone className="w-3 h-3 text-emerald-600" />
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickWhatsAppConnect(candidate)}
+                        title="Send WhatsApp screening message"
+                        className="p-1 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-md transition-colors cursor-pointer"
+                      >
+                        <WhatsAppIcon className="w-3 h-3 fill-emerald-600" />
+                      </button>
                     </span>
                     <span className="text-slate-300">&bull;</span>
                     <span>
@@ -1105,6 +1155,27 @@ export default function HrCandidatePipeline({
                 {/* Bottom Action Buttons Bar: Neat, Minimalist, Rounded-xl */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100">
                   <div className="flex flex-wrap items-center gap-2">
+                    {/* Call Candidate Button */}
+                    <a
+                      href={`tel:+91${clean10Phone}`}
+                      title={`Call ${candidate.fullName} (+91 ${clean10Phone})`}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-50 hover:bg-emerald-50 text-slate-800 hover:text-emerald-800 text-[11px] font-bold uppercase tracking-wider rounded-xl border border-slate-200/90 hover:border-emerald-300 transition-all shadow-2xs min-h-[36px] cursor-pointer group"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-emerald-600 group-hover:scale-110 transition-transform" />
+                      <span>Call</span>
+                    </a>
+
+                    {/* WhatsApp Quick Connect Button */}
+                    <button
+                      type="button"
+                      onClick={() => handleQuickWhatsAppConnect(candidate)}
+                      title="Send WhatsApp shortlist message to connect & check availability"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold uppercase tracking-wider rounded-xl shadow-md shadow-emerald-500/20 transition-all min-h-[36px] cursor-pointer active:scale-95"
+                    >
+                      <WhatsAppIcon className="w-3.5 h-3.5 fill-white" />
+                      <span>WhatsApp</span>
+                    </button>
+
                     {/* View Resume PDF */}
                     <button
                       type="button"

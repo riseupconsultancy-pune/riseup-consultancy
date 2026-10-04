@@ -144,10 +144,28 @@ export default function JobDetailClient({ job }: JobDetailClientProps) {
     setErrorMessage(null);
   };
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/\D/g, "");
+    if (val.length === 12 && val.startsWith("91")) {
+      val = val.slice(2);
+    } else if (val.length === 11 && val.startsWith("0")) {
+      val = val.slice(1);
+    }
+    val = val.slice(0, 10);
+    setFormData((prev) => ({ ...prev, phone: val }));
+    setErrorMessage(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setFileError("");
+
+    const cleanPhone = formData.phone.replace(/\D/g, "");
+    if (cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
+      setErrorMessage("Please enter a valid 10-digit Indian mobile number (without country code).");
+      return;
+    }
 
     if (!resumeFile) {
       setFileError("Please attach your updated resume (PDF or DOCX).");
@@ -449,15 +467,24 @@ export default function JobDetailClient({ job }: JobDetailClientProps) {
                     <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
                       Phone Number *
                     </label>
-                    <input
-                      type="tel"
-                      required
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="10-digit mobile"
-                      className="w-full px-3 py-2.5 text-xs bg-slate-50/70 border border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 rounded-xl outline-none transition-all text-slate-900"
-                    />
+                    <div className="flex rounded-xl overflow-hidden border border-slate-200 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/10 transition-all bg-slate-50/70 focus-within:bg-white">
+                      <span className="inline-flex items-center px-3 text-xs font-bold text-slate-600 bg-slate-100/90 border-r border-slate-200 select-none">
+                        +91
+                      </span>
+                      <input
+                        type="tel"
+                        required
+                        name="phone"
+                        inputMode="numeric"
+                        maxLength={10}
+                        pattern="[6-9][0-9]{9}"
+                        value={formData.phone}
+                        onChange={handlePhoneChange}
+                        placeholder="10-digit mobile"
+                        className="w-full px-3 py-2.5 text-xs outline-none bg-transparent transition-all text-slate-900 font-medium"
+                      />
+                    </div>
+                    <span className="text-[10px] text-slate-400 mt-1 block">10-digit number without country code</span>
                   </div>
                 </div>
 

@@ -219,15 +219,14 @@ export async function updateCandidateStatusByHrAction(
       return { success: false, error: "Candidate not found." };
     }
 
-    if (session.role === "HR_RECRUITER" && candidate.hrId && candidate.hrId !== hrProfileId) {
-      return { success: false, error: "Candidate belongs to another recruiter's pool." };
+    if (session.role === "HR_RECRUITER" && candidate.hrId !== hrProfileId) {
+      return { success: false, error: "Unauthorized: Candidate is not assigned to your recruiter pool." };
     }
 
     const previousStatus = candidate.status;
     const updateData: {
       status: string;
       interviewDate?: Date | null;
-      hrId?: string;
     } = {
       status: parsed.data.newStatus,
     };
@@ -236,10 +235,6 @@ export async function updateCandidateStatusByHrAction(
       updateData.interviewDate = parsed.data.interviewDate
         ? new Date(parsed.data.interviewDate)
         : new Date();
-    }
-
-    if (!candidate.hrId && hrProfileId) {
-      updateData.hrId = hrProfileId;
     }
 
     await prisma.$transaction([
@@ -335,8 +330,8 @@ export async function dispatchCandidateToInterviewAction(params: {
       return { success: false, error: "Candidate record not found." };
     }
 
-    if (session.role === "HR_RECRUITER" && candidate.hrId && candidate.hrId !== hrProfileId) {
-      return { success: false, error: "Candidate is assigned to another recruiter." };
+    if (session.role === "HR_RECRUITER" && candidate.hrId !== hrProfileId) {
+      return { success: false, error: "Unauthorized: Candidate is not assigned to your recruiter pool." };
     }
 
     const previousStatus = candidate.status;
@@ -347,16 +342,11 @@ export async function dispatchCandidateToInterviewAction(params: {
       vacancyId: string;
       status: string;
       interviewDate: Date;
-      hrId?: string;
     } = {
       vacancyId: targetVacancyId,
       status: "GOING_FOR_INTERVIEW",
       interviewDate: dateObj,
     };
-
-    if (!candidate.hrId && hrProfileId) {
-      updateData.hrId = hrProfileId;
-    }
 
     const historyNote = note
       ? note
@@ -448,7 +438,7 @@ export async function bulkDispatchCandidatesToInterviewAction(params: {
 
     const validCandidates = candidates.filter((c) => {
       if (session.role === "SUPER_ADMIN") return true;
-      return !c.hrId || c.hrId === hrProfileId;
+      return c.hrId === hrProfileId;
     });
 
     if (validCandidates.length === 0) {
@@ -464,7 +454,6 @@ export async function bulkDispatchCandidatesToInterviewAction(params: {
             vacancyId: targetVacancy.id,
             status: "GOING_FOR_INTERVIEW",
             interviewDate: dateObj,
-            ...(hrProfileId && !c.hrId ? { hrId: hrProfileId } : {}),
           },
         }),
         prisma.candidateStatusHistory.create({
@@ -513,6 +502,10 @@ export async function setCandidatePlacedOutsideAction(candidateId: string, note?
       return { success: false, error: "Candidate not found." };
     }
 
+    if (session.role === "HR_RECRUITER" && candidate.hrId !== session.hrProfileId) {
+      return { success: false, error: "Unauthorized: Candidate is not assigned to your recruiter pool." };
+    }
+
     const previousStatus = candidate.status;
 
     await prisma.$transaction([
@@ -556,6 +549,10 @@ export async function reactivateCandidateAction(candidateId: string) {
 
     if (!candidate) {
       return { success: false, error: "Candidate not found." };
+    }
+
+    if (session.role === "HR_RECRUITER" && candidate.hrId !== session.hrProfileId) {
+      return { success: false, error: "Unauthorized: Candidate is not assigned to your recruiter pool." };
     }
 
     const previousStatus = candidate.status;
@@ -605,8 +602,8 @@ export async function deleteCandidateAction(candidateId: string) {
       return { success: false, error: "Candidate not found." };
     }
 
-    if (session.role === "HR_RECRUITER" && candidate.hrId && candidate.hrId !== session.hrProfileId) {
-      return { success: false, error: "Unauthorized to delete another recruiter's candidate." };
+    if (session.role === "HR_RECRUITER" && candidate.hrId !== session.hrProfileId) {
+      return { success: false, error: "Unauthorized: Candidate is not assigned to your recruiter pool." };
     }
 
     // Delete uploaded resume PDF from disk if it exists

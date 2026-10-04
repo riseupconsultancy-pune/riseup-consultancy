@@ -76,6 +76,18 @@ export default function ApplyModal({
     setErrorMessage(null);
   };
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/\D/g, "");
+    if (val.length === 12 && val.startsWith("91")) {
+      val = val.slice(2);
+    } else if (val.length === 11 && val.startsWith("0")) {
+      val = val.slice(1);
+    }
+    val = val.slice(0, 10);
+    setFormData((prev) => ({ ...prev, phone: val }));
+    setErrorMessage(null);
+  };
+
   const handleRoleToggle = (role: string) => {
     setInterestedRoles((prev) =>
       prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role]
@@ -114,6 +126,12 @@ export default function ApplyModal({
 
     if (!formData.fullName.trim() || formData.fullName.trim().length < 2) {
       setErrorMessage("Please enter your full legal name.");
+      return;
+    }
+
+    const cleanPhone = formData.phone.replace(/\D/g, "");
+    if (cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
+      setErrorMessage("Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9 (without country code).");
       return;
     }
 
@@ -262,17 +280,26 @@ export default function ApplyModal({
 
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    WhatsApp Phone <span className="text-rose-500">*</span>
+                    WhatsApp Phone Number <span className="text-rose-500">*</span>
                   </label>
-                  <input
-                    required
-                    type="tel"
-                    name="phone"
-                    placeholder="e.g. +91 98220 11223"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
-                  />
+                  <div className="flex rounded-xl overflow-hidden border border-slate-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/10 transition-all bg-white">
+                    <span className="inline-flex items-center px-3 text-xs font-bold text-slate-600 bg-slate-100 border-r border-slate-200 select-none">
+                      🇮🇳 +91
+                    </span>
+                    <input
+                      required
+                      type="tel"
+                      name="phone"
+                      inputMode="numeric"
+                      maxLength={10}
+                      pattern="[6-9][0-9]{9}"
+                      placeholder="10-digit number (e.g. 9822011223)"
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      className="w-full px-3 py-2 text-xs focus:outline-none bg-white font-medium text-slate-900"
+                    />
+                  </div>
+                  <span className="text-[10px] text-slate-400 mt-1 block">Strict 10 digits without country code</span>
                 </div>
               </div>
 
@@ -297,15 +324,13 @@ export default function ApplyModal({
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                     Country <span className="text-rose-500">*</span>
                   </label>
-                  <select
-                    name="country"
-                    value={formData.country}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 text-xs focus:outline-none focus:border-blue-600 bg-white rounded-xl font-medium"
-                  >
-                    <option value="India">India</option>
-                    <option value="Nigeria">Nigeria</option>
-                  </select>
+                  <input
+                    type="text"
+                    disabled
+                    value="India (Domestic Operations Only)"
+                    className="w-full px-3 py-2 border border-slate-200 text-xs bg-slate-100 text-slate-600 rounded-xl font-medium cursor-not-allowed select-none"
+                  />
+                  <input type="hidden" name="country" value="India" />
                 </div>
               </div>
 

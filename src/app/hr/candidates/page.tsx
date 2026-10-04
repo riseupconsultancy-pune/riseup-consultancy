@@ -70,13 +70,10 @@ export default async function HrCandidatesPage() {
     },
   });
 
-  // Fetch candidates from recruiter's pool and unassigned general pool
+  // Fetch candidates strictly assigned to this recruiter's pool
   const candidates = await prisma.candidate.findMany({
     where: {
-      OR: [
-        { hrId: hrProfileId },
-        { hrId: null },
-      ],
+      hrId: hrProfileId,
     },
     orderBy: { updatedAt: "desc" },
     include: {

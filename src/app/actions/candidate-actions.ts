@@ -13,13 +13,25 @@ import { generateCandidateId } from "@/lib/id-generator";
 // -------------------------------------------------------------
 
 const MAX_RESUME_SIZE = 2 * 1024 * 1024; // 2MB strict ceiling
+const INDIAN_MOBILE_REGEX = /^[6-9]\d{9}$/;
 
 const candidateApplicationSchema = z.object({
   slug: z.string().min(3, "Invalid application link").trim(),
   fullName: z.string().min(2, "Full name must be at least 2 characters").max(100).trim(),
   email: z.string().email("Please provide a valid email address").toLowerCase().trim(),
-  phone: z.string().min(7, "Phone number must be at least 7 digits").max(20).trim(),
-  country: z.enum(["India", "Nigeria"]),
+  phone: z
+    .string()
+    .trim()
+    .transform((val) => {
+      let digits = val.replace(/\D/g, "");
+      if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+      if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+      return digits;
+    })
+    .refine((val) => INDIAN_MOBILE_REGEX.test(val), {
+      message: "Mobile number must be a valid 10-digit Indian mobile number without country code (e.g., 9822011223).",
+    }),
+  country: z.string().default("India"),
   city: z.string().min(2, "City is required").max(100).trim(),
   qualification: z.string().min(2, "Highest qualification is required").max(100).trim(),
   totalExperience: z.string().min(1, "Experience is required").max(50).trim(),
