@@ -49,11 +49,7 @@ interface JobsDirectoryClientProps {
 }
 
 function formatSalaryAmount(amount: number): string {
-  if (amount >= 100000) {
-    const inLakhs = amount / 100000;
-    return `${inLakhs % 1 === 0 ? inLakhs.toFixed(0) : inLakhs.toFixed(1)} LPA`;
-  }
-  return amount.toLocaleString("en-IN");
+  return Math.round(amount).toLocaleString("en-IN");
 }
 
 function formatSalaryRange(min?: number | null, max?: number | null, currency = "INR"): string {
@@ -485,7 +481,7 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                               <span className="text-slate-300">•</span>
                               <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
                                 <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 shrink-0" />
-                                <span>{salaryText} <span className="font-normal text-slate-400 text-[10px] sm:text-[11px]">/ yr</span></span>
+                                <span>{salaryText} <span className="font-normal text-slate-400 text-[10px] sm:text-[11px]">/ month</span></span>
                               </span>
                             </>
                           )}

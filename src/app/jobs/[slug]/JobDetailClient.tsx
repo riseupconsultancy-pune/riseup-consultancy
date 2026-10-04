@@ -297,13 +297,23 @@ export default function JobDetailClient({ job }: JobDetailClientProps) {
 
               <div>
                 <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Compensation
+                  Monthly Compensation
                 </span>
                 <span className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-1 mt-0.5">
-                  <IndianRupee className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  {job.salaryCurrency === "NGN" ? (
+                    <span className="text-xs font-bold text-emerald-600">₦</span>
+                  ) : (
+                    <IndianRupee className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  )}
                   <span>
                     {job.salaryMin && job.salaryMax
-                      ? `₹${(job.salaryMin / 100000).toFixed(1)} - ₹${(job.salaryMax / 100000).toFixed(1)} LPA`
+                      ? job.salaryMin === job.salaryMax
+                        ? `${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMin).toLocaleString("en-IN")} / month`
+                        : `${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMin).toLocaleString("en-IN")} - ${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMax).toLocaleString("en-IN")} / month`
+                      : job.salaryMin
+                      ? `${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMin).toLocaleString("en-IN")}+ / month`
+                      : job.salaryMax
+                      ? `Up to ${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMax).toLocaleString("en-IN")} / month`
                       : "Best in Industry"}
                   </span>
                 </span>

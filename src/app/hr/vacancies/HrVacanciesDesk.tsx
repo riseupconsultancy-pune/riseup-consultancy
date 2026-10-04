@@ -309,7 +309,7 @@ export default function HrVacanciesDesk({ vacancies: initialVacancies, recruiter
                         <>
                           <span>&bull;</span>
                           <span>
-                            Salary: <strong className="text-slate-800">{vacancy.salaryCurrency} {vacancy.salaryMin.toLocaleString()} - {vacancy.salaryMax.toLocaleString()}</strong>
+                            Salary: <strong className="text-slate-800">{vacancy.salaryCurrency} {vacancy.salaryMin.toLocaleString()} - {vacancy.salaryMax.toLocaleString()} / month</strong>
                           </span>
                         </>
                       )}

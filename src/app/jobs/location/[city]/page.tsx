@@ -36,11 +36,12 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { generateJobSlug } from "@/lib/job-slug";
 
 function formatJobSalary(min: number | null, max: number | null, currency: string = "INR") {
+  const sym = currency === "NGN" ? "₦" : "₹";
   if (min && max) {
-    return `₹${Math.round(min).toLocaleString("en-IN")} - ₹${Math.round(max).toLocaleString("en-IN")}/mo`;
+    return `${sym}${Math.round(min).toLocaleString("en-IN")} - ${sym}${Math.round(max).toLocaleString("en-IN")} / month`;
   }
-  if (min) return `From ₹${Math.round(min).toLocaleString("en-IN")}/mo`;
-  if (max) return `Up to ₹${Math.round(max).toLocaleString("en-IN")}/mo`;
+  if (min) return `From ${sym}${Math.round(min).toLocaleString("en-IN")} / month`;
+  if (max) return `Up to ${sym}${Math.round(max).toLocaleString("en-IN")} / month`;
   return "Competitive Salary";
 }
 

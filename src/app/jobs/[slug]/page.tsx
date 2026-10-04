@@ -136,7 +136,7 @@ export default async function JobDetailPage({ params }: PageProps) {
         "@type": "QuantitativeValue",
         minValue: vacancy.salaryMin || 0,
         maxValue: vacancy.salaryMax || vacancy.salaryMin || 0,
-        unitText: "YEAR",
+        unitText: "MONTH",
       },
     };
   }
