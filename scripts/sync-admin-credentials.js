@@ -103,8 +103,13 @@ async function syncAdminCredentials() {
       }
     }
 
-    // 3. Clean up demo users if present on deployment (Apex Global, Digitide, Priya HR)
-    const demoEmails = ['client@apexglobal.com', 'client@digitide.com', 'hr.priya@riseupconsultancy.in'];
+    // 3. Clean up legacy demo users if present on deployment
+    const demoEmails = [
+      'client@apexglobal.com',
+      'client@digitide.com',
+      'hr.priya@riseupconsultancy.in',
+      'hr.rahul@riseupconsultancy.in',
+    ];
     for (const email of demoEmails) {
       const demoUser = await prisma.user.findUnique({ where: { email } });
       if (demoUser) {
