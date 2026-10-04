@@ -52,6 +52,19 @@ function formatSalaryAmount(amount: number): string {
   return Math.round(amount).toLocaleString("en-IN");
 }
 
+function formatPostedDate(dateStr?: string): string {
+  if (!dateStr) return "Recently posted";
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 0) return "Posted today";
+  if (diffDays === 1) return "Posted 1 day ago";
+  if (diffDays < 30) return `Posted ${diffDays} days ago`;
+  return `Posted ${date.toLocaleDateString("en-IN", { day: "numeric", month: "short" })}`;
+}
+
 function formatSalaryRange(min?: number | null, max?: number | null, currency = "INR"): string {
   const sym = currency === "NGN" ? "₦" : "₹";
   if (min && max) {
@@ -400,22 +413,34 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
             {/* Minimalist Cards List */}
             {filteredJobs.length === 0 ? (
               <div className="bg-white border border-slate-200/80 p-12 text-center space-y-4 rounded-3xl shadow-sm">
-                <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mx-auto text-slate-400">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center mx-auto text-blue-600">
                   <Briefcase className="w-6 h-6" />
                 </div>
                 <h4 className="text-base font-bold text-slate-800">
-                  No matching jobs found
+                  {initialJobs.length === 0 ? "No active vacancies posted right now" : "No matching jobs found"}
                 </h4>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-                  Try clearing your search query or selecting &quot;All Corridors / All Cities&quot; to view open vacancies.
+                  {initialJobs.length === 0
+                    ? "New corporate and BPO mandates are updated regularly. Submit an open candidate application or check back shortly."
+                    : "Try clearing your search query or selecting \"All Corridors / All Cities\" to view open vacancies."}
                 </p>
-                <button
-                  type="button"
-                  onClick={handleResetFilters}
-                  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer shadow-md shadow-blue-500/20 hover:shadow-lg transition-all"
-                >
-                  Reset All Filters
-                </button>
+                {initialJobs.length === 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => handleOpenApply("General Candidate Application", "general")}
+                    className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer shadow-md shadow-blue-500/20 hover:shadow-lg transition-all"
+                  >
+                    Submit Open Application
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer shadow-md shadow-blue-500/20 hover:shadow-lg transition-all"
+                  >
+                    Reset All Filters
+                  </button>
+                )}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-5 items-start">
@@ -437,7 +462,7 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/25 to-transparent" />
 
                       <div className="space-y-2 sm:space-y-3 min-w-0 w-full">
-                        {/* Top Line: Category, Work Mode Badges & Job ID */}
+                        {/* Top Line: Category, Work Mode Badges, Posted Date & Job ID */}
                         <div className="flex items-center justify-between gap-1.5 min-w-0">
                           <div className="flex items-center gap-1.5 flex-wrap min-w-0">
                             <span className="text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider bg-slate-100 sm:bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded-md sm:rounded-full shrink-0">
@@ -446,6 +471,12 @@ export default function JobsDirectoryClient({ initialJobs }: JobsDirectoryClient
                             <span className="text-[9.5px] sm:text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/70 px-2 py-0.5 rounded-md sm:rounded-full shrink-0">
                               {job.workMode}
                             </span>
+                            {job.createdAt && (
+                              <span className="inline-flex items-center gap-1 text-[9.5px] sm:text-[10px] font-semibold text-slate-500 bg-slate-50 sm:bg-white border border-slate-200/80 px-2 py-0.5 rounded-md sm:rounded-full shrink-0">
+                                <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 shrink-0" />
+                                <span>{formatPostedDate(job.createdAt)}</span>
+                              </span>
+                            )}
                           </div>
                           <span className="text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 shrink-0">
                             {job.jobId}

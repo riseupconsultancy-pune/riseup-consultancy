@@ -31,58 +31,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Clean default fallback jobs (Zero company names)
-const FALLBACK_JOBS: MinimalistJob[] = [
-  {
-    id: "fallback-1",
-    jobId: "RUP-JOB-1001",
-    title: "Customer Support Specialist (Voice Process)",
-    category: "Voice Process",
-    city: "Pune",
-    country: "India",
-    workMode: "On-site",
-    expMin: 0,
-    expMax: 2,
-    skills: ["English Fluency", "Customer Handling", "Day Shift"],
-  },
-  {
-    id: "fallback-2",
-    jobId: "RUP-JOB-1002",
-    title: "Back Office Operations Specialist (Non-Voice)",
-    category: "Back Office",
-    city: "Pune",
-    country: "India",
-    workMode: "On-site",
-    expMin: 0,
-    expMax: 1,
-    skills: ["Data Entry", "Typing 30 WPM", "MS Excel"],
-  },
-  {
-    id: "fallback-3",
-    jobId: "RUP-JOB-1003",
-    title: "IT Support & Service Desk Analyst",
-    category: "IT Support",
-    city: "Bengaluru",
-    country: "India",
-    workMode: "Hybrid",
-    expMin: 1,
-    expMax: 3,
-    skills: ["Hardware Support", "Networking", "Windows 11"],
-  },
-  {
-    id: "fallback-4",
-    jobId: "RUP-JOB-1004",
-    title: "Operations & Logistics Associate",
-    category: "Operations",
-    city: "Lagos",
-    country: "Nigeria",
-    workMode: "On-site",
-    expMin: 1,
-    expMax: 3,
-    skills: ["Inventory Management", "Supply Chain", "ERP"],
-  },
-];
-
 export default async function JobsPage() {
   // Query active vacancies published to website
   // STRICT SECURITY & PRIVACY RULE: Company name is deliberately omitted!
@@ -140,7 +88,7 @@ export default async function JobsPage() {
     };
   });
 
-  const jobsToDisplay = formattedDbJobs.length > 0 ? formattedDbJobs : FALLBACK_JOBS;
+  const jobsToDisplay = formattedDbJobs;
 
   // Valid Schema.org structured data for Directory / Collection Page
   const jsonLd = {

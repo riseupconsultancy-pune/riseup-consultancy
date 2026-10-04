@@ -71,6 +71,19 @@ const EXPERIENCES = [
   "5+ Years",
 ];
 
+function formatPostedDate(dateStr?: string): string {
+  if (!dateStr) return "Recently posted";
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 0) return "Posted today";
+  if (diffDays === 1) return "Posted 1 day ago";
+  if (diffDays < 30) return `Posted ${diffDays} days ago`;
+  return `Posted ${date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}`;
+}
+
 export default function JobDetailClient({ job }: JobDetailClientProps) {
   const [copied, setCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -243,6 +256,12 @@ export default function JobDetailClient({ job }: JobDetailClientProps) {
                 <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-full">
                   {job.workMode}
                 </span>
+                {job.createdAt && (
+                  <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-1 rounded-full">
+                    <Clock className="w-3 h-3 text-slate-500" />
+                    <span>{formatPostedDate(job.createdAt)}</span>
+                  </span>
+                )}
               </div>
 
               <div className="flex items-center gap-1.5">
@@ -300,20 +319,14 @@ export default function JobDetailClient({ job }: JobDetailClientProps) {
                   Monthly Compensation
                 </span>
                 <span className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-1 mt-0.5">
-                  {job.salaryCurrency === "NGN" ? (
-                    <span className="text-xs font-bold text-emerald-600">₦</span>
-                  ) : (
-                    <IndianRupee className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  )}
+                  <IndianRupee className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                   <span>
                     {job.salaryMin && job.salaryMax
-                      ? job.salaryMin === job.salaryMax
-                        ? `${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMin).toLocaleString("en-IN")} / month`
-                        : `${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMin).toLocaleString("en-IN")} - ${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMax).toLocaleString("en-IN")} / month`
+                      ? `${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Number(job.salaryMin).toLocaleString("en-IN")} - ${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Number(job.salaryMax).toLocaleString("en-IN")} / month`
                       : job.salaryMin
-                      ? `${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMin).toLocaleString("en-IN")}+ / month`
+                      ? `${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Number(job.salaryMin).toLocaleString("en-IN")}+ / month`
                       : job.salaryMax
-                      ? `Up to ${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Math.round(job.salaryMax).toLocaleString("en-IN")} / month`
+                      ? `Up to ${job.salaryCurrency === "NGN" ? "₦" : "₹"}${Number(job.salaryMax).toLocaleString("en-IN")} / month`
                       : "Best in Industry"}
                   </span>
                 </span>

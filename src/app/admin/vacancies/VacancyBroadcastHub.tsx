@@ -19,6 +19,7 @@ import {
 import { 
   broadcastVacancyToHRsAction, 
   publishVacancyToWebsiteAction, 
+  unpublishVacancyFromWebsiteAction,
   toggleVacancyStatusAction,
   updateVacancyVenueAction
 } from "@/app/actions/admin-actions";
@@ -153,31 +154,66 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
     setLoadingId(null);
   };
 
-  const handlePublishWebsite = async (vacancyId: string) => {
+  const handleToggleWebsite = async (vacancyId: string, isCurrentlyPosted: boolean) => {
     setLoadingId(vacancyId);
     setActionError(null);
     setActionSuccess(null);
 
-    const res = await publishVacancyToWebsiteAction(vacancyId);
-    if (!res.success) {
-      setActionError(res.error || "Failed to publish vacancy on website.");
+    if (isCurrentlyPosted) {
+      const res = await unpublishVacancyFromWebsiteAction(vacancyId);
+      if (!res.success) {
+        setActionError(res.error || "Failed to remove vacancy from website.");
+      } else {
+        setActionSuccess("Vacancy removed from website /jobs section.");
+        setVacancies((prev) =>
+          prev.map((v) => (v.id === vacancyId ? { ...v, isPostedOnWebsite: false } : v))
+        );
+      }
     } else {
-      setActionSuccess("Vacancy published live to the public website /jobs section!");
-      setVacancies((prev) =>
-        prev.map((v) => (v.id === vacancyId ? { ...v, isPostedOnWebsite: true, status: "ACTIVE" } : v))
-      );
+      const res = await publishVacancyToWebsiteAction(vacancyId);
+      if (!res.success) {
+        setActionError(res.error || "Failed to publish vacancy on website.");
+      } else {
+        const freshDate = new Date().toISOString();
+        setActionSuccess("Vacancy published live to /jobs with today's date timestamp!");
+        setVacancies((prev) =>
+          prev.map((v) =>
+            v.id === vacancyId
+              ? { ...v, isPostedOnWebsite: true, status: "ACTIVE", createdAt: freshDate }
+              : v
+          )
+        );
+      }
     }
     setLoadingId(null);
   };
 
   const handleToggleStatus = async (vacancyId: string, currentStatus: string) => {
     setLoadingId(vacancyId);
+    setActionError(null);
+    setActionSuccess(null);
     const newStatus = currentStatus === "ACTIVE" ? "DISABLED" : "ACTIVE";
     const res = await toggleVacancyStatusAction(vacancyId, newStatus);
     if (res.success) {
+      const freshDate = new Date().toISOString();
       setVacancies((prev) =>
-        prev.map((v) => (v.id === vacancyId ? { ...v, status: newStatus } : v))
+        prev.map((v) =>
+          v.id === vacancyId
+            ? {
+                ...v,
+                status: newStatus,
+                ...(newStatus === "ACTIVE" ? { createdAt: freshDate } : {}),
+              }
+            : v
+        )
       );
+      if (newStatus === "ACTIVE") {
+        setActionSuccess("Vacancy re-enabled! Job posted date refreshed to today for candidates and HRs.");
+      } else {
+        setActionSuccess("Vacancy disabled! Hidden from HR recruiter portals and public /jobs section.");
+      }
+    } else {
+      setActionError(res.error || "Failed to update vacancy status.");
     }
     setLoadingId(null);
   };
@@ -280,6 +316,12 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                       }`}>
                         {v.status}
                       </span>
+                      {v.createdAt && (
+                        <span className="text-[10px] text-slate-500 font-medium inline-flex items-center gap-1 bg-slate-50 border border-slate-200/60 px-2 py-0.5 rounded-full">
+                          <Clock className="w-2.5 h-2.5 text-slate-400" />
+                          <span>Posted: {new Date(v.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                        </span>
+                      )}
                     </div>
 
                     <h2 className="text-lg font-bold text-slate-900 tracking-tight font-heading">
@@ -376,19 +418,20 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                         <span>{v.isBroadcastedToHR ? "Dispatched to HRs" : "Broadcast to all HRs"}</span>
                       </button>
 
-                      {/* Button 2: Post to Website */}
+                      {/* Button 2: Post to Website / Unpublish */}
                       <button
                         type="button"
-                        disabled={isLoading || v.isPostedOnWebsite}
-                        onClick={() => handlePublishWebsite(v.id)}
+                        disabled={isLoading}
+                        onClick={() => handleToggleWebsite(v.id, v.isPostedOnWebsite)}
                         className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
                           v.isPostedOnWebsite
-                            ? "bg-emerald-50 border border-emerald-300 text-emerald-800 opacity-90 cursor-default shadow-2xs"
+                            ? "bg-emerald-50 border border-emerald-300 text-emerald-800 hover:bg-emerald-100 shadow-2xs"
                             : "bg-slate-900 hover:bg-slate-800 text-white shadow-sm"
                         }`}
+                        title={v.isPostedOnWebsite ? "Click to remove from public /jobs" : "Publish live to /jobs directory"}
                       >
                         {v.isPostedOnWebsite ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Globe className="w-3.5 h-3.5" />}
-                        <span>{v.isPostedOnWebsite ? "Live on /jobs" : "Post on Website"}</span>
+                        <span>{v.isPostedOnWebsite ? "Live on /jobs (Click to hide)" : "Post on Website"}</span>
                       </button>
 
                       {/* Button 3: Toggle Active / Disabled */}
@@ -396,10 +439,14 @@ export default function VacancyBroadcastHub({ initialVacancies }: { initialVacan
                         type="button"
                         disabled={isLoading}
                         onClick={() => handleToggleStatus(v.id, v.status)}
-                        className="px-3 py-2 text-xs font-bold uppercase tracking-wider border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl cursor-pointer shadow-2xs transition-colors"
-                        title="Toggle Status"
+                        className={`px-3 py-2 text-xs font-bold uppercase tracking-wider border rounded-xl cursor-pointer shadow-2xs transition-colors ${
+                          v.status === "ACTIVE"
+                            ? "border-slate-200 hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-700"
+                            : "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                        }`}
+                        title={v.status === "ACTIVE" ? "Disable vacancy from HR portals and /jobs" : "Re-enable vacancy and refresh posting timestamp to today"}
                       >
-                        {v.status === "ACTIVE" ? "Disable" : "Enable"}
+                        {v.status === "ACTIVE" ? "Disable" : "Enable (Refresh Date)"}
                       </button>
                     </div>
 

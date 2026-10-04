@@ -544,7 +544,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
               Step 2: Role Details, Headcount & Experience
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              Specify job title, open headcount target, experience, and monthly salary range.
+              Specify job title, open headcount target, experience, and salary range.
             </p>
           </div>
 
@@ -629,7 +629,7 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
 
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Minimum Monthly Salary (₹ / Month)
+                Minimum Monthly Salary ({formData.salaryCurrency})
               </label>
               <div className="flex">
                 <span className="inline-flex items-center px-3 bg-slate-100 border border-r-0 border-slate-200 text-xs font-bold text-slate-600 rounded-l-xl">
@@ -640,16 +640,15 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                   name="salaryMin"
                   value={formData.salaryMin}
                   onChange={handleInputChange}
-                  placeholder="e.g. 22000"
+                  placeholder="e.g. 20000"
                   className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-r-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                 />
               </div>
-              <span className="text-[10px] text-slate-400 mt-1 block">Monthly salary figure (e.g. ₹22,000 / month)</span>
             </div>
 
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                Maximum Monthly Salary (₹ / Month)
+                Maximum Monthly Salary ({formData.salaryCurrency})
               </label>
               <div className="flex">
                 <span className="inline-flex items-center px-3 bg-slate-100 border border-r-0 border-slate-200 text-xs font-bold text-slate-600 rounded-l-xl">
@@ -664,7 +663,6 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
                   className="w-full bg-white border border-slate-200 px-3.5 py-2.5 text-xs text-slate-900 font-medium rounded-r-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                 />
               </div>
-              <span className="text-[10px] text-slate-400 mt-1 block">Monthly salary figure (e.g. ₹25,000 / month)</span>
             </div>
 
             <div className="sm:col-span-2">
@@ -786,14 +784,12 @@ export default function ClientVacancyWizard({ clientProfile }: ClientVacancyWiza
               </span>
             </div>
             <div className="sm:col-span-2">
-              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Monthly Compensation Bracket</span>
+              <span className="font-bold text-slate-400 uppercase text-[10px] block mb-0.5">Monthly Salary Bracket</span>
               <span className="font-semibold text-slate-800">
                 {formData.salaryMin && formData.salaryMax
-                  ? `${formData.salaryCurrency} ${Number(formData.salaryMin).toLocaleString()} - ${Number(formData.salaryMax).toLocaleString()} / month`
+                  ? `${formData.salaryCurrency} ${Number(formData.salaryMin).toLocaleString("en-IN")} - ${Number(formData.salaryMax).toLocaleString("en-IN")} / month`
                   : formData.salaryMin
-                  ? `${formData.salaryCurrency} ${Number(formData.salaryMin).toLocaleString()}+ / month`
-                  : formData.salaryMax
-                  ? `Up to ${formData.salaryCurrency} ${Number(formData.salaryMax).toLocaleString()} / month`
+                  ? `${formData.salaryCurrency} ${Number(formData.salaryMin).toLocaleString("en-IN")}+ / month`
                   : "As per company standards"}
               </span>
             </div>

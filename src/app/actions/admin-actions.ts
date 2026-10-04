@@ -236,6 +236,7 @@ export async function publishVacancyToWebsiteAction(vacancyId: string) {
       data: {
         isPostedOnWebsite: true,
         status: "ACTIVE",
+        createdAt: new Date(), // Always refresh job posted timestamp when publishing to website
       },
     });
 
@@ -253,12 +254,41 @@ export async function publishVacancyToWebsiteAction(vacancyId: string) {
   }
 }
 
-export async function toggleVacancyStatusAction(vacancyId: string, status: string) {
+export async function unpublishVacancyFromWebsiteAction(vacancyId: string) {
   try {
     await assertAdmin();
     const updated = await prisma.vacancy.update({
       where: { id: vacancyId },
-      data: { status },
+      data: {
+        isPostedOnWebsite: false,
+      },
+    });
+
+    notifyGoogleOfJobVacancy(updated.title, updated.city, updated.jobId, "URL_DELETED").catch((err) => {
+      console.warn("Background Google Indexing ping failed:", err);
+    });
+
+    revalidatePath("/admin/vacancies");
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/jobs");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to remove vacancy from website." };
+  }
+}
+
+export async function toggleVacancyStatusAction(vacancyId: string, status: string) {
+  try {
+    await assertAdmin();
+    const dataToUpdate: any = { status };
+    if (status === "ACTIVE") {
+      // When admin re-enables an ongoing vacancy, refresh timestamp to now
+      dataToUpdate.createdAt = new Date();
+    }
+
+    const updated = await prisma.vacancy.update({
+      where: { id: vacancyId },
+      data: dataToUpdate,
     });
 
     // Notify Google Indexing if page is public on website
