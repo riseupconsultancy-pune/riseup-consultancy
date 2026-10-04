@@ -49,8 +49,13 @@ const CATEGORIES = [
 
 const SHIFT_OPTIONS = [
   "Day Shift (9:30 AM - 6:30 PM)",
+  "Day Shift (10:00 AM - 7:00 PM / 11:00 AM - 8:00 PM)",
+  "Day Shift (9:00 AM - 6:00 PM)",
+  "Evening Shift (4:00 PM - 1:00 AM)",
+  "Evening Login Shifts (4:30 PM | 8:30 PM | 1:30 AM)",
   "UK Shift (1:30 PM - 10:30 PM)",
   "US Shift (6:30 PM - 3:30 AM / Night)",
+  "US Rotational Shift (24/7 Window / Night)",
   "Rotational Shift (24/7 Window)",
   "Split Shift",
 ];
@@ -58,15 +63,20 @@ const SHIFT_OPTIONS = [
 const INDIA_CITIES = [
   "Pune (HQ)",
   "Mumbai",
+  "Thane",
   "Bengaluru",
   "Hyderabad",
   "Chennai",
-  "Coimbatore",
+  "Noida",
   "Delhi NCR",
-  "Kolkata",
+  "Mohali",
+  "Chandigarh",
   "Ahmedabad",
+  "Kolkata",
+  "Coimbatore",
   "Jaipur",
   "Indore",
+  "Lucknow",
 ];
 
 const NIGERIA_CITIES = [
